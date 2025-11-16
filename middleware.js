@@ -11,14 +11,31 @@ const verifyToken = (token) => {
   }
 };
 
-export function middleware(req) {
-  if (req.nextUrl.pathname.startsWith('/admin')) {
-    const cookieStore = cookies();
-    const token = cookieStore.get('token')?.value;
-    const user = verifyToken(token);
+export async function middleware(request) {
+  const { pathname } = request.nextUrl;
 
-    if (!user && req.nextUrl.pathname !== '/admin/login') {
-      return NextResponse.redirect(new URL('/admin/login', req.url));
+  // Only protect admin routes (except login)
+  if (pathname.startsWith('/admin')) {
+    if (pathname === '/admin/login') {
+      return NextResponse.next();
+    }
+
+    try {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('token')?.value;
+      const user = verifyToken(token);
+
+      if (!user) {
+        // Redirect to login if not authenticated
+        const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('from', pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch (error) {
+      // If there's an error, redirect to login
+      const loginUrl = new URL('/admin/login', request.url);
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
@@ -26,5 +43,7 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: [
+    '/admin/:path*',
+  ],
 };

@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Toaster } from 'react-hot-toast';
 import FontLoader from '@/components/FontLoader';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const roboto = Roboto({ 
   weight: ['300', '400', '500'],
@@ -20,12 +21,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${roboto.className} islamic-theme`}>
-        <FontLoader />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <Toaster />
+      <body className={`${roboto.variable} ${roboto.className} bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
+        <ThemeProvider>
+          <FontLoader />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,9 +1,27 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
 import { getSupabaseServiceClient } from '@/lib/supabase';
 import connectDB from '@/lib/mongoose';
 import Gallery from '@/models/Gallery';
 
+const verifyToken = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  if (!token) return null;
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch {
+    return null;
+  }
+};
+
 export async function POST(req) {
+  const user = await verifyToken();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // Check if Supabase is configured
     if (!process.env.SUPABASE_URL) {
