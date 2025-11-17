@@ -6,7 +6,6 @@ import { Tab } from '@headlessui/react';
 import { useForm } from 'react-hook-form';
 import { Trash2, Plus, Upload, Image as ImageIcon, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { uploadToSupabase } from '@/lib/supabase';
 import Image from 'next/image';
 
 export default function AdminContentClient({ initialData, user }) {
@@ -18,7 +17,8 @@ export default function AdminContentClient({ initialData, user }) {
     banners: [], 
     news: [], 
     videos: [], 
-    committees: [] 
+    committees: [],
+    advisory: []
   });
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -121,6 +121,8 @@ export default function AdminContentClient({ initialData, user }) {
       ? { name: '', role: '', image: '', bio: '' } 
       : type === 'organizations'
       ? { name: '', desc: '' }
+      : type === 'advisory'
+      ? { name: '', role: '', image: '', order: (data.advisory?.length || 0) + 1 }
       : { name: '', url: '', icon: '' };
     setData({ ...data, [type]: [...(data[type] || []), newItem] });
   };
@@ -208,7 +210,29 @@ export default function AdminContentClient({ initialData, user }) {
     
     try {
       setUploading(true);
-      const url = await uploadToSupabase(file);
+      
+      // Use server-side upload API (same as gallery)
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'gallery');
+      
+      const uploadRes = await fetch('/api/upload-image', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+      
+      const uploadResult = await uploadRes.json();
+      
+      if (!uploadRes.ok) {
+        if (uploadRes.status === 401) {
+          router.push('/admin/login');
+          return;
+        }
+        throw new Error(uploadResult.error || 'Failed to upload image');
+      }
+      
+      const url = uploadResult.url;
       
       if (type === 'gallery') {
         const res = await fetch('/api/content', {
@@ -223,7 +247,7 @@ export default function AdminContentClient({ initialData, user }) {
             router.push('/admin/login');
             return;
           }
-          throw new Error('Failed to upload');
+          throw new Error('Failed to save to gallery');
         }
         
         toast.success('Image uploaded!');
@@ -235,11 +259,7 @@ export default function AdminContentClient({ initialData, user }) {
     } catch (error) {
       console.error('Upload error:', error);
       const errorMessage = error.message || 'Failed to upload image';
-      if (errorMessage.includes('Supabase') || errorMessage.includes('environment variables')) {
-        toast.error('Supabase is not configured. Please set up NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. See README for instructions.');
-      } else {
-        toast.error(errorMessage);
-      }
+      toast.error(errorMessage);
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -272,7 +292,7 @@ export default function AdminContentClient({ initialData, user }) {
           <Tab.Group selectedIndex={activeTab} onChange={setActiveTab}>
             <div className="border-b border-gray-200 bg-gray-50">
               <Tab.List className="flex space-x-1 px-6 pt-4 overflow-x-auto">
-                {['Core Content', 'Banner', 'News', 'Videos', 'Gallery', 'Organizations', 'Committees', 'Socials', 'Location'].map((tab) => (
+                {['Core Content', 'Banner', 'News', 'Videos', 'Advisory Board', 'Gallery', 'Organizations', 'Committees', 'Socials', 'Location'].map((tab) => (
                   <Tab
                     key={tab}
                     className={({ selected }) =>
@@ -364,27 +384,48 @@ export default function AdminContentClient({ initialData, user }) {
                           if (!file) return;
                           try {
                             setUploading(true);
-                            const url = await uploadToSupabase(file);
+                            
+                            // Use server-side upload API (same as gallery)
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('bucket', 'gallery');
+                            
+                            const uploadRes = await fetch('/api/upload-image', {
+                              method: 'POST',
+                              credentials: 'include',
+                              body: formData
+                            });
+                            
+                            const uploadResult = await uploadRes.json();
+                            
+                            if (!uploadRes.ok) {
+                              if (uploadRes.status === 401) {
+                                router.push('/admin/login');
+                                return;
+                              }
+                              throw new Error(uploadResult.error || 'Failed to upload image');
+                            }
+                            
+                            const url = uploadResult.url;
+                            
                             const res = await fetch('/api/banner', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ imageUrl: url, order: data.banners?.length || 0 }),
                               credentials: 'include'
                             });
+                            
+                            const result = await res.json();
+                            
                             if (res.ok) {
                               toast.success('Banner uploaded!');
                               fetchAllData();
                             } else {
-                              throw new Error('Failed to save banner');
+                              throw new Error(result.error || 'Failed to save banner');
                             }
                           } catch (error) {
                             console.error('Upload error:', error);
-                            const errorMessage = error.message || 'Failed to upload banner';
-                            if (errorMessage.includes('Supabase') || errorMessage.includes('environment variables')) {
-                              toast.error('Supabase is not configured. Please set up NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. See README for instructions.');
-                            } else {
-                              toast.error(errorMessage);
-                            }
+                            toast.error(error.message || 'Failed to upload banner');
                           } finally {
                             setUploading(false);
                             e.target.value = '';
@@ -465,17 +506,34 @@ export default function AdminContentClient({ initialData, user }) {
                               if (!file) return;
                               try {
                                 setUploading(true);
-                                const url = await uploadToSupabase(file);
+                                
+                                // Use server-side upload API (same as gallery)
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                formData.append('bucket', 'gallery');
+                                
+                                const uploadRes = await fetch('/api/upload-image', {
+                                  method: 'POST',
+                                  credentials: 'include',
+                                  body: formData
+                                });
+                                
+                                const uploadResult = await uploadRes.json();
+                                
+                                if (!uploadRes.ok) {
+                                  if (uploadRes.status === 401) {
+                                    router.push('/admin/login');
+                                    return;
+                                  }
+                                  throw new Error(uploadResult.error || 'Failed to upload image');
+                                }
+                                
+                                const url = uploadResult.url;
                                 setEditingNews({ ...editingNews, thumbnail: url });
                                 toast.success('Thumbnail uploaded!');
                               } catch (error) {
                                 console.error('Upload error:', error);
-                                const errorMessage = error.message || 'Failed to upload thumbnail';
-                                if (errorMessage.includes('Supabase') || errorMessage.includes('environment variables')) {
-                                  toast.error('Supabase is not configured. Please set up NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. See README for instructions.');
-                                } else {
-                                  toast.error(errorMessage);
-                                }
+                                toast.error(error.message || 'Failed to upload thumbnail');
                               } finally {
                                 setUploading(false);
                                 e.target.value = '';
@@ -714,6 +772,113 @@ export default function AdminContentClient({ initialData, user }) {
                 </div>
               </Tab.Panel>
 
+              {/* Advisory Board Tab */}
+              <Tab.Panel>
+                <div className="space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">Advisory Board Members</h3>
+                      <p className="text-sm text-gray-500">Showcase key leadership roles like Chairman, Secretary, etc.</p>
+                    </div>
+                    <button
+                      onClick={() => addItem('advisory')}
+                      className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      <Plus size={18} />
+                      <span>Add Member</span>
+                    </button>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {(data.advisory || []).map((member, i) => (
+                      <div key={member._id || i} className="border-2 border-gray-200 rounded-lg p-5 space-y-4 hover:border-green-500 transition-colors bg-white shadow-sm">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 relative border-2 border-dashed border-gray-200">
+                            {member.image ? (
+                              <Image src={member.image} alt={member.name || 'Member photo'} fill className="object-cover" />
+                            ) : (
+                              <span className="text-xs text-gray-400 flex items-center justify-center h-full">No photo</span>
+                            )}
+                          </div>
+                          <div className="flex-1 space-y-3">
+                            <div>
+                              <label className="text-xs uppercase text-gray-500 block mb-1">Name</label>
+                              <input
+                                value={member.name || ''}
+                                onChange={(e) => updateItem('advisory', i, 'name', e.target.value)}
+                                placeholder="Member name"
+                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs uppercase text-gray-500 block mb-1">Role / Position</label>
+                              <input
+                                value={member.role || ''}
+                                onChange={(e) => updateItem('advisory', i, 'role', e.target.value)}
+                                placeholder="e.g., Chairman, Secretary"
+                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs uppercase text-gray-500 block mb-1">Display Order</label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={member.order ?? i}
+                              onChange={(e) => updateItem('advisory', i, 'order', Number(e.target.value))}
+                              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            />
+                          </div>
+                        </div>
+
+                        <label className="flex items-center cursor-pointer text-sm text-gray-600 hover:text-green-600 w-fit">
+                          <ImageIcon size={16} className="mr-2" />
+                          <span>Upload Portrait</span>
+                          <input
+                            type="file"
+                            onChange={(e) => handleImageUpload(e, 'advisory', i)}
+                            className="hidden"
+                            accept="image/*"
+                          />
+                        </label>
+
+                        <div className="flex space-x-2">
+                          {member._id && (
+                            <button
+                              onClick={() => deleteItem('advisory', member._id, i)}
+                              className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors text-sm"
+                            >
+                              <Trash2 size={14} className="inline mr-1" />
+                              Delete
+                            </button>
+                          )}
+                          <button
+                            onClick={() => removeItem('advisory', i)}
+                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors text-sm"
+                          >
+                            <X size={14} className="inline mr-1" />
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => saveItems('advisory')}
+                    disabled={saving.advisory}
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                  >
+                    <Save size={18} />
+                    <span>{saving.advisory ? 'Saving...' : 'Save Advisory Board'}</span>
+                  </button>
+                </div>
+              </Tab.Panel>
+
               {/* Gallery Tab */}
               <Tab.Panel>
                 <div className="space-y-6">
@@ -794,19 +959,36 @@ export default function AdminContentClient({ initialData, user }) {
                                     if (!file) return;
                                     try {
                                       setUploading(true);
-                                      const url = await uploadToSupabase(file);
+                                      
+                                      // Use server-side upload API (same as gallery)
+                                      const formData = new FormData();
+                                      formData.append('file', file);
+                                      formData.append('bucket', 'gallery');
+                                      
+                                      const uploadRes = await fetch('/api/upload-image', {
+                                        method: 'POST',
+                                        credentials: 'include',
+                                        body: formData
+                                      });
+                                      
+                                      const uploadResult = await uploadRes.json();
+                                      
+                                      if (!uploadRes.ok) {
+                                        if (uploadRes.status === 401) {
+                                          router.push('/admin/login');
+                                          return;
+                                        }
+                                        throw new Error(uploadResult.error || 'Failed to upload image');
+                                      }
+                                      
+                                      const url = uploadResult.url;
                                       const updated = [...(data.committees || [])];
                                       updated[ci].members[mi] = { ...updated[ci].members[mi], photo: url };
                                       setData({ ...data, committees: updated });
                                       toast.success('Photo uploaded!');
                                     } catch (error) {
                                       console.error('Upload error:', error);
-                                      const errorMessage = error.message || 'Failed to upload photo';
-                                      if (errorMessage.includes('Supabase') || errorMessage.includes('environment variables')) {
-                                        toast.error('Supabase is not configured. Please set up NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. See README for instructions.');
-                                      } else {
-                                        toast.error(errorMessage);
-                                      }
+                                      toast.error(error.message || 'Failed to upload photo');
                                     } finally {
                                       setUploading(false);
                                       e.target.value = '';

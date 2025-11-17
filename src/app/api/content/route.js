@@ -6,6 +6,7 @@ import Content from '@/models/Content';
 import Board from '@/models/Board';
 import Organization from '@/models/Organization';
 import Gallery from '@/models/Gallery';
+import AdvisoryMember from '@/models/AdvisoryMember';
 
 const verifyToken = async () => {
   const cookieStore = await cookies();
@@ -24,7 +25,8 @@ export async function GET() {
   const board = await Board.find({}).lean();
   const organizations = await Organization.find({}).lean();
   const gallery = await Gallery.find({}).sort({ uploadedAt: -1 }).lean();
-  return NextResponse.json({ content, board, organizations, gallery });
+  const advisory = await AdvisoryMember.find({}).sort({ order: 1, createdAt: -1 }).lean();
+  return NextResponse.json({ content, board, organizations, gallery, advisory });
 }
 
 export async function POST(req) {
@@ -54,6 +56,13 @@ export async function POST(req) {
         break;
       case 'gallery':
         await new Gallery(body).save();
+        break;
+      case 'advisory':
+        if (body._id) {
+          await AdvisoryMember.findByIdAndUpdate(body._id, body);
+        } else {
+          await new AdvisoryMember(body).save();
+        }
         break;
       default:
         await Content.findOneAndUpdate({}, body, { upsert: true });
@@ -85,6 +94,9 @@ export async function DELETE(req) {
         break;
       case 'gallery':
         await Gallery.findByIdAndDelete(id);
+        break;
+      case 'advisory':
+        await AdvisoryMember.findByIdAndDelete(id);
         break;
       default:
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 });

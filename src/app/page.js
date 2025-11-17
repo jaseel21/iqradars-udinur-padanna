@@ -11,6 +11,8 @@ export default function Home() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [news, setNews] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [contentData, setContentData] = useState(null);
+  const [advisoryMembers, setAdvisoryMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,11 +30,18 @@ export default function Home() {
 
   const fetchAllData = async () => {
     try {
-      const [bannerRes, newsRes, videoRes] = await Promise.all([
+      const [contentRes, bannerRes, newsRes, videoRes] = await Promise.all([
+        fetch('/api/content'),
         fetch('/api/banner'),
         fetch('/api/news'),
         fetch('/api/video'),
       ]);
+
+      if (contentRes.ok) {
+        const contentPayload = await contentRes.json();
+        setContentData(contentPayload.content || null);
+        setAdvisoryMembers(contentPayload.advisory || []);
+      }
 
       if (bannerRes.ok) {
         const bannerData = await bannerRes.json();
@@ -47,13 +56,13 @@ export default function Home() {
       if (videoRes.ok) {
         const videoData = await videoRes.json();
         setVideos(videoData.videos || []);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   const nextBanner = () => {
     setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
@@ -68,6 +77,15 @@ export default function Home() {
   const aboutIqraDars = 'Iqra Dars Udinur is a leading Islamic education institution dedicated to spreading knowledge, faith, and wisdom. We provide comprehensive Islamic education and guidance to help individuals strengthen their connection with Allah and understand the teachings of Islam.';
   const aboutUDSA = 'UDSA Organization works in partnership with Iqra Dars Udinur to support educational initiatives, community development, and social welfare programs. Together, we strive to create a positive impact in our community through faith-based education and service.';
 
+  const advisoryFallback = [
+    { name: 'Sheikh Ibrahim Kareem', role: 'Chief Patron', image: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=400&fit=crop' },
+    { name: 'Ustadh Maryam Rahman', role: 'Academic Secretary', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop' },
+    { name: 'Dr. Salman Qureshi', role: 'Executive Director', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop' },
+    { name: 'Amina Abdul Wahid', role: 'Community Chair', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop' },
+  ];
+
+  const advisoryList = advisoryMembers.length > 0 ? advisoryMembers : advisoryFallback;
+
   const latestNews = news.length > 0 ? news[0] : null;
   const previousNews = news.slice(1);
 
@@ -80,6 +98,9 @@ export default function Home() {
     const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
     return match ? match[1] : null;
   };
+
+  const heroDescription = contentData?.description || aboutIqraDars;
+  const missionStatement = contentData?.mission || staticMission;
 
   if (loading) {
     return (
@@ -150,10 +171,10 @@ export default function Home() {
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-r from-green-600 via-green-700 to-green-600">
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-            }}></div>
-          </div>
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+        </div>
         )}
         
         <div className="relative z-10 max-w-5xl mx-auto space-y-8">
@@ -171,7 +192,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed"
           >
-            {aboutIqraDars}
+            {heroDescription}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -223,7 +244,7 @@ export default function Home() {
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{aboutUDSA}</p>
           </motion.div>
 
-          <motion.div
+            <motion.div
             whileHover={{ scale: 1.02 }}
             className="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow"
           >
@@ -233,8 +254,37 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold font-amiri text-gray-800 dark:text-gray-100">Our Mission</h3>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{staticMission}</p>
-          </motion.div>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{missionStatement}</p>
+            </motion.div>
+        </div>
+      </AnimatedSection>
+
+      {/* Advisory Board Section */}
+      <AnimatedSection title="Advisory Board" className="py-16 bg-white dark:bg-gray-900">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <p className="text-gray-600 dark:text-gray-300">
+            Guided by respected scholars and administrators who provide strategic direction for Iqra Dars Udinur.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {advisoryList.map((member, index) => (
+            <motion.div
+              key={member._id || index}
+              whileHover={{ y: -6 }}
+              className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm hover:shadow-lg transition-shadow p-6 text-center"
+            >
+              <div className="relative w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-green-100 dark:border-green-800 mb-4">
+                <Image
+                  src={member.image || 'https://via.placeholder.com/200'}
+                  alt={member.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{member.name}</h4>
+              <p className="text-green-600 dark:text-green-400 font-medium">{member.role}</p>
+            </motion.div>
+          ))}
         </div>
       </AnimatedSection>
 
@@ -305,10 +355,10 @@ export default function Home() {
                         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
                           {item.content.replace(/<[^>]*>/g, '').substring(0, 100)}...
                         </p>
-                      </div>
-                    </div>
+            </div>
+          </div>
                   </motion.div>
-                </Link>
+            </Link>
               ))
             ) : (
               <p className="text-gray-600 dark:text-gray-400 text-sm">No previous news</p>
@@ -346,7 +396,7 @@ export default function Home() {
               <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-12 text-center">
                 <Play size={48} className="mx-auto text-gray-400 mb-4" />
                 <p className="text-gray-600 dark:text-gray-400">No videos available yet</p>
-              </div>
+            </div>
             )}
           </div>
 

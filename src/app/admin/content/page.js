@@ -9,6 +9,7 @@ import Banner from '@/models/Banner';
 import News from '@/models/News';
 import Video from '@/models/Video';
 import Committee from '@/models/Committee';
+import AdvisoryMember from '@/models/AdvisoryMember';
 import AdminContentClient from './AdminContentClient';
 
 const verifyToken = (token) => {
@@ -38,6 +39,7 @@ export default async function AdminContentPage() {
   const news = await News.find({}).sort({ publishedAt: -1 }).lean();
   const videos = await Video.find({}).sort({ order: 1, createdAt: -1 }).lean();
   const committees = await Committee.find({}).lean();
+  const advisory = await AdvisoryMember.find({}).sort({ order: 1, createdAt: -1 }).lean();
 
   // Ensure all data is properly serialized as plain objects
   const initialData = {
@@ -61,6 +63,7 @@ export default async function AdminContentPage() {
     news: news ? JSON.parse(JSON.stringify(news)) : [],
     videos: videos ? JSON.parse(JSON.stringify(videos)) : [],
     committees: committees ? JSON.parse(JSON.stringify(committees)) : [],
+    advisory: advisory ? JSON.parse(JSON.stringify(advisory)) : [],
   };
 
   return <AdminContentClient initialData={initialData} user={user} />;
