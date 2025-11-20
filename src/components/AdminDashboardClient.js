@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon, Users, Building2 } from 'lucide-react';
+import { Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon, Users, Building2, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminDashboardClient({ user }) {
@@ -44,6 +44,14 @@ export default function AdminDashboardClient({ user }) {
       icon: FileText,
       color: 'from-green-500 to-green-600',
       hoverColor: 'hover:from-green-600 hover:to-green-700'
+    },
+    {
+      title: 'Manage Articles & Poems',
+      description: 'Publish multilingual articles and poetry with ease',
+      href: '/admin/articles',
+      icon: BookOpen,
+      color: 'from-purple-500 to-purple-600',
+      hoverColor: 'hover:from-purple-600 hover:to-purple-700'
     },
   ];
 
