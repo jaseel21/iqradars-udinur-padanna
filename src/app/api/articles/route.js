@@ -29,10 +29,16 @@ export async function GET(request) {
   const limit = parseInt(searchParams.get('limit') || '0', 10);
   const type = searchParams.get('type');
   const language = searchParams.get('language');
+  const status = searchParams.get('status');
 
   const query = {};
   if (type) query.type = type;
   if (language) query.language = language;
+  if (status && status !== 'all') {
+    query.status = status;
+  } else if (!status) {
+    query.status = 'published';
+  }
 
   const cursor = Article.find(query).sort({ createdAt: -1 });
   if (limit) cursor.limit(limit);
@@ -55,6 +61,7 @@ export async function POST(request) {
     const article = await Article.create({
       ...payload,
       slug,
+      status: payload.status || 'draft',
     });
 
     return NextResponse.json({ article });
@@ -112,3 +119,33 @@ export async function DELETE(request) {
   }
 }
 
+export async function PATCH(request) {
+  try {
+    await connectDB();
+    const { id, action } = await request.json();
+    if (!id || !action) {
+      return NextResponse.json({ error: 'Article ID and action are required' }, { status: 400 });
+    }
+
+    const update =
+      action === 'like'
+        ? { $inc: { likes: 1 } }
+        : action === 'view'
+        ? { $inc: { views: 1 } }
+        : null;
+
+    if (!update) {
+      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    }
+
+    const article = await Article.findByIdAndUpdate(id, update, { new: true }).lean();
+    if (!article) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ likes: article.likes, views: article.views });
+  } catch (error) {
+    console.error('Article PATCH error:', error);
+    return NextResponse.json({ error: 'Failed to update article metadata' }, { status: 500 });
+  }
+}

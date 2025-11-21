@@ -10,6 +10,7 @@ export const metadata = {
 const fallbackArticles = [
   {
     _id: 'fallback-article',
+    isPlaceholder: true,
     title: 'Echoes of Devotion',
     subtitle: 'Meditations on faith and community',
     author: 'Editorial Team',
@@ -18,9 +19,12 @@ const fallbackArticles = [
     bannerUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800',
     content: 'In every gathering of remembrance there is a revival of the soul...',
     createdAt: new Date().toISOString(),
+    likes: 0,
+    views: 0,
   },
   {
     _id: 'fallback-poem',
+    isPlaceholder: true,
     title: 'روح کی سرگوشی',
     subtitle: 'An Urdu poem for seekers',
     author: 'Fatimah Noor',
@@ -29,12 +33,14 @@ const fallbackArticles = [
     bannerUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&blend=000000',
     content: 'چاندنی شب میں دل کی صدائیں...',
     createdAt: new Date().toISOString(),
+    likes: 0,
+    views: 0,
   },
 ];
 
 export default async function ArticlesPage() {
   await connectDB();
-  const articles = await Article.find({}).sort({ createdAt: -1 }).lean();
+  const articles = await Article.find({ status: 'published' }).sort({ createdAt: -1 }).lean();
   const serialized = JSON.parse(JSON.stringify(articles));
 
   return <ArticlesShowcase articles={serialized.length ? serialized : fallbackArticles} />;

@@ -12,6 +12,9 @@ const articleSchema = new mongoose.Schema(
     content: { type: String, required: true },
     type: { type: String, enum: ['article', 'poem'], default: 'article' },
     tags: [String],
+    status: { type: String, enum: ['draft', 'published'], default: 'draft' },
+    likes: { type: Number, default: 0 },
+    views: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

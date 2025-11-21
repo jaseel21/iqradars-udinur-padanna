@@ -15,6 +15,7 @@ const defaultArticle = {
   bannerUrl: '',
   content: '',
   tags: '',
+  status: 'draft',
 };
 
 const fontOptions = [
@@ -26,6 +27,10 @@ const fontOptions = [
 ];
 
 const languageOptions = ['English', 'Arabic', 'Malayalam', 'Urdu', 'Tamil', 'Hindi'];
+const statusOptions = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'published', label: 'Published' },
+];
 
 export default function AdminArticlesClient({ initialArticles = [] }) {
   const [articles, setArticles] = useState(initialArticles);
@@ -33,6 +38,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [statusUpdatingId, setStatusUpdatingId] = useState(null);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -118,6 +124,39 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
     }
   };
 
+  const handleStatusToggle = async (article) => {
+    if (!article?._id) return;
+    const nextStatus = article.status === 'published' ? 'draft' : 'published';
+    setStatusUpdatingId(article._id);
+    try {
+      const res = await fetch('/api/articles', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ _id: article._id, status: nextStatus }),
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          window.location.href = '/admin/login';
+          return;
+        }
+        throw new Error('Failed to update status');
+      }
+
+      const data = await res.json();
+      setArticles((prev) => prev.map((a) => (a._id === article._id ? data.article : a)));
+      toast.success(
+        nextStatus === 'published' ? 'Article published publicly' : 'Article moved to drafts'
+      );
+    } catch (error) {
+      console.error('Status change error', error);
+      toast.error(error.message || 'Unable to update status');
+    } finally {
+      setStatusUpdatingId(null);
+    }
+  };
+
   const handleEdit = (article) => {
     setForm({
       title: article.title || '',
@@ -129,6 +168,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
       bannerUrl: article.bannerUrl || '',
       content: article.content || '',
       tags: article.tags?.join(', ') || '',
+      status: article.status || 'draft',
     });
     setEditingId(article._id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -263,6 +303,23 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                       <option value="poem">Poem</option>
                     </select>
                   </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-2 block">Status</label>
+                    <select
+                      value={form.status || 'draft'}
+                      onChange={(e) => handleChange('status', e.target.value)}
+                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      {statusOptions.map((status) => (
+                        <option key={status.value} value={status.value}>
+                          {status.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Draft articles stay private until you set status to Published.
+                    </p>
+                  </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-600 mb-2 block">Tags</label>
@@ -359,14 +416,50 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
               {articles.map((article) => (
                 <div
                   key={article._id}
-                  className="border-2 border-gray-100 rounded-xl p-5 hover:border-green-400 transition group flex flex-col"
+                  className="border-2 border-gray-100 rounded-xl p-5 hover:border-green-400 transition group flex flex-col space-y-3"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs uppercase tracking-wide text-gray-500">
-                      {article.type} · {article.language}
+                  <div className="flex items-center justify-between">
+                    <div className="space-x-2 text-xs uppercase tracking-wide text-gray-500">
+                      <span>{article.type}</span>
+                      <span>· {article.language}</span>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        article.status === 'published'
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'bg-amber-50 text-amber-700'
+                      }`}
+                    >
+                      {article.status === 'published' ? 'Published' : 'Draft'}
                     </span>
-                    <span className="text-xs text-gray-400">
-                      {new Date(article.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-400">
+                    <span>{new Date(article.createdAt).toLocaleDateString()}</span>
+                    <span className="flex items-center gap-4">
+                      <span className="flex items-center space-x-1">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M12 21c-4.2-3.2-7-6.1-7-9.8a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 3.7-2.8 6.6-7 9.8Z"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span>{article.likes || 0}</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span>{article.views || 0}</span>
+                      </span>
                     </span>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
@@ -377,12 +470,27 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                   </p>
                   <p className="text-xs text-gray-400 mb-4">By {article.author || 'Editorial Team'}</p>
 
-                  <div className="mt-auto flex items-center gap-3">
+                  <div className="mt-auto flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => handleEdit(article)}
                       className="flex-1 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition text-sm font-medium"
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() => handleStatusToggle(article)}
+                      disabled={statusUpdatingId === article._id}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
+                        article.status === 'published'
+                          ? 'text-amber-700 border-amber-200 hover:bg-amber-50'
+                          : 'text-emerald-700 border-emerald-200 hover:bg-emerald-50'
+                      }`}
+                    >
+                      {statusUpdatingId === article._id
+                        ? 'Updating...'
+                        : article.status === 'published'
+                        ? 'Move to Draft'
+                        : 'Publish'}
                     </button>
                     <button
                       onClick={() => handleDelete(article._id)}

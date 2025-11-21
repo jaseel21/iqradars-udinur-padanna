@@ -55,21 +55,21 @@ function AdminNavbar() {
                 <span className="text-lg font-semibold text-gray-900">Admin Panel</span>
                 <span className="text-xs text-gray-500">Management System</span>
               </div>
-            </Link>
+          </Link>
 
             {/* Desktop Admin Controls */}
             <div className="hidden lg:flex items-center space-x-6">
               {adminMenuItems.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+              <Link
+                key={item.href}
+                href={item.href}
                     className="flex items-center space-x-2 text-gray-700 hover:text-emerald-600 transition-colors font-medium"
-                  >
+              >
                     <Icon size={16} />
                     <span>{item.label}</span>
-                  </Link>
+              </Link>
                 );
               })}
 
@@ -98,7 +98,7 @@ function AdminNavbar() {
                 <LogOut size={16} />
                 <span>Logout</span>
               </motion.button>
-            </div>
+          </div>
 
             {/* Mobile Admin Controls */}
             <div className="lg:hidden flex items-center space-x-3">
@@ -116,7 +116,7 @@ function AdminNavbar() {
               </motion.button>
 
               <motion.button
-                onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(!isOpen)}
                 className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
                 whileTap={{ scale: 0.9 }}
                 aria-label="Toggle admin menu"
@@ -135,7 +135,7 @@ function AdminNavbar() {
         <AnimatePresence>
           {isOpen && (
             <>
-              <motion.div
+            <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -169,9 +169,9 @@ function AdminNavbar() {
                   {adminMenuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
+                  <Link
+                    key={item.href}
+                    href={item.href}
                         className="flex items-center space-x-4 px-4 py-3 rounded-lg font-medium transition-all text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                       >
@@ -179,7 +179,7 @@ function AdminNavbar() {
                           <Icon size={18} className="text-gray-600" />
                         </div>
                         <span className="flex-1">{item.label}</span>
-                      </Link>
+                  </Link>
                     );
                   })}
                 </div>
@@ -330,7 +330,7 @@ export default function Header() {
                   </motion.div>
                 </motion.button>
               </div>
-            </div>
+              </div>
 
             {/* Mobile Controls */}
             <div className="lg:hidden flex items-center space-x-3">
@@ -369,9 +369,9 @@ export default function Header() {
                       transition={{ duration: 0.2 }}
                     >
                       <Menu size={20} className="text-gray-600" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
               </motion.button>
             </div>
           </div>
@@ -455,12 +455,12 @@ export default function Header() {
                       <Moon size={18} className="text-gray-600" />
                     )}
                   </motion.button>
-                </div>
+      </div>
               </motion.aside>
             </>
           )}
         </AnimatePresence>
-      </nav>
+    </nav>
       
       {/* Spacer to prevent content from going under fixed header */}
       <div className="h-16"></div>
