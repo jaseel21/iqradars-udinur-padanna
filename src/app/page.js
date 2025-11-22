@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { ArrowRight, BookOpen, Users, Target, Newspaper, Play, ChevronLeft, ChevronRight, Feather, Heart, Eye } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Target, Newspaper, Play, ChevronLeft, ChevronRight, Feather, Heart, Eye, X } from 'lucide-react';
 
 export default function Home() {
   const [banners, setBanners] = useState([]);
@@ -12,6 +12,8 @@ export default function Home() {
   const [news, setNews] = useState([]);
   const [videos, setVideos] = useState([]);
   const [contentData, setContentData] = useState(null);
+    const [selectedArticle, setSelectedArticle] = useState(null);
+  
   const [advisoryMembers, setAdvisoryMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
@@ -28,9 +30,7 @@ export default function Home() {
     const viewed = JSON.parse(localStorage.getItem('viewedArticles') || '[]');
     setLikedArticleIds(liked);
     setViewedArticleIds(viewed);
-  }, []);
-
-  useEffect(() => {
+  }, []);  useEffect(() => {
     if (banners.length > 0) {
       const interval = setInterval(() => {
         setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
@@ -98,45 +98,18 @@ export default function Home() {
     {
       _id: 'placeholder-1',
       isPlaceholder: true,
-      title: 'Echoes of Faith',
-      subtitle: 'Contemplations on resilience and gratitude',
-      author: 'Sheikh Amjad Kareem',
+      title: 'empty',
+      subtitle: 'This feild is emppty',
+      author: 'no auther asigned',
       language: 'English',
       type: 'article',
-      bannerUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=960&h=640&fit=crop',
+      bannerUrl: 'https://images.unsplash.com/photo-14694749680s28-56623f02e42e?w=960&h=640&fit=crop',
       content: 'In the quiet hours before dawn, hearts awaken with remembrance and gratitude...',
       createdAt: new Date().toISOString(),
       likes: 0,
       views: 0,
     },
-    {
-      _id: 'placeholder-2',
-      isPlaceholder: true,
-      title: 'പ്രണയത്തിന്റെ മൊഴികൾ',
-      subtitle: 'മലയാള കവിതാ സമർപ്പണം',
-      author: 'Fathima Rahman',
-      language: 'Malayalam',
-      type: 'poem',
-      bannerUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=960&h=640&fit=crop',
-      content: 'സ്വപ്നങ്ങൾ തുറക്കുന്ന കവിത, പ്രണയത്തിന്റെ മിഴികൾ...',
-      createdAt: new Date().toISOString(),
-      likes: 0,
-      views: 0,
-    },
-    {
-      _id: 'placeholder-3',
-      isPlaceholder: true,
-      title: 'Verses in Velvet Night',
-      subtitle: 'An Urdu ode to the seeker',
-      author: 'Dr. Saifuddin',
-      language: 'Urdu',
-      type: 'poem',
-      bannerUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=960&h=640&fit=crop',
-      content: 'رات کے دامن میں چھپے چراغ...',
-      createdAt: new Date().toISOString(),
-      likes: 0,
-      views: 0,
-    },
+    
   ];
 
   const articleList = articles.length > 0 ? articles : placeholderArticles;
@@ -144,10 +117,8 @@ export default function Home() {
   const supportingArticles = articleList.slice(1, 4);
 
   const advisoryFallback = [
-    { name: 'Sheikh Ibrahim Kareem', role: 'Chief Patron', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop' },
-    { name: 'Ustadh Maryam Rahman', role: 'Academic Secretary', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop' },
-    { name: 'Dr. Salman Qureshi', role: 'Executive Director', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop' },
-    { name: 'Amina Abdul Wahid', role: 'Community Chair', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop' },
+    { name: 'Sheikh Ibrahim Kareem', role: 'Chief Patron', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crowp' },
+    
   ];
 
   const advisoryList = advisoryMembers.length > 0 ? advisoryMembers : advisoryFallback;
@@ -256,7 +227,8 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <div className="min-h-screen bg-white">
       {/* Hero Banner Section */}
       <section className="relative h-[85vh] flex items-center justify-center text-white overflow-hidden">
         {banners.length > 0 ? (
@@ -440,12 +412,16 @@ export default function Home() {
 
       <div className="space-y-4">
         {supportingArticles.map((article) => (
-          <div
+          <motion.div
+            layout
             key={article._id || article.slug || article.title}
-            className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 hover:border-emerald-300 transition flex flex-col"
+            className={`bg-white rounded-2xl border border-emerald-50 overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col ${
+              isRTL(article.language) ? 'text-right' : 'text-left'
+            }`}
+            dir={isRTL(article.language) ? 'rtl' : 'ltr'}
           >
             {article.bannerUrl && (
-              <div className="relative w-full h-32">
+              <div className="relative w-full h-40">
                 <Image
                   src={article.bannerUrl}
                   alt={article.title}
@@ -454,53 +430,55 @@ export default function Home() {
                 />
               </div>
             )}
-            <div
-              className={`p-5 flex flex-col flex-1 ${
-                isRTL(article.language) ? 'text-right' : 'text-left'
-              }`}
-              dir={isRTL(article.language) ? 'rtl' : 'ltr'}
-            >
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                <span className="uppercase tracking-[0.4em]">{article.type}</span>
+            <div className="p-6 flex flex-col flex-1">
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                <span className="uppercase tracking-[0.3em] text-gray-400">{article.type}</span>
                 <span>{formatArticleDate(article.createdAt)}</span>
               </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                {article.title}
-              </h4>
-              <p className="text-sm text-gray-600 line-clamp-3 flex-1 mb-3">
-                {article.content?.slice(0, 150)}...
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{article.title}</h3>
+              {article.subtitle && (
+                <p className="text-gray-500 text-sm mb-3">{article.subtitle}</p>
+              )}
+              <p className="text-gray-600 text-sm line-clamp-4 flex-1">
+                {article.content?.slice(0, 300)}...
               </p>
-              <div className="flex items-center justify-between text-xs">
-                <p className="text-gray-400">By {article.author || 'Editorial Team'}</p>
-                <div className="text-emerald-600 font-semibold flex items-center space-x-1">
-                  <Feather size={14} />
-                  <span>{article.language}</span>
+              <div className="mt-4 flex items-center justify-between text-sm text-gray-500 flex-wrap gap-3">
+                <span>By {article.author || 'Editorial Team'}</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleArticleLike(article)}
+                    disabled={!article._id || article.isPlaceholder || hasLikedArticle(article._id)}
+                    className={`inline-flex items-center space-x-1 px-3 py-1.5 rounded-full border ${
+                      hasLikedArticle(article._id)
+                        ? 'bg-emerald-50 text-emerald-700 border-transparent'
+                        : 'border-emerald-100 text-emerald-600 hover:bg-emerald-50'
+                    }`}
+                  >
+                    <Heart
+                      size={14}
+                      fill={article._id && hasLikedArticle(article._id) ? 'currentColor' : 'none'}
+                    />
+                    <span>{formatCount(article.likes)}</span>
+                  </button>
+                  <span className="inline-flex items-center space-x-1 text-gray-500">
+                    <Eye size={14} />
+                    <span>{formatCount(article.views)}</span>
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedArticle(article);
+                      handleArticleView(article);
+                    }}
+                    className="text-emerald-600 font-semibold hover:text-emerald-700 inline-flex items-center space-x-2"
+                  >
+                    <span>Read</span>
+                    <Feather size={16} />
+                  </button>
                 </div>
               </div>
-              <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
-                <button
-                  type="button"
-                  onClick={() => handleArticleLike(article)}
-                disabled={!article._id || article.isPlaceholder || hasLikedArticle(article._id)}
-                  className={`inline-flex items-center space-x-1 px-3 py-1.5 rounded-full border ${
-                    hasLikedArticle(article._id)
-                      ? 'bg-emerald-50 text-emerald-700 border-transparent'
-                      : 'border-emerald-100 text-emerald-600 hover:bg-emerald-50'
-                  }`}
-                >
-                  <Heart
-                    size={14}
-                    fill={article._id && hasLikedArticle(article._id) ? 'currentColor' : 'none'}
-                  />
-                  <span>{formatCount(article.likes)}</span>
-                </button>
-                <span className="inline-flex items-center space-x-1">
-                  <Eye size={14} />
-                  <span>{formatCount(article.views)}</span>
-                </span>
-              </div>
             </div>
-          </div>
+          </motion.div>
         ))}
         {supportingArticles.length < 3 && (
           <div className="bg-gray-50 rounded-2xl p-6 border border-dashed border-emerald-200 flex flex-col justify-center items-start space-y-3 h-64">
@@ -756,5 +734,105 @@ export default function Home() {
         </div>
       </section>
     </div>
+
+    <AnimatePresence>
+      {selectedArticle && (
+        <motion.div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            {selectedArticle.bannerUrl && (
+              <div className="h-56 w-full overflow-hidden rounded-t-3xl">
+                <Image
+                  src={selectedArticle.bannerUrl}
+                  alt={selectedArticle.title}
+                  width={960}
+                  height={224}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <div
+              className={`p-8 space-y-4 ${
+                isRTL(selectedArticle.language) ? 'text-right' : 'text-left'
+              }`}
+              dir={isRTL(selectedArticle.language) ? 'rtl' : 'ltr'}
+            >
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <span>{selectedArticle.language}</span>
+                <span>{formatArticleDate(selectedArticle.createdAt)}</span>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.4em] text-gray-400 mb-2">
+                  {selectedArticle.type}
+                </p>
+                <h2 className="text-3xl font-bold text-gray-900">{selectedArticle.title}</h2>
+                {selectedArticle.subtitle && (
+                  <p className="text-gray-500 mt-2">{selectedArticle.subtitle}</p>
+                )}
+              </div>
+              <p className="text-sm text-gray-500">By {selectedArticle.author || 'Editorial Team'}</p>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                <button
+                  type="button"
+                  onClick={() => handleArticleLike(selectedArticle)}
+                  disabled={
+                    !selectedArticle._id ||
+                    selectedArticle.isPlaceholder ||
+                    hasLikedArticle(selectedArticle._id)
+                  }
+                  className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full border ${
+                    hasLikedArticle(selectedArticle._id)
+                      ? 'bg-emerald-50 text-emerald-700 border-transparent'
+                      : 'border-emerald-100 text-emerald-600 hover:bg-emerald-50'
+                  }`}
+                >
+                  <Heart
+                    size={16}
+                    fill={
+                      selectedArticle._id && hasLikedArticle(selectedArticle._id)
+                        ? 'currentColor'
+                        : 'none'
+                    }
+                  />
+                  <span>{formatCount(selectedArticle.likes)}</span>
+                </button>
+                <span className="inline-flex items-center space-x-2">
+                  <Eye size={16} />
+                  <span>{formatCount(selectedArticle.views)}</span>
+                </span>
+              </div>
+              <div
+                className="text-lg text-gray-800 whitespace-pre-line leading-relaxed"
+                style={{
+                  direction: isRTL(selectedArticle.language) ? 'rtl' : 'ltr',
+                  textAlign: isRTL(selectedArticle.language) ? 'right' : 'left',
+                }}
+              >
+                {selectedArticle.content}
+              </div>
+              <div className="flex flex-wrap items-center gap-3 pt-4">
+                <button
+                  onClick={() => setSelectedArticle(null)}
+                  className="ml-auto flex items-center space-x-2 text-sm text-gray-500 hover:text-gray-700"
+                >
+                  <X size={16} />
+                  <span>Close</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
