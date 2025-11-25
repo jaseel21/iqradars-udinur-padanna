@@ -1,212 +1,190 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone, Send, ArrowRight, Youtube, Linkedin } from 'lucide-react';
+import { 
+  Facebook, Instagram, Twitter, Youtube, 
+  Mail, MapPin, Phone, ArrowRight, Send, 
+  ShieldCheck, Heart, ExternalLink 
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image'; // Make sure to use this if you have a real logo
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
-    main: [
-      { href: '/', label: 'Home' },
-      { href: '/articles', label: 'Articles' },
-      { href: '/organizations', label: 'Organizations' },
-      { href: '/gallery', label: 'Gallery' },
-      { href: '/board', label: 'Board' },
+    academics: [
+      { href: '/articles', label: 'Library & Articles' },
+      { href: '/courses', label: 'Academic Programs' },
+      { href: '/gallery', label: 'Student Gallery' },
+      { href: '/admissions', label: 'Admission Policy' },
     ],
-    about: [
-      { href: '/contact', label: 'Contact' },
-      { href: '/location', label: 'Location' },
+    institution: [
       { href: '/about', label: 'About Us' },
-      { href: '/events', label: 'Events' },
+      { href: '/organizations', label: 'Organizations' },
+      { href: '/board', label: 'Advisory Board' },
+      { href: '/careers', label: 'Careers' },
     ],
     legal: [
       { href: '/privacy', label: 'Privacy Policy' },
-      { href: '/terms', label: 'Terms of Service' },
-      { href: '/cookies', label: 'Cookie Policy' },
+      { href: '/terms', label: 'Terms of Use' },
+      { href: '/sitemap', label: 'Sitemap' },
     ],
   };
 
   const socialLinks = [
-    { icon: Facebook, href: 'https://facebook.com/iqradars', label: 'Facebook', color: 'hover:bg-blue-600' },
-    { icon: Instagram, href: 'https://instagram.com/iqradars', label: 'Instagram', color: 'hover:bg-pink-600' },
-    { icon: Twitter, href: 'https://twitter.com/iqradars', label: 'Twitter', color: 'hover:bg-sky-500' },
-    { icon: Youtube, href: 'https://youtube.com/iqradars', label: 'Youtube', color: 'hover:bg-red-600' },
+    { icon: Facebook, href: '#', label: 'Facebook' },
+    { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Instagram, href: '#', label: 'Instagram' },
+    { icon: Youtube, href: '#', label: 'Youtube' },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
-    <footer className="relative bg-gradient-to-b from-gray-50 to-white border-t border-gray-100 mt-24">
-      {/* Decorative Top Border */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600"></div>
+    <footer className="bg-slate-50 border-t border-slate-200 pt-20 pb-12 font-sans relative overflow-hidden text-slate-600">
       
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-12">
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12"
-        >
-          {/* Brand Section - Takes more space */}
-          <motion.div variants={itemVariants} className="lg:col-span-4">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl blur opacity-30"></div>
-                <div className="relative bg-gradient-to-br from-emerald-600 to-teal-600 p-2.5 rounded-xl shadow-md">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      {/* Subtle Background Pattern */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        
+        {/* TOP SECTION: Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 mb-16">
+          
+          {/* 1. BRAND & NEWSLETTER (4 cols) */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Brand Logo */}
+            <Link href="/" className="inline-block group">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200 group-hover:bg-emerald-700 transition-colors">
+                  {/* SVG Logo Placeholder */}
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 leading-none">Iqra Dars</h3>
+                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Udinur & Padne</span>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                Iqra Dars Udinur
-              </h3>
-            </div>
-            <p className="text-gray-600 leading-relaxed mb-6 text-sm">
-              Dedicated to spreading Islamic knowledge, faith, and wisdom. Empowering the Muslim community through quality education and spiritual guidance.
+            </Link>
+
+            <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
+              An institution dedicated to preserving Islamic heritage while fostering academic excellence. Join our community of knowledge seekers.
             </p>
+
+            {/* Newsletter Box */}
+            <div className="p-1">
+               <h4 className="text-sm font-bold text-slate-900 mb-3">Subscribe to updates</h4>
+               <form className="flex gap-2">
+                 <input 
+                   type="email" 
+                   placeholder="Email address" 
+                   className="flex-1 bg-white border border-slate-200 text-slate-900 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-sm transition-all"
+                 />
+                 <button className="bg-slate-900 hover:bg-emerald-600 text-white p-2.5 rounded-lg transition-colors shadow-md">
+                   <ArrowRight size={18} />
+                 </button>
+               </form>
+               <p className="text-[10px] text-slate-400 mt-2">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+          </div>
+
+          {/* 2. LINKS COLUMNS (2 cols each) */}
+          <div className="lg:col-span-2 md:col-span-4">
+             <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Academics</h4>
+             <ul className="space-y-3">
+                {footerLinks.academics.map((link, i) => (
+                  <li key={i}>
+                    <Link href={link.href} className="text-sm text-slate-500 hover:text-emerald-700 hover:translate-x-1 transition-all inline-flex items-center gap-1">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+             </ul>
+          </div>
+
+          <div className="lg:col-span-2 md:col-span-4">
+             <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Institution</h4>
+             <ul className="space-y-3">
+                {footerLinks.institution.map((link, i) => (
+                  <li key={i}>
+                    <Link href={link.href} className="text-sm text-slate-500 hover:text-emerald-700 hover:translate-x-1 transition-all inline-block">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+             </ul>
+          </div>
+
+          {/* 3. CONTACT INFO (4 cols) */}
+          <div className="lg:col-span-4 space-y-8">
+            <div>
+               <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Contact Us</h4>
+               <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600 mt-0.5">
+                       <MapPin size={16} />
+                    </div>
+                    <span className="text-sm text-slate-600 leading-relaxed">
+                      Iqra Dars Campus,<br />
+                      Udinur, Kasaragod District,<br />
+                      Kerala, India - 671310
+                    </span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
+                       <Phone size={16} />
+                    </div>
+                    <a href="tel:+919876543210" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">+91 987 654 3210</a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
+                       <Mail size={16} />
+                    </div>
+                    <a href="mailto:info@iqradars.edu" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">info@iqradars.edu</a>
+                  </li>
+               </ul>
+            </div>
             
-            {/* Social Links */}
-            <div className="flex space-x-3">
-              {socialLinks.map((social, index) => {
-                const Icon = social.icon;
-                return (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    whileHover={{ y: -3, scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`group relative bg-gray-100 p-3 rounded-xl text-emerald-600 hover:text-white transition-all ${social.color}`}
-                  >
-                    <Icon size={18} className="text-current" />
-                  </motion.a>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Quick Links */}
-          <motion.div variants={itemVariants} className="lg:col-span-2">
-            <h4 className="text-lg font-bold text-gray-900 mb-6 relative inline-block">
-              Quick Links
-              <span className="absolute bottom-0 left-0 w-12 h-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full"></span>
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.main.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="group text-gray-600 hover:text-emerald-600 transition-colors flex items-center space-x-2 text-sm"
-                  >
-                    <ArrowRight size={14} className="text-emerald-600 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                    <span>{link.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* About */}
-          <motion.div variants={itemVariants} className="lg:col-span-2">
-            <h4 className="text-lg font-bold text-gray-900 mb-6 relative inline-block">
-              About
-              <span className="absolute bottom-0 left-0 w-12 h-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full"></span>
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.about.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="group text-gray-600 hover:text-emerald-600 transition-colors flex items-center space-x-2 text-sm"
-                  >
-                    <ArrowRight size={14} className="text-emerald-600 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                    <span>{link.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div variants={itemVariants} className="lg:col-span-4">
-            <h4 className="text-lg font-bold text-gray-900 mb-6 relative inline-block">
-              Contact Us
-              <span className="absolute bottom-0 left-0 w-12 h-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full"></span>
-            </h4>
-            <ul className="space-y-4">
-              <li className="flex items-start space-x-3 text-gray-600">
-                <div className="bg-emerald-50 p-2 rounded-lg">
-                  <MapPin size={18} className="text-emerald-600 flex-shrink-0" />
-                </div>
-                <span className="text-sm leading-relaxed">
-                  123 Islamic Education Street<br />
-                  Udinur District, City, Country
-                </span>
-              </li>
-              <li className="flex items-center space-x-3 text-gray-600">
-                <div className="bg-emerald-50 p-2 rounded-lg">
-                  <Mail size={18} className="text-emerald-600 flex-shrink-0" />
-                </div>
-                <a href="mailto:info@iqradars.edu" className="hover:text-emerald-600 transition-colors text-sm">
-                  info@iqradars.edu
-                </a>
-              </li>
-              <li className="flex items-center space-x-3 text-gray-600">
-                <div className="bg-emerald-50 p-2 rounded-lg">
-                  <Phone size={18} className="text-emerald-600 flex-shrink-0" />
-                </div>
-                <a href="tel:+1234567890" className="hover:text-emerald-600 transition-colors text-sm">
-                  +1 (234) 567-890
-                </a>
-              </li>
-            </ul>
-          </motion.div>
-        </motion.div>
-
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-600 text-sm text-center md:text-left">
-              <p>
-                &copy; {currentYear} <span className="font-semibold text-gray-900">Iqra Dars Udinur</span>. All rights reserved.
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center md:justify-end gap-6 text-sm">
-              {footerLinks.legal.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="text-gray-600 hover:text-emerald-600 transition-colors relative group"
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 group-hover:w-full transition-all"></span>
-                </a>
-              ))}
+            <div>
+               <h4 className="text-slate-900 font-bold mb-4 text-xs uppercase tracking-wide">Follow Us</h4>
+               <div className="flex gap-3">
+                  {socialLinks.map((social, idx) => (
+                    <a
+                      key={idx}
+                      href={social.href}
+                      className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300"
+                      aria-label={social.label}
+                    >
+                      <social.icon size={18} />
+                    </a>
+                  ))}
+               </div>
             </div>
           </div>
         </div>
+
+        {/* BOTTOM BAR: Separator & Copyright */}
+        <div className="border-t border-slate-200 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+             <p className="text-xs text-slate-400 font-medium text-center md:text-left">
+               &copy; {currentYear} Iqra Dars Udinur.
+             </p>
+             <div className="flex gap-4">
+               {footerLinks.legal.map((link, i) => (
+                 <Link key={i} href={link.href} className="text-xs text-slate-400 hover:text-emerald-700 transition-colors">
+                   {link.label}
+                 </Link>
+               ))}
+             </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs text-slate-400 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
+             <ShieldCheck size={12} className="text-emerald-600" />
+             <span>Registered Educational Institution</span>
+          </div>
+        </div>
+
       </div>
     </footer>
   );
