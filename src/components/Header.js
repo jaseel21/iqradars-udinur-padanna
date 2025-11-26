@@ -35,7 +35,7 @@ const TopBar = () => (
         <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
            <Phone size={10} />
         </span>
-        <span className="group-hover:text-white transition-colors">+91 987 654 3210</span>
+        <span className="group-hover:text-white transition-colors">+91 9656480068</span>
       </div>
       <div className="w-px h-3 bg-slate-700"></div>
       <div className="flex items-center gap-2 group cursor-pointer">

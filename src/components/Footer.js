@@ -135,7 +135,7 @@ export default function Footer() {
                     <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
                        <Phone size={16} />
                     </div>
-                    <a href="tel:+919876543210" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">+91 987 654 3210</a>
+                    <a href="tel:+919656480068" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">+91 987 654 3210</a>
                   </li>
                   <li className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">

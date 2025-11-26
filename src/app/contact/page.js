@@ -125,7 +125,7 @@ export default function Contact() {
                   <Phone className="text-emerald-400 mt-1" size={20} />
                   <div>
                     <p className="text-sm text-slate-400 font-medium mb-1 uppercase tracking-wide">Phone</p>
-                    <p className="text-lg font-semibold">{content?.phone || '+91 987 654 3210'}</p>
+                    <p className="text-lg font-semibold">{content?.phone || '+91 9656480068'}</p>
                   </div>
                 </div>
 
