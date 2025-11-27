@@ -13,6 +13,8 @@ import {
 import { 
   Menu, X, Shield, LayoutDashboard, 
   Upload, FileText, BookOpen, Phone, Facebook, Twitter, Instagram, 
+  // WhatsApp,  // <-- Remove or comment this out
+  MessageCircle,  // <-- Add this as a placeholder (available in Lucide)
   ChevronRight, MapPin, Mail, LogOut, GraduationCap
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -31,12 +33,12 @@ const customStyles = `
 const TopBar = () => (
   <div className="hidden lg:flex justify-between items-center bg-[#0F172A] text-slate-300 py-2.5 px-6 lg:px-12 text-[10px] font-bold tracking-[0.15em] uppercase z-50 relative border-b border-slate-800">
     <div className="flex items-center gap-6">
-      <div className="flex items-center gap-2 group cursor-pointer">
+      {/* <div className="flex items-center gap-2 group cursor-pointer">
         <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
            <Phone size={10} />
         </span>
         <span className="group-hover:text-white transition-colors">+91 9656480068</span>
-      </div>
+      </div> */}
       <div className="w-px h-3 bg-slate-700"></div>
       <div className="flex items-center gap-2 group cursor-pointer">
         <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
@@ -47,13 +49,14 @@ const TopBar = () => (
     </div>
     <div className="flex items-center gap-4">
       <span className="text-slate-500">Follow Us:</span>
-      <div className="flex gap-3">
-        {[Facebook, Twitter, Instagram].map((Icon, i) => (
-          <a key={i} href="#" className="hover:text-white hover:scale-110 transition-all duration-300">
-            <Icon size={12} />
-          </a>
-        ))}
-      </div>
+     <div className="flex gap-3">
+  <a href="https://www.instagram.com/iqra_dars_udinurs" className="hover:text-white hover:scale-110 transition-all duration-300">
+    <Instagram size={12} />
+  </a>
+  <a href="https://wa.me/9656480068" className="hover:text-white hover:scale-110 transition-all duration-300">
+    <MessageCircle size={12} />  {/* Placeholder for WhatsApp */}
+  </a>
+</div>
     </div>
   </div>
 );
@@ -205,17 +208,56 @@ export default function Header() {
 
             {/* --- DESKTOP CTA --- */}
             <div className="hidden lg:flex items-center gap-4">
-              <Link href="/location">
-                <motion.button 
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 bg-slate-900 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-[12px] font-bold uppercase tracking-widest shadow-lg shadow-slate-900/10 hover:shadow-emerald-900/20 transition-all"
-                >
-                  <MapPin size={14} />
-                  <span>Locate Us</span>
-                </motion.button>
-              </Link>
-            </div>
+  <Link href="/location" className="focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
+    <motion.button
+      whileHover={{ 
+        scale: 1.02, 
+        borderColor: "rgba(16,185,129,1)",
+        boxShadow: "0 0 0 1px rgba(16,185,129,1), 0 0 0 4px rgba(16,185,129,0.1), 0 8px 32px rgba(16,185,129,0.15)" 
+      }}
+      whileTap={{ scale: 0.98 }}
+      whileFocus={{ scale: 1.02 }}
+      className="
+        flex items-center gap-2.5
+        backdrop-blur-sm
+        bg-transparent
+        text-emerald-800 hover:text-emerald-600
+        px-4 py-2
+        rounded-xl
+        text-sm font-semibold uppercase tracking-wide
+        border-1 border-emerald-500/60 hover:border-emerald-400/80
+        shadow-md shadow-emerald-500/10
+        hover:shadow-lg hover:shadow-emerald-500/20
+        transition-all duration-300 ease-out
+        group
+        relative
+        after:absolute after:inset-0 after:rounded-xl after:border after:border-emerald-500/20 after:pointer-events-none
+        after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300
+      "
+    >
+      <motion.div
+        className="flex h-4 w-4 items-center justify-center"
+        animate={{ 
+          scale: [1, 1.05, 1] 
+        }}
+        transition={{ 
+          duration: 2, 
+          repeat: Infinity, 
+          ease: "easeInOut" 
+        }}
+      >
+        <MapPin 
+          size={16} 
+          className="text-emerald-800 group-hover:text-emerald-300 transition-colors duration-300 drop-shadow-sm" 
+        />
+      </motion.div>
+      <span className="tracking-[0.05em] leading-none relative z-10">
+        Locate Us
+      </span>
+    </motion.button>
+  </Link>
+</div>
+
 
             {/* --- MOBILE HAMBURGER --- */}
             <button
@@ -297,10 +339,18 @@ export default function Header() {
               {/* Sidebar Footer */}
               <div className="p-6 border-t border-slate-100 bg-slate-50">
                 <Link href="/location" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className="w-full flex items-center justify-center gap-3 py-4 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-widest shadow-xl shadow-slate-900/10 active:scale-95 transition-transform">
-                    <MapPin size={18} />
-                    Visit Campus
-                  </button>
+                <motion.button
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  className="w-full flex items-center justify-center gap-3 py-3.5 px-6 
+           
+             text-green-700 rounded-xl font-bold uppercase tracking-widest text-sm 
+             shadow-lg shadow-emerald-700/30 
+             transition-all duration-300"
+>
+  <MapPin size={18} className="text-emarald-900" />
+  <span>VISIT DARS </span>
+</motion.button>
                 </Link>
                 
                 <div className="mt-8 flex justify-center gap-8">

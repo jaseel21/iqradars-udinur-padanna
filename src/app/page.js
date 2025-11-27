@@ -201,7 +201,7 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <div className="relative z-10 h-full max-w-[1400px] mx-auto px-6 md:px-12 flex items-center">
+        <div className="relative z-10 max-sm:pb-[100px] h-full max-w-[1400px] mx-auto px-6 md:px-12 flex items-center">
           <div className="max-w-4xl pt-10">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -231,7 +231,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-5">
                 <Link href="/contact" className="group relative">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200"></div>
+                  <div className="absolute -inset-0.5 max-sm:-inset-0.5 max-sm:inset-10 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200"></div>
                   <button className="relative px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-3 shadow-xl">
                     <span>Begin Journey</span>
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -239,7 +239,7 @@ export default function Home() {
                 </Link>
 
                 <Link href="/organizations">
-                  <button className="px-8 py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 hover:border-white/40 transition-all flex items-center justify-center tracking-wide">
+                  <button className="px-8  py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 hover:border-white/40 transition-all flex items-center justify-center tracking-wide">
                     View Structure
                   </button>
                 </Link>

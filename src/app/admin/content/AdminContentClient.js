@@ -298,7 +298,7 @@ export default function AdminContentClient({ initialData, user }) {
                     className={({ selected }) =>
                       `px-6 py-3 text-sm font-medium rounded-t-lg transition-all whitespace-nowrap ${
                         selected
-                          ? 'bg-white text-green-600 border-t-2 border-l-2 border-r-2 border-green-600 -mb-px'
+                          ? 'bg-white text-green-600 border-t-2 border-l-2 border-r-2 border-green-600 -mb-px shadow-md'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                       }`
                     }
@@ -319,7 +319,7 @@ export default function AdminContentClient({ initialData, user }) {
                       <textarea
                         {...registerCore('description')}
                         placeholder="Enter description..."
-                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none"
+                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none text-gray-900 placeholder-gray-500"
                       />
                     </div>
                     <div>
@@ -327,7 +327,7 @@ export default function AdminContentClient({ initialData, user }) {
                       <textarea
                         {...registerCore('mission')}
                         placeholder="Enter mission..."
-                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none"
+                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none text-gray-900 placeholder-gray-500"
                       />
                     </div>
                   </div>
@@ -337,7 +337,7 @@ export default function AdminContentClient({ initialData, user }) {
                       <input
                         {...registerCore('phone')}
                         placeholder="Enter phone..."
-                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                     </div>
                     <div>
@@ -346,7 +346,7 @@ export default function AdminContentClient({ initialData, user }) {
                         {...registerCore('email')}
                         type="email"
                         placeholder="Enter email..."
-                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                     </div>
                     <div>
@@ -354,14 +354,14 @@ export default function AdminContentClient({ initialData, user }) {
                       <input
                         {...registerCore('hours')}
                         placeholder="Enter hours..."
-                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                     </div>
                   </div>
                   <button
                     type="submit"
                     disabled={saving.core}
-                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
                   >
                     <Save size={18} />
                     <span>{saving.core ? 'Saving...' : 'Save All'}</span>
@@ -374,7 +374,7 @@ export default function AdminContentClient({ initialData, user }) {
                 <div className="space-y-6">
                   <div className="flex justify-between items-center">
                     <p className="text-gray-600">Manage banner images (up to 3 images for slider)</p>
-                    <label className="flex items-center cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    <label className="flex items-center cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md">
                       <Upload size={18} className="mr-2" />
                       {uploading ? 'Uploading...' : 'Upload Banner'}
                       <input
@@ -441,7 +441,7 @@ export default function AdminContentClient({ initialData, user }) {
                     {(data.banners || []).map((banner, i) => (
                       <motion.div
                         key={banner._id || i}
-                        className="relative group border-2 border-gray-200 rounded-lg overflow-hidden hover:border-green-500 transition-colors"
+                        className="relative group border-2 border-gray-200 rounded-lg overflow-hidden hover:border-green-500 transition-colors shadow-sm"
                         whileHover={{ scale: 1.02 }}
                       >
                         <div className="aspect-video relative">
@@ -465,7 +465,7 @@ export default function AdminContentClient({ initialData, user }) {
                               toast.error('Failed to delete banner');
                             }
                           }}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -480,23 +480,23 @@ export default function AdminContentClient({ initialData, user }) {
                 <div className="space-y-6">
                   <button
                     onClick={() => setEditingNews({ title: '', content: '', thumbnail: '' })}
-                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                   >
                     <Plus size={18} />
                     <span>Add News</span>
                   </button>
                   
                   {editingNews !== null && (
-                    <div className="bg-gray-50 p-6 rounded-lg border-2 border-green-500">
+                    <div className="bg-gray-50 p-6 rounded-lg border-2 border-green-500 shadow-md">
                       <h3 className="text-lg font-bold mb-4">{editingNews._id ? 'Edit News' : 'New News'}</h3>
                       <div className="space-y-4">
                         <input
                           value={editingNews.title || ''}
                           onChange={(e) => setEditingNews({ ...editingNews, title: e.target.value })}
                           placeholder="News Title"
-                          className="w-full p-3 border border-gray-300 rounded-lg"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500"
                         />
-                        <label className="flex items-center cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors w-fit">
+                        <label className="flex items-center cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors w-fit shadow-md">
                           <Upload size={18} className="mr-2" />
                           Upload Thumbnail
                           <input
@@ -544,7 +544,7 @@ export default function AdminContentClient({ initialData, user }) {
                           />
                         </label>
                         {editingNews.thumbnail && (
-                          <div className="relative w-32 h-32 rounded-lg overflow-hidden">
+                          <div className="relative w-32 h-32 rounded-lg overflow-hidden shadow-md">
                             <Image src={editingNews.thumbnail} alt="Thumbnail" fill className="object-cover" />
                           </div>
                         )}
@@ -552,7 +552,7 @@ export default function AdminContentClient({ initialData, user }) {
                           value={editingNews.content || ''}
                           onChange={(e) => setEditingNews({ ...editingNews, content: e.target.value })}
                           placeholder="News Content (HTML supported)"
-                          className="w-full p-3 border border-gray-300 rounded-lg h-48 resize-none"
+                          className="w-full p-3 border border-gray-300 rounded-lg h-48 resize-none text-gray-900 placeholder-gray-500"
                         />
                         <div className="flex space-x-2">
                           <button
@@ -597,13 +597,13 @@ export default function AdminContentClient({ initialData, user }) {
                                 toast.error('Failed to save news: ' + (error.message || 'Unknown error'));
                               }
                             }}
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 shadow-md"
                           >
                             Save
                           </button>
                           <button
                             onClick={() => setEditingNews(null)}
-                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 shadow-md"
                           >
                             Cancel
                           </button>
@@ -614,15 +614,15 @@ export default function AdminContentClient({ initialData, user }) {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     {(data.news || []).map((item) => (
-                      <div key={item._id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-green-500 transition-colors">
+                      <div key={item._id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-green-500 transition-colors shadow-sm">
                         <div className="relative h-32 mb-3 rounded-lg overflow-hidden">
                           <Image src={item.thumbnail} alt={item.title} fill className="object-cover" />
                         </div>
-                        <h4 className="font-bold mb-2">{item.title}</h4>
+                        <h4 className="font-bold mb-2 text-gray-900">{item.title}</h4>
                         <div className="flex space-x-2">
                           <button
                             onClick={() => setEditingNews(item)}
-                            className="flex-1 bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 text-sm"
+                            className="flex-1 bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 text-sm shadow-md"
                           >
                             Edit
                           </button>
@@ -644,7 +644,7 @@ export default function AdminContentClient({ initialData, user }) {
                                 toast.error('Failed to delete news');
                               }
                             }}
-                            className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+                            className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm shadow-md"
                           >
                             Delete
                           </button>
@@ -663,31 +663,31 @@ export default function AdminContentClient({ initialData, user }) {
                       const newVideo = { title: '', youtubeUrl: '', description: '', order: data.videos?.length || 0 };
                       setData({ ...data, videos: [...(data.videos || []), newVideo] });
                     }}
-                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                   >
                     <Plus size={18} />
                     <span>Add Video</span>
                   </button>
                   <div className="grid md:grid-cols-2 gap-6">
                     {(data.videos || []).map((video, i) => (
-                      <div key={video._id || i} className="border-2 border-gray-200 rounded-lg p-4 space-y-3 hover:border-green-500 transition-colors">
+                      <div key={video._id || i} className="border-2 border-gray-200 rounded-lg p-4 space-y-3 hover:border-green-500 transition-colors shadow-sm">
                         <input
                           value={video.title || ''}
                           onChange={(e) => updateItem('videos', i, 'title', e.target.value)}
                           placeholder="Video Title"
-                          className="w-full p-3 border border-gray-300 rounded-lg"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500"
                         />
                         <input
                           value={video.youtubeUrl || ''}
                           onChange={(e) => updateItem('videos', i, 'youtubeUrl', e.target.value)}
                           placeholder="YouTube URL"
-                          className="w-full p-3 border border-gray-300 rounded-lg"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500"
                         />
                         <textarea
                           value={video.description || ''}
                           onChange={(e) => updateItem('videos', i, 'description', e.target.value)}
                           placeholder="Description"
-                          className="w-full p-3 border border-gray-300 rounded-lg h-24 resize-none"
+                          className="w-full p-3 border border-gray-300 rounded-lg h-24 resize-none text-gray-900 placeholder-gray-500"
                         />
                         <div className="flex space-x-2">
                           {video._id ? (
@@ -709,7 +709,7 @@ export default function AdminContentClient({ initialData, user }) {
                                     toast.error('Failed to update video');
                                   }
                                 }}
-                                className="flex-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-sm"
+                                className="flex-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-sm shadow-md"
                               >
                                 Update
                               </button>
@@ -731,7 +731,7 @@ export default function AdminContentClient({ initialData, user }) {
                                     toast.error('Failed to delete video');
                                   }
                                 }}
-                                className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+                                className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm shadow-md"
                               >
                                 Delete
                               </button>
@@ -754,14 +754,14 @@ export default function AdminContentClient({ initialData, user }) {
                                   toast.error('Failed to save video');
                                 }
                               }}
-                              className="flex-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-sm"
+                              className="flex-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-sm shadow-md"
                             >
                               Save
                             </button>
                           )}
                           <button
                             onClick={() => removeItem('videos', i)}
-                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 text-sm"
+                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 text-sm shadow-md"
                           >
                             Remove
                           </button>
@@ -782,7 +782,7 @@ export default function AdminContentClient({ initialData, user }) {
                     </div>
                     <button
                       onClick={() => addItem('advisory')}
-                      className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                      className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                     >
                       <Plus size={18} />
                       <span>Add Member</span>
@@ -807,7 +807,7 @@ export default function AdminContentClient({ initialData, user }) {
                                 value={member.name || ''}
                                 onChange={(e) => updateItem('advisory', i, 'name', e.target.value)}
                                 placeholder="Member name"
-                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                               />
                             </div>
                             <div>
@@ -816,7 +816,7 @@ export default function AdminContentClient({ initialData, user }) {
                                 value={member.role || ''}
                                 onChange={(e) => updateItem('advisory', i, 'role', e.target.value)}
                                 placeholder="e.g., Chairman, Secretary"
-                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                               />
                             </div>
                           </div>
@@ -830,7 +830,7 @@ export default function AdminContentClient({ initialData, user }) {
                               min="0"
                               value={member.order ?? i}
                               onChange={(e) => updateItem('advisory', i, 'order', Number(e.target.value))}
-                              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                             />
                           </div>
                         </div>
@@ -850,7 +850,7 @@ export default function AdminContentClient({ initialData, user }) {
                           {member._id && (
                             <button
                               onClick={() => deleteItem('advisory', member._id, i)}
-                              className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors text-sm"
+                              className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors text-sm shadow-md"
                             >
                               <Trash2 size={14} className="inline mr-1" />
                               Delete
@@ -858,7 +858,7 @@ export default function AdminContentClient({ initialData, user }) {
                           )}
                           <button
                             onClick={() => removeItem('advisory', i)}
-                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors text-sm"
+                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors text-sm shadow-md"
                           >
                             <X size={14} className="inline mr-1" />
                             Remove
@@ -871,7 +871,7 @@ export default function AdminContentClient({ initialData, user }) {
                   <button
                     onClick={() => saveItems('advisory')}
                     disabled={saving.advisory}
-                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors shadow-md"
                   >
                     <Save size={18} />
                     <span>{saving.advisory ? 'Saving...' : 'Save Advisory Board'}</span>
@@ -886,7 +886,7 @@ export default function AdminContentClient({ initialData, user }) {
                     {(data.gallery || []).slice(0, 12).map((img, i) => (
                       <motion.div
                         key={img._id || i}
-                        className="relative group border-2 border-gray-200 rounded-lg overflow-hidden hover:border-green-500 transition-colors"
+                        className="relative group border-2 border-gray-200 rounded-lg overflow-hidden hover:border-green-500 transition-colors shadow-sm"
                         whileHover={{ scale: 1.02 }}
                       >
                         <div className="aspect-square relative">
@@ -899,14 +899,14 @@ export default function AdminContentClient({ initialData, user }) {
                         </div>
                         <button
                           onClick={() => deleteItem('gallery', img._id, i)}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md"
                         >
                           <Trash2 size={16} />
                         </button>
                       </motion.div>
                     ))}
                   </div>
-                  <label className="flex items-center justify-center cursor-pointer bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full md:w-auto">
+                  <label className="flex items-center justify-center cursor-pointer bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full md:w-auto shadow-md">
                     <Upload size={18} className="mr-2" />
                     {uploading ? 'Uploading...' : 'Upload New Image'}
                     <input
@@ -928,14 +928,14 @@ export default function AdminContentClient({ initialData, user }) {
                       const newCommittee = { wing: '', members: [] };
                       setData({ ...data, committees: [...(data.committees || []), newCommittee] });
                     }}
-                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                   >
                     <Plus size={18} />
                     <span>Add Committee</span>
                   </button>
                   <div className="space-y-6">
                     {(data.committees || []).map((committee, ci) => (
-                      <div key={committee._id || ci} className="border-2 border-gray-200 rounded-lg p-6 space-y-4 hover:border-green-500 transition-colors">
+                      <div key={committee._id || ci} className="border-2 border-gray-200 rounded-lg p-6 space-y-4 hover:border-green-500 transition-colors shadow-sm">
                         <input
                           value={committee.wing || ''}
                           onChange={(e) => {
@@ -944,7 +944,7 @@ export default function AdminContentClient({ initialData, user }) {
                             setData({ ...data, committees: updated });
                           }}
                           placeholder="Wing Name (e.g., Youth Wing)"
-                          className="w-full p-3 border border-gray-300 rounded-lg font-bold text-lg"
+                          className="w-full p-3 border border-gray-300 rounded-lg font-bold text-lg text-gray-900 placeholder-gray-500"
                         />
                         <div className="grid md:grid-cols-3 gap-4">
                           {(committee.members || []).map((member, mi) => (
@@ -1011,7 +1011,7 @@ export default function AdminContentClient({ initialData, user }) {
                                   setData({ ...data, committees: updated });
                                 }}
                                 placeholder="Member Name"
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-500"
                               />
                               <input
                                 value={member.position || ''}
@@ -1021,7 +1021,7 @@ export default function AdminContentClient({ initialData, user }) {
                                   setData({ ...data, committees: updated });
                                 }}
                                 placeholder="Position"
-                                className="w-full p-2 border border-gray-300 rounded"
+                                className="w-full p-2 border border-gray-300 rounded text-gray-900 placeholder-gray-500"
                               />
                               <button
                                 onClick={() => {
@@ -1029,7 +1029,7 @@ export default function AdminContentClient({ initialData, user }) {
                                   updated[ci].members = updated[ci].members.filter((_, i) => i !== mi);
                                   setData({ ...data, committees: updated });
                                 }}
-                                className="w-full bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+                                className="w-full bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm shadow-md"
                               >
                                 Remove Member
                               </button>
@@ -1043,7 +1043,7 @@ export default function AdminContentClient({ initialData, user }) {
                                 updated[ci].members.push({ name: '', position: '', photo: '' });
                                 setData({ ...data, committees: updated });
                               }}
-                              className="bg-gray-200 hover:bg-gray-300 p-4 rounded-lg flex items-center justify-center text-gray-600"
+                              className="bg-gray-200 hover:bg-gray-300 p-4 rounded-lg flex items-center justify-center text-gray-600 shadow-sm"
                             >
                               <Plus size={24} />
                             </button>
@@ -1069,7 +1069,7 @@ export default function AdminContentClient({ initialData, user }) {
                                     toast.error('Failed to update committee');
                                   }
                                 }}
-                                className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 shadow-md"
                               >
                                 Update
                               </button>
@@ -1091,7 +1091,7 @@ export default function AdminContentClient({ initialData, user }) {
                                     toast.error('Failed to delete committee');
                                   }
                                 }}
-                                className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 shadow-md"
                               >
                                 Delete
                               </button>
@@ -1114,7 +1114,7 @@ export default function AdminContentClient({ initialData, user }) {
                                   toast.error('Failed to save committee');
                                 }
                               }}
-                              className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                              className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 shadow-md"
                             >
                               Save
                             </button>
@@ -1124,7 +1124,7 @@ export default function AdminContentClient({ initialData, user }) {
                               const updated = (data.committees || []).filter((_, i) => i !== ci);
                               setData({ ...data, committees: updated });
                             }}
-                            className="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                            className="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 shadow-md"
                           >
                             Remove
                           </button>
@@ -1140,31 +1140,31 @@ export default function AdminContentClient({ initialData, user }) {
                 <div className="space-y-6">
                   <button
                     onClick={() => addItem('organizations')}
-                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                   >
                     <Plus size={18} />
                     <span>Add Organization</span>
                   </button>
                   <div className="grid md:grid-cols-2 gap-6">
                     {(data.organizations || []).map((org, i) => (
-                      <div key={org._id || i} className="border-2 border-gray-200 rounded-lg p-4 space-y-3 hover:border-green-500 transition-colors">
+                      <div key={org._id || i} className="border-2 border-gray-200 rounded-lg p-4 space-y-3 hover:border-green-500 transition-colors shadow-sm">
                         <input
                           value={org.name || ''}
                           onChange={(e) => updateItem('organizations', i, 'name', e.target.value)}
                           placeholder="Organization Name"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-medium"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-medium text-gray-900 placeholder-gray-500"
                         />
                         <textarea
                           value={org.desc || ''}
                           onChange={(e) => updateItem('organizations', i, 'desc', e.target.value)}
                           placeholder="Description"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-32 resize-none text-gray-900 placeholder-gray-500"
                         />
                         <div className="flex space-x-2">
                           {org._id && (
                             <button
                               onClick={() => deleteItem('organizations', org._id, i)}
-                              className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors"
+                              className="flex-1 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors shadow-md"
                             >
                               <Trash2 size={14} className="inline mr-1" />
                               Delete
@@ -1172,7 +1172,7 @@ export default function AdminContentClient({ initialData, user }) {
                           )}
                           <button
                             onClick={() => removeItem('organizations', i)}
-                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors"
+                            className="flex-1 bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors shadow-md"
                           >
                             <X size={14} className="inline mr-1" />
                             Remove
@@ -1184,7 +1184,7 @@ export default function AdminContentClient({ initialData, user }) {
                   <button
                     onClick={() => saveItems('organizations')}
                     disabled={saving.organizations}
-                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors shadow-md"
                   >
                     <Save size={18} />
                     <span>{saving.organizations ? 'Saving...' : 'Save Organizations'}</span>
@@ -1196,7 +1196,7 @@ export default function AdminContentClient({ initialData, user }) {
               <Tab.Panel>
                 <div className="space-y-4">
                   {(data.content?.socials || []).map((s, i) => (
-                    <div key={i} className="flex gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+                    <div key={i} className="flex gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors shadow-sm">
                       <input
                         value={s.name || ''}
                         onChange={(e) => {
@@ -1206,7 +1206,7 @@ export default function AdminContentClient({ initialData, user }) {
                           setData({ ...data, content: { ...data.content, socials: updated } });
                         }}
                         placeholder="Name (e.g., Facebook)"
-                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                       <input
                         value={s.url || ''}
@@ -1217,7 +1217,7 @@ export default function AdminContentClient({ initialData, user }) {
                           setData({ ...data, content: { ...data.content, socials: updated } });
                         }}
                         placeholder="URL"
-                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                       <input
                         value={s.icon || ''}
@@ -1228,7 +1228,7 @@ export default function AdminContentClient({ initialData, user }) {
                           setData({ ...data, content: { ...data.content, socials: updated } });
                         }}
                         placeholder="Icon"
-                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="flex-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                       />
                       <button
                         type="button"
@@ -1236,7 +1236,7 @@ export default function AdminContentClient({ initialData, user }) {
                           const updated = (data.content?.socials || []).filter((_, ii) => ii !== i);
                           setData({ ...data, content: { ...data.content, socials: updated } });
                         }}
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors shadow-md"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -1253,7 +1253,7 @@ export default function AdminContentClient({ initialData, user }) {
                         },
                       });
                     }}
-                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                   >
                     <Plus size={18} />
                     <span>Add Social</span>
@@ -1261,7 +1261,7 @@ export default function AdminContentClient({ initialData, user }) {
                   <button
                     onClick={handleSaveCore}
                     disabled={saving.core}
-                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors shadow-md"
                   >
                     <Save size={18} />
                     <span>{saving.core ? 'Saving...' : 'Save Socials'}</span>
@@ -1278,7 +1278,7 @@ export default function AdminContentClient({ initialData, user }) {
                       value={data.content?.location?.address || ''}
                       onChange={(e) => setCoreValue('location.address', e.target.value)}
                       placeholder="Enter address..."
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                     />
                   </div>
                   <div>
@@ -1287,13 +1287,13 @@ export default function AdminContentClient({ initialData, user }) {
                       value={data.content?.location?.mapEmbed || ''}
                       onChange={(e) => setCoreValue('location.mapEmbed', e.target.value)}
                       placeholder="Enter map embed URL..."
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                     />
                   </div>
                   <button
                     onClick={handleSaveCore}
                     disabled={saving.core}
-                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors shadow-md"
                   >
                     <Save size={18} />
                     <span>{saving.core ? 'Saving...' : 'Save Location'}</span>
@@ -1307,4 +1307,3 @@ export default function AdminContentClient({ initialData, user }) {
     </div>
   );
 }
-

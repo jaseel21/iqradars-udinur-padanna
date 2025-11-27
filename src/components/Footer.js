@@ -4,184 +4,176 @@ import { motion } from 'framer-motion';
 import { 
   Facebook, Instagram, Twitter, Youtube, 
   Mail, MapPin, Phone, ArrowRight, Send, 
-  ShieldCheck, Heart, ExternalLink 
+  ShieldCheck, ExternalLink, MessageSquare 
 } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image'; // Make sure to use this if you have a real logo
+// Assuming the logo is handled by the `img src="/icon.png"` as in your code
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    academics: [
-      { href: '/articles', label: 'Library & Articles' },
-      { href: '/courses', label: 'Academic Programs' },
-      { href: '/gallery', label: 'Student Gallery' },
-      { href: '/admissions', label: 'Admission Policy' },
+  // --- UPDATED CONTACT INFO with two locations and two phone numbers ---
+  const contactInfo = {
+    email: 'iqradars786@gmail.com',
+    phones: [
+        { label: 'Admissions', number: '+91 9656480068' },
+        { label: 'Administration', number: '+91 8714403503' },
     ],
-    institution: [
-      { href: '/about', label: 'About Us' },
-      { href: '/organizations', label: 'Organizations' },
-      { href: '/board', label: 'Advisory Board' },
-      { href: '/careers', label: 'Careers' },
-    ],
-    legal: [
-      { href: '/privacy', label: 'Privacy Policy' },
-      { href: '/terms', label: 'Terms of Use' },
-      { href: '/sitemap', label: 'Sitemap' },
-    ],
+    locations: [
+        { 
+            name: 'Udinur Campus', 
+            address: 'Udinur Education Street, Udinur, Kasaragod, Kerala, India',
+            mapUrl: "https://www.google.com/maps/place/Udinur+Juma+Masjid/@12.1535692,75.1699812,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba46e2faaaaaaab:0x34c5c716b6b6e9d!8m2!3d12.1535692!4d75.1699812!16s%2Fg%2F11b7h9y1zm?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D"
+        },
+        { 
+            name: 'Padanna Campus', 
+            address: 'Padanna Valiya Juma Masjid Road, Padanna, Kasaragod, Kerala, India',
+            mapUrl: "https://www.google.com/maps/place/Padanna+%E2%88%99+Valiya+juma+masjid/@12.1763519,75.1463666,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba4712baa5a024f:0xf28f87750da0ae5e!8m2!3d12.1763519!4d75.1463666!16s%2Fg%2F11hdf8t3mj?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D"
+        },
+    ]
   };
-
+  
+  // --- ADDED WHATSAPP ICON ---
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Twitter, href: '#', label: 'Twitter' },
     { icon: Instagram, href: '#', label: 'Instagram' },
     { icon: Youtube, href: '#', label: 'Youtube' },
+    // Using the first phone number for the WhatsApp link
+    { icon: MessageSquare, href: `https://wa.me/${contactInfo.phones[0].number.replace(/[^0-9]/g, '')}`, label: 'WhatsApp' },
+  ];
+
+  const legalLinks = [
+      { href: '/privacy', label: 'Privacy Policy' },
+      { href: '/terms', label: 'Terms of Use' },
   ];
 
   return (
-    <footer className="bg-slate-50 border-t border-slate-200 pt-20 pb-12 font-sans relative overflow-hidden text-slate-600">
+    <footer className="bg-slate-900 border-t border-slate-800 pt-16 pb-8 font-sans relative overflow-hidden text-slate-400">
       
-      {/* Subtle Background Pattern */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+      {/* Subtle Top Border Highlight */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-600 to-slate-900 opacity-70"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         
-        {/* TOP SECTION: Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 mb-16">
+        {/* TOP SECTION: Grid Layout for Contact/Follow */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 xl:gap-16 mb-16 border-b border-slate-800 pb-12">
           
-          {/* 1. BRAND & NEWSLETTER (4 cols) */}
-          <div className="lg:col-span-4 space-y-8">
-            {/* Brand Logo */}
+          {/* 1. BRANDING & MISSION (2 cols on large screen) */}
+          <div className="md:col-span-2 space-y-6">
             <Link href="/" className="inline-block group">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200 group-hover:bg-emerald-700 transition-colors">
-                  {/* SVG Logo Placeholder */}
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+                {/* Logo Area */}
+                <div className="w-16 h-16  rounded-xl flex items-center justify-center text-white shadow-xl shadow-emerald-900/50 group-hover:bg-emerald-700 transition-colors">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon.png" alt="Iqra Dars Logo" className='w-12 h-12 object-contain' />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 leading-none">Iqra Dars</h3>
-                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Udinur & Padanna </span>
+                  <h3 className="text-2xl font-bold text-white leading-tight">Iqra Dars</h3>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.15em]">Udinur & Padanna </span>
                 </div>
               </div>
             </Link>
 
-            <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
-              An institution dedicated to preserving Islamic heritage while fostering academic excellence. Join our community of knowledge seekers.
+            <p className="text-slate-500 text-sm leading-relaxed max-w-lg">
+              Dedicated to integrating Islamic heritage with modern academic excellence, fostering a community of enlightened knowledge seekers in Kerala.
             </p>
-
-            {/* Newsletter Box */}
-            <div className="p-1">
-               <h4 className="text-sm font-bold text-slate-900 mb-3">Subscribe to updates</h4>
-               <form className="flex gap-2">
-                 <input 
-                   type="email" 
-                   placeholder="Email address" 
-                   className="flex-1 bg-white border border-slate-200 text-slate-900 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-sm transition-all"
-                 />
-                 <button className="bg-slate-900 hover:bg-emerald-600 text-white p-2.5 rounded-lg transition-colors shadow-md">
-                   <ArrowRight size={18} />
-                 </button>
-               </form>
-               <p className="text-[10px] text-slate-400 mt-2">We respect your privacy. Unsubscribe at any time.</p>
-            </div>
-          </div>
-
-          {/* 2. LINKS COLUMNS (2 cols each) */}
-          <div className="lg:col-span-2 md:col-span-4">
-             <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Academics</h4>
-             <ul className="space-y-3">
-                {footerLinks.academics.map((link, i) => (
-                  <li key={i}>
-                    <Link href={link.href} className="text-sm text-slate-500 hover:text-emerald-700 hover:translate-x-1 transition-all inline-flex items-center gap-1">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-             </ul>
-          </div>
-
-          <div className="lg:col-span-2 md:col-span-4">
-             <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Institution</h4>
-             <ul className="space-y-3">
-                {footerLinks.institution.map((link, i) => (
-                  <li key={i}>
-                    <Link href={link.href} className="text-sm text-slate-500 hover:text-emerald-700 hover:translate-x-1 transition-all inline-block">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-             </ul>
-          </div>
-
-          {/* 3. CONTACT INFO (4 cols) */}
-          <div className="lg:col-span-4 space-y-8">
-            <div>
-               <h4 className="text-slate-900 font-bold mb-6 text-sm uppercase tracking-wide">Contact Us</h4>
-               <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600 mt-0.5">
-                       <MapPin size={16} />
-                    </div>
-                    <span className="text-sm text-slate-600 leading-relaxed">
-                      Iqra Dars Campus,<br />
-                      Udinur, Kasaragod District,<br />
-                      Kerala, India - 671310
-                    </span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
-                       <Phone size={16} />
-                    </div>
-                    <a href="tel:+919656480068" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">+91 987 654 3210</a>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
-                       <Mail size={16} />
-                    </div>
-                    <a href="mailto:info@iqradars.edu" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">iqradars786@gmail.com</a>
-                  </li>
-               </ul>
-            </div>
             
-            <div>
-               <h4 className="text-slate-900 font-bold mb-4 text-xs uppercase tracking-wide">Follow Us</h4>
-               <div className="flex gap-3">
-                  {socialLinks.map((social, idx) => (
-                    <a
-                      key={idx}
-                      href={social.href}
-                      className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300"
-                      aria-label={social.label}
-                    >
-                      <social.icon size={18} />
-                    </a>
-                  ))}
-               </div>
+            {/* Admissions CTA (clean and direct) */}
+            <div className='pt-4'>
+                <Link href="/contact">
+                    <button className='flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-white bg-emerald-600 px-5 py-2 rounded-lg hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/50'>
+                        <Send size={16} />
+                        Enquire Now
+                    </button>
+                </Link>
             </div>
+          </div>
+
+          {/* 2. CONTACT INFORMATION (Structurally Refined - 1 col) */}
+          <div className="lg:col-span-1 space-y-4">
+             <h4 className="text-emerald-400 font-bold mb-6 text-sm uppercase tracking-wider">Contact Information</h4>
+             
+             <ul className="space-y-4">
+                {/* Email */}
+                <li className="flex items-center gap-3 border-b border-slate-800 pb-4">
+                  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center shrink-0 text-emerald-500">
+                     <Mail size={16} />
+                  </div>
+                  <a href={`mailto:${contactInfo.email}`} className="text-sm text-slate-400 hover:text-white font-medium transition-colors">{contactInfo.email}</a>
+                </li>
+             
+                {/* Phone Numbers */}
+                <h5 className="text-xs font-bold text-slate-500 pt-1 mb-2 uppercase tracking-wider">Contact Numbers</h5>
+                {contactInfo.phones.map((p, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center shrink-0 text-emerald-500">
+                         <Phone size={16} />
+                      </div>
+                      <div className='flex flex-col'>
+                        <a href={`tel:${p.number}`} className="text-sm text-slate-400 hover:text-white font-medium transition-colors">{p.number}</a>
+                        <span className='text-[10px] text-slate-500 uppercase tracking-widest'>{p.label}</span>
+                      </div>
+                    </li>
+                ))}
+                
+                {/* Locations */}
+                <h5 className="text-xs font-bold text-slate-500 pt-4 mb-2 uppercase tracking-wider border-t border-slate-800">Our Campuses</h5>
+                {contactInfo.locations.map((loc, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center shrink-0 text-emerald-500 mt-0.5">
+                         <MapPin size={16} />
+                      </div>
+                      <span className="text-sm text-slate-400 leading-relaxed hover:text-white transition-colors">
+                        <span className='font-medium text-white'>{loc.name}</span><br/>
+                        <span className='text-xs text-slate-500'>{loc.address}</span>
+                        <Link href={loc.mapUrl} target="_blank" rel="noopener noreferrer" className='block text-xs text-emerald-500 hover:text-emerald-400 mt-1'>
+                            View Map <ExternalLink size={10} className='inline ml-1'/>
+                        </Link>
+                      </span>
+                    </li>
+                ))}
+             </ul>
+          </div>
+
+          {/* 3. FOLLOW US (1 col) */}
+          <div className="lg:col-span-1">
+             <h4 className="text-emerald-400 font-bold mb-6 text-sm uppercase tracking-wider">Connect With Us</h4>
+             <div className="flex flex-wrap gap-3">
+                {socialLinks.map((social, idx) => (
+                  <a
+                    key={idx}
+                    href={social.href}
+                    target={social.label === 'WhatsApp' ? '_blank' : '_self'}
+                    rel={social.label === 'WhatsApp' ? 'noopener noreferrer' : ''}
+                    className={`w-10 h-10 rounded-full border border-slate-700 bg-slate-800 flex items-center justify-center text-slate-400 transition-all duration-300 shadow-lg ${social.label === 'WhatsApp' ? 'hover:bg-green-600 hover:text-white hover:border-green-600' : 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600'}`}
+                    aria-label={social.label}
+                  >
+                    <social.icon size={18} />
+                  </a>
+                ))}
+             </div>
           </div>
         </div>
 
-        {/* BOTTOM BAR: Separator & Copyright */}
-        <div className="border-t border-slate-200 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* BOTTOM BAR: Copyright & Legal */}
+        <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
-             <p className="text-xs text-slate-400 font-medium text-center md:text-left">
-               &copy; {currentYear} Iqra Dars Udinur.
+             <p className="text-xs text-slate-500 font-medium text-center md:text-left">
+               &copy; {currentYear} Iqra Dars Udinur. All Rights Reserved.
              </p>
              <div className="flex gap-4">
-               {footerLinks.legal.map((link, i) => (
-                 <Link key={i} href={link.href} className="text-xs text-slate-400 hover:text-emerald-700 transition-colors">
+               {legalLinks.map((link, i) => (
+                 <Link key={i} href={link.href} className="text-xs text-slate-500 hover:text-emerald-400 transition-colors">
                    {link.label}
                  </Link>
                ))}
              </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-400 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-             <ShieldCheck size={12} className="text-emerald-600" />
-             <span>Registered Educational Institution</span>
+          <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full shadow-md">
+             <ShieldCheck size={12} className="text-emerald-500" />
+             <span>Registered Islamic Educational Institution</span>
           </div>
         </div>
 
