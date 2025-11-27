@@ -12,56 +12,84 @@ import {
 } from 'framer-motion';
 import { 
   Menu, X, Shield, LayoutDashboard, 
-  Upload, FileText, BookOpen, Phone, Facebook, Twitter, Instagram, 
+  Upload, FileText, BookOpen, Phone, Facebook, Twitter,MessageCircleCode, Instagram, 
   // WhatsApp,  // <-- Remove or comment this out
   MessageCircle,  // <-- Add this as a placeholder (available in Lucide)
   ChevronRight, MapPin, Mail, LogOut, GraduationCap
 } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa'; // Import WhatsApp icon from react-icons
 import toast from 'react-hot-toast';
 
-// --- CUSTOM FONT CSS ---
+// --- PREMIUM CUSTOM FONT CSS ---
 const customStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
   
   :root {
     --font-sans: 'Inter', sans-serif;
     --font-serif: 'Playfair Display', serif;
   }
+
+  .premium-shadow {
+    box-shadow: 
+      0 20px 60px rgba(15, 23, 42, 0.08),
+      0 0 0 1px rgba(255, 255, 255, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .premium-shadow-hover {
+    box-shadow: 
+      0 30px 80px rgba(16, 185, 129, 0.15),
+      0 0 0 1px rgba(16, 185, 129, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
 `;
 
-// --- 1. TOP UTILITY BAR (The "Eyebrow") ---
+// --- 1. PREMIUM TOP UTILITY BAR ---
 const TopBar = () => (
-  <div className="hidden lg:flex justify-between items-center bg-[#0F172A] text-slate-300 py-2.5 px-6 lg:px-12 text-[10px] font-bold tracking-[0.15em] uppercase z-50 relative border-b border-slate-800">
+  <div className="hidden lg:flex justify-between items-center bg-gradient-to-r from-[#0F172A] via-[#1e293b] to-[#0F172A] text-slate-200 py-3 px-6 lg:px-12 text-[11px] font-semibold tracking-[0.2em] uppercase z-50 relative border-b border-slate-800/60">
     <div className="flex items-center gap-6">
-      {/* <div className="flex items-center gap-2 group cursor-pointer">
-        <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
-           <Phone size={10} />
-        </span>
-        <span className="group-hover:text-white transition-colors">+91 9656480068</span>
-      </div> */}
-      <div className="w-px h-3 bg-slate-700"></div>
-      <div className="flex items-center gap-2 group cursor-pointer">
-        <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
-           <Mail size={10} />
-        </span>
-        <span className="group-hover:text-white transition-colors">iqradars786@gmail.com</span>
+      <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 group cursor-pointer">
+        <Mail size={11} className="text-emerald-400" />
+        <span className="text-slate-200 group-hover:text-white transition-colors">iqradars786@gmail.com</span>
+      </div>
+      <div className="w-px h-4 bg-white/10"></div>
+      <div className="flex items-center gap-2 text-emerald-300">
+        <Phone size={11} />
+        <span className="text-[10px] tracking-[0.3em] text-slate-400">+91 9656480068</span>
       </div>
     </div>
-    <div className="flex items-center gap-4">
-      <span className="text-slate-500">Follow Us:</span>
-     <div className="flex gap-3">
-  <a href="https://www.instagram.com/iqra_dars_udinurs" className="hover:text-white hover:scale-110 transition-all duration-300">
-    <Instagram size={12} />
-  </a>
-  <a href="https://wa.me/9656480068" className="hover:text-white hover:scale-110 transition-all duration-300">
-    <MessageCircle size={12} />  {/* Placeholder for WhatsApp */}
-  </a>
-</div>
+    <div className="flex items-center gap-5">
+      <span className="text-[10px] tracking-[0.4em] text-slate-400">Connect</span>
+      <div className="flex gap-3">
+        <a 
+          href="https://www.instagram.com/iqra_dars_udinur" 
+          className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-emerald-400 hover:bg-emerald-500/20 hover:scale-110 transition-all duration-300"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Instagram size={13} />
+        </a>
+        <a 
+          href="https://whatsapp.com/channel/0029Vahzgjj545usYhW1vK37" 
+          className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-green-400 hover:bg-green-500/20 hover:scale-110 transition-all duration-300"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaWhatsapp size={13} style={{ color: '#25D366' }} />
+        </a>
+      </div>
     </div>
   </div>
 );
 
-// --- 2. ADMIN NAVBAR (Distinct & Functional) ---
+// --- 2. PREMIUM ADMIN NAVBAR ---
 function AdminNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -83,16 +111,19 @@ function AdminNavbar() {
   ];
 
   return (
-    <nav className="fixed w-full top-0 z-50 bg-slate-900 text-white border-b border-slate-800 shadow-2xl">
+    <nav className="fixed w-full top-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-b border-slate-700/50 shadow-2xl">
       <div className="max-w-[1600px] mx-auto px-6">
         <div className="flex justify-between items-center h-16">
-          <Link href="/admin" className="flex items-center gap-3">
-            <div className="bg-emerald-600 p-2 rounded-lg shadow-lg shadow-emerald-900/50">
-              <Shield className="text-white" size={18} />
+          <Link href="/admin" className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-500/30 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative bg-gradient-to-br from-emerald-600 to-emerald-500 p-2.5 rounded-lg shadow-lg shadow-emerald-900/50">
+                <Shield className="text-white" size={18} />
+              </div>
             </div>
             <div>
               <span className="block font-bold text-sm tracking-wide uppercase">Admin Panel</span>
-              <span className="block text-[10px] text-slate-400 font-mono">v2.0 Secure</span>
+              <span className="block text-[10px] text-emerald-400 font-mono">v2.0 Secure</span>
             </div>
           </Link>
 
@@ -101,19 +132,24 @@ function AdminNavbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-slate-300 hover:bg-white/10 hover:text-white transition-all duration-300 border border-transparent hover:border-white/10"
               >
                 <item.icon size={14} />
                 <span>{item.label}</span>
               </Link>
             ))}
             <div className="h-5 w-px bg-slate-700 mx-3" />
-            <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-500/10 rounded-md transition-colors">
+            <button 
+              onClick={handleLogout} 
+              className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-500/20 hover:text-red-300 rounded-lg transition-all duration-300 border border-transparent hover:border-red-500/30"
+            >
               <LogOut size={14} /> Logout
             </button>
           </div>
           
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 text-slate-400 hover:text-white"><Menu size={24} /></button>
+          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+            <Menu size={24} />
+          </button>
         </div>
       </div>
     </nav>
@@ -155,117 +191,88 @@ export default function Header() {
         transition={{ duration: 0.5, type: 'spring', damping: 20 }}
         className={`fixed w-full top-0 lg:top-auto z-40 transition-all duration-500 ease-in-out font-sans ${
           isScrolled 
-            ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-200/40 py-3 lg:py-3 border-b border-slate-200/50' 
-            : 'bg-white py-5 lg:py-6 border-b border-transparent'
+            ? 'bg-white/95 backdrop-blur-2xl shadow-xl shadow-slate-900/5 py-3 lg:py-3 border-b border-slate-200/60' 
+            : 'bg-white/80 backdrop-blur-md py-5 lg:py-6 border-b border-transparent'
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center">
             
-            {/* --- BRAND LOGO --- */}
+            {/* --- PREMIUM BRAND LOGO --- */}
             <Link href="/" className="flex items-center gap-4 group z-50" onClick={() => setIsMobileMenuOpen(false)}>
-              <div className="relative w-12 h-12 flex items-center justify-center bg-slate-50 rounded-xl border border-slate-100 shadow-sm group-hover:shadow-md group-hover:border-emerald-100 transition-all duration-300">
-                 {/* Using img tag for direct file reference as requested */}
-                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                 <img src="/icon.png" alt="Logo" className="w-8 h-8 object-contain" />
+              <div className="relative">
+                <div className="absolute inset-0 bg-emerald-200/50 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+                <div className="relative w-14 h-14 flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-2xl border-2 border-slate-100 shadow-lg group-hover:shadow-xl group-hover:border-emerald-200 group-hover:scale-105 transition-all duration-300 premium-shadow">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon.png" alt="Logo" className="w-9 h-9 object-contain" />
+                </div>
               </div>
               <div className="flex flex-col">
-                <h1 className="text-xl font-sans font-bold text-slate-900 leading-none tracking-tight group-hover:text-emerald-800 transition-colors">
+                <h1 className="text-xl font-bold text-slate-900 leading-none tracking-tight group-hover:text-emerald-700 transition-colors">
                   Iqra Dars
                 </h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="h-px w-4 bg-emerald-500"></span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="h-0.5 w-5 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"></span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                     Udinur & Padanna 
                   </span>
                 </div>
               </div>
             </Link>
 
-            {/* --- DESKTOP NAV --- */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* --- PREMIUM DESKTOP NAV --- */}
+            <nav className="hidden lg:flex items-center gap-2  rounded-full bg-slate-50/80 backdrop-blur-sm px-2 py-1.5 border border-slate-200/60 premium-shadow">
               {menuItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link 
                     key={item.href} 
                     href={item.href} 
-                    className="relative px-5 py-2.5 group overflow-hidden rounded-full"
+                    className="relative px-6 py-2.5 group overflow-hidden rounded-full transition-all duration-300"
                   >
                     <span className={`relative z-10 text-[13px] font-bold uppercase tracking-wider transition-colors duration-300 ${
                       isActive ? 'text-emerald-700' : 'text-slate-600 group-hover:text-emerald-700'
                     }`}>
                       {item.label}
                     </span>
-                    {/* Hover Background Pill */}
-                    <span className={`absolute inset-0 bg-emerald-50 rounded-full transform origin-center transition-transform duration-300 ease-out ${
-                      isActive ? 'scale-100' : 'scale-0 group-hover:scale-100'
+                    {/* Premium Hover Background Pill */}
+                    <span className={`absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full transform origin-center transition-transform duration-300 ease-out ${
+                      isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'
                     }`} />
+                    {/* Active Indicator */}
+                    {isActive && (
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"></span>
+                    )}
                   </Link>
                 );
               })}
             </nav>
 
-            {/* --- DESKTOP CTA --- */}
+            {/* --- PREMIUM DESKTOP CTA --- */}
             <div className="hidden lg:flex items-center gap-4">
-  <Link href="/location" className="focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
-    <motion.button
-      whileHover={{ 
-        scale: 1.02, 
-        borderColor: "rgba(16,185,129,1)",
-        boxShadow: "0 0 0 1px rgba(16,185,129,1), 0 0 0 4px rgba(16,185,129,0.1), 0 8px 32px rgba(16,185,129,0.15)" 
-      }}
-      whileTap={{ scale: 0.98 }}
-      whileFocus={{ scale: 1.02 }}
-      className="
-        flex items-center gap-2.5
-        backdrop-blur-sm
-        bg-transparent
-        text-emerald-800 hover:text-emerald-600
-        px-4 py-2
-        rounded-xl
-        text-sm font-semibold uppercase tracking-wide
-        border-1 border-emerald-500/60 hover:border-emerald-400/80
-        shadow-md shadow-emerald-500/10
-        hover:shadow-lg hover:shadow-emerald-500/20
-        transition-all duration-300 ease-out
-        group
-        relative
-        after:absolute after:inset-0 after:rounded-xl after:border after:border-emerald-500/20 after:pointer-events-none
-        after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300
-      "
-    >
-      <motion.div
-        className="flex h-4 w-4 items-center justify-center"
-        animate={{ 
-          scale: [1, 1.05, 1] 
-        }}
-        transition={{ 
-          duration: 2, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-      >
-        <MapPin 
-          size={16} 
-          className="text-emerald-800 group-hover:text-emerald-300 transition-colors duration-300 drop-shadow-sm" 
-        />
-      </motion.div>
-      <span className="tracking-[0.05em] leading-none relative z-10">
-        Locate Us
-      </span>
-    </motion.button>
-  </Link>
-</div>
+              <Link href="/location" className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl blur opacity-0 group-hover:opacity-60 transition duration-300"></div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="relative flex items-center gap-2.5 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-sm font-bold uppercase tracking-wide shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300"
+                >
+                  <MapPin size={16} className="group-hover:rotate-12 transition-transform" />
+                  <span>Locate Us</span>
+                </motion.button>
+              </Link>
+            </div>
 
 
-            {/* --- MOBILE HAMBURGER --- */}
-            <button
+            {/* --- PREMIUM MOBILE HAMBURGER --- */}
+            <motion.button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2.5 text-slate-800 hover:bg-slate-50 rounded-xl transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="lg:hidden p-3 text-slate-800 hover:bg-slate-50 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all"
             >
-              <Menu size={26} strokeWidth={2} />
-            </button>
+              <Menu size={24} strokeWidth={2.5} />
+            </motion.button>
           </div>
         </div>
       </motion.header>
@@ -283,31 +290,38 @@ export default function Header() {
               className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"
             />
             
-            {/* Sidebar */}
+            {/* Premium Sidebar */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 z-50 h-full w-[85%] max-w-[360px] bg-white shadow-2xl lg:hidden flex flex-col"
+              className="fixed top-0 right-0 z-50 h-full w-[85%] max-w-[380px] bg-gradient-to-b from-white via-white to-slate-50 shadow-2xl lg:hidden flex flex-col"
             >
-              {/* Sidebar Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50">
+              {/* Premium Sidebar Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
                 <div className="flex items-center gap-3">
-                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                   <img src="/icon.png" alt="Logo" className="w-8 h-8" />
-                   <span className="font-serif font-bold text-slate-900">Iqra Dars</span>
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-emerald-200/50 rounded-xl blur-md opacity-0 group-hover:opacity-100"></div>
+                    <div className="relative w-10 h-10 flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl border border-slate-200 shadow-sm">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/icon.png" alt="Logo" className="w-7 h-7 object-contain" />
+                    </div>
+                  </div>
+                  <span className="font-bold text-slate-900 text-lg">Iqra Dars</span>
                 </div>
-                <button 
+                <motion.button 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-red-500 hover:border-red-200 transition-colors"
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-2.5 bg-white border-2 border-slate-200 rounded-full text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-all shadow-sm"
                 >
                   <X size={20} />
-                </button>
+                </motion.button>
               </div>
 
-              {/* Sidebar Links (Staggered) */}
-              <div className="flex-1 overflow-y-auto py-8 px-6 space-y-2">
+              {/* Premium Sidebar Links */}
+              <div className="flex-1 overflow-y-auto py-8 px-6 space-y-3">
                 {menuItems.map((item, idx) => {
                   const isActive = pathname === item.href;
                   return (
@@ -320,15 +334,15 @@ export default function Header() {
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`group flex items-center justify-between p-4 rounded-xl transition-all ${
+                        className={`group flex items-center justify-between  p-5 rounded-2xl transition-all duration-300 ${
                           isActive 
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-100' 
-                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
+                          ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-2 border-emerald-200 shadow-lg shadow-emerald-100' 
+                          : 'text-slate-700 hover:bg-white hover:text-slate-900 border-2 border-slate-100 hover:border-slate-200 hover:shadow-md'
                         }`}
                       >
-                        <span className="font-bold text-lg">{item.label}</span>
-                        <div className={`p-1 rounded-full ${isActive ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-100 text-slate-400 group-hover:bg-white'}`}>
-                           <ChevronRight size={16} />
+                        <span className=" text-am">{item.label}</span>
+                        <div className={`p- rounded-full transition-all ${isActive ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-emerald-600'}`}>
+                           <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </div>
                       </Link>
                     </motion.div>
@@ -336,31 +350,43 @@ export default function Header() {
                 })}
               </div>
 
-              {/* Sidebar Footer */}
-              <div className="p-6 border-t border-slate-100 bg-slate-50">
-                <Link href="/location" onClick={() => setIsMobileMenuOpen(false)}>
-                <motion.button
-  whileHover={{ scale: 1.02 }}
-  whileTap={{ scale: 0.98 }}
-  className="w-full flex items-center justify-center gap-3 py-3.5 px-6 
-           
-             text-green-700 rounded-xl font-bold uppercase tracking-widest text-sm 
-             shadow-lg shadow-emerald-700/30 
-             transition-all duration-300"
->
-  <MapPin size={18} className="text-emarald-900" />
-  <span>VISIT DARS </span>
-</motion.button>
-                </Link>
+              {/* Premium Sidebar Footer */}
+              <div className="p-6 border-t-2 border-slate-200 bg-gradient-to-b from-slate-50 to-white">
+              <Link href="/location" onClick={() => setIsMobileMenuOpen(false)}>
+  <motion.button
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+    className="relative w-full flex items-center justify-center gap-3 py-4 px-6 bg-white hover:bg-gray-50 text-gray-900 rounded-2xl font-bold uppercase tracking-wider text-sm shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-300/60 border border-gray-200 hover:border-gray-300 transition-all duration-300 group overflow-hidden"
+  >
+    <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <MapPin size={18} className="relative z-10 text-emerald-600 group-hover:rotate-12 transition-transform" />
+    <span className="relative z-10">Visit Dars</span>
+  </motion.button>
+</Link>
                 
-                <div className="mt-8 flex justify-center gap-8">
-                  {[Facebook, Twitter, Instagram].map((Icon, i) => (
-                    <a key={i} href="#" className="text-slate-400 hover:text-emerald-600 hover:scale-110 transition-all">
-                      <Icon size={22} />
-                    </a>
-                  ))}
+                <div className="mt-8 flex justify-center gap-6">
+                  <motion.a
+                    href="https://www.instagram.com/iqra_dars_udinur"
+                    whileHover={{ scale: 1.15, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-12 h-12 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center text-slate-500 hover:text-white hover:bg-gradient-to-br hover:from-emerald-500 hover:to-teal-500 hover:border-transparent transition-all duration-300 shadow-sm hover:shadow-lg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Instagram size={20} />
+                  </motion.a>
+                  <motion.a
+                    href="https://whatsapp.com/channel/0029Vahzgjj545usYhW1vK37"
+                    whileHover={{ scale: 1.15, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-12 h-12 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center text-slate-500 hover:text-white hover:bg-green-500 hover:border-transparent transition-all duration-300 shadow-sm hover:shadow-lg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaWhatsapp size={20} style={{ color: '#25D366' }} />
+                  </motion.a>
                 </div>
-                <p className="text-center text-[10px] text-slate-400 mt-6 uppercase tracking-widest font-semibold">© 2024 Iqra Dars</p>
+                <p className="text-center text-[10px] text-slate-500 mt-6 uppercase tracking-widest font-semibold">© 2024 Iqra Dars</p>
               </div>
             </motion.div>
           </>
