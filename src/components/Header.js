@@ -42,7 +42,7 @@ const TopBar = () => (
         <span className="bg-emerald-500/10 p-1 rounded text-emerald-500 group-hover:text-emerald-400 transition-colors">
            <Mail size={10} />
         </span>
-        <span className="group-hover:text-white transition-colors">info@iqradars.edu</span>
+        <span className="group-hover:text-white transition-colors">iqradars786@gmail.com</span>
       </div>
     </div>
     <div className="flex items-center gap-4">
@@ -173,7 +173,7 @@ export default function Header() {
                 <div className="flex items-center gap-2 mt-1">
                   <span className="h-px w-4 bg-emerald-500"></span>
                   <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
-                    Udinur & Padne
+                    Udinur & Padanna 
                   </span>
                 </div>
               </div>

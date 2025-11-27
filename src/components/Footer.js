@@ -63,7 +63,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 leading-none">Iqra Dars</h3>
-                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Udinur & Padne</span>
+                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Udinur & Padanna </span>
                 </div>
               </div>
             </Link>
@@ -141,7 +141,7 @@ export default function Footer() {
                     <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-600">
                        <Mail size={16} />
                     </div>
-                    <a href="mailto:info@iqradars.edu" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">info@iqradars.edu</a>
+                    <a href="mailto:info@iqradars.edu" className="text-sm text-slate-600 hover:text-emerald-700 font-medium">iqradars786@gmail.com</a>
                   </li>
                </ul>
             </div>

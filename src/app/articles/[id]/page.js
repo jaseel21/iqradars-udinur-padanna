@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState, use } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -16,15 +15,12 @@ const formatDate = (date) =>
         month: 'long',
         day: 'numeric',
     });
-
 const isRTL = (language = '') =>
     /arabic|urdu|farsi|persian|hebrew|pashto/i.test((language || '').toLowerCase());
-
 const calculateReadTime = (text) => {
     const words = text?.split(/\s+/).length || 0;
     return Math.ceil(words / 200) + ' min read';
 };
-
 const formatCount = (value = 0) =>
     new Intl.NumberFormat('en-US', { notation: "compact" }).format(value || 0);
 
@@ -34,7 +30,7 @@ export default function ArticlePage({ params }) {
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [likedIds, setLikedIds] = useState(new Set());
-    const [viewedIds, setViewedIds] = useState(new Set());
+    const [viewedIds, setViewedIds] = new useState(new Set());
 
     // --- Effects (Persistence & Views) ---
     useEffect(() => {
@@ -75,6 +71,9 @@ export default function ArticlePage({ params }) {
                 next.add(article._id);
                 setViewedIds(next);
                 localStorage.setItem('viewedArticles', JSON.stringify([...next]));
+                
+                // Optimistically update article state views
+                setArticle(prev => ({ ...prev, views: (prev.views || 0) + 1 }));
 
                 // API Call
                 await fetch('/api/articles', {
@@ -99,6 +98,7 @@ export default function ArticlePage({ params }) {
             const next = new Set(likedIds);
             next.add(article._id);
             setLikedIds(next);
+            // Increment likes count on state
             setArticle(prev => ({ ...prev, likes: (prev.likes || 0) + 1 }));
             localStorage.setItem('likedArticles', JSON.stringify([...next]));
             toast.success('Added to favorites');
@@ -153,19 +153,22 @@ export default function ArticlePage({ params }) {
     return (
         <div className="min-h-screen bg-[#FDFDFD] font-sans text-slate-900 pb-24 selection:bg-emerald-100 selection:text-emerald-900">
 
-            {/* Simple Back Button (No Sticky Header) */}
-            <div className="absolute top-6 left-6 z-50">
-                <Link href="/" className="p-3 bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-slate-100 hover:bg-white text-slate-600 transition-all">
-                    <ArrowLeft size={20} />
-                </Link>
-            </div>
-
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl mx-auto px-6 py-12 pt-24"
+                className="max-w-4xl mx-auto px-6 py-12 pt-12"
             >
-                {/* Article Meta */}
+                {/* Simple Back Button */}
+                <button
+                    onClick={() => router.back()}
+                    className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 mb-8"
+                    aria-label="Go Back"
+                >
+                    <ArrowLeft size={20} />
+                    <span className="text-sm font-medium">Back to articles</span>
+                </button>
+
+                {/* Article Meta (Simplified for views, as views are also on the banner) */}
                 <div className="flex flex-wrap items-center gap-4 mb-8 text-sm">
                     <span className="px-3 py-1 bg-slate-100 text-slate-600 font-bold uppercase tracking-wider rounded-full text-xs">
                         {article.type}
@@ -180,10 +183,6 @@ export default function ArticlePage({ params }) {
                     <div className="flex items-center gap-2 text-slate-500">
                         <Clock size={14} />
                         <span>{calculateReadTime(article.content)}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <Eye size={14} />
-                        <span>{formatCount(article.views)} views</span>
                     </div>
                 </div>
 
@@ -209,37 +208,50 @@ export default function ArticlePage({ params }) {
                     </div>
                 </div>
 
-                {/* Banner */}
+                {/* Banner with professional Action Overlay */}
                 {article.bannerUrl && (
-                    <div className="w-full aspect-video rounded-2xl overflow-hidden mb-8 shadow-lg">
+                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-12 shadow-xl">
+                        {/* Image */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={article.bannerUrl} alt={article.title} className="w-full h-full object-cover" />
+
+                        {/* Action Overlay (Bottom Right) */}
+                        <div className="absolute bottom-4 right-4 flex items-center gap-3">
+                            
+                            {/* View Count Display (Non-interactive) */}
+                            <div
+                                className="flex items-center gap-2 p-3 rounded-full backdrop-blur-sm bg-white/70 text-slate-700 border border-slate-200 shadow-lg"
+                            >
+                                <Eye size={20} />
+                                <span className="font-semibold text-sm mr-1">
+                                    {formatCount(article.views)}
+                                </span>
+                            </div>
+
+                            {/* Like Button with Count */}
+                            <button
+                                onClick={handleLike}
+                                className={`flex items-center gap-2 p-3 rounded-full transition-all backdrop-blur-sm bg-white/70 shadow-lg border ${likedIds.has(article._id) ? 'text-red-600 border-red-200 hover:bg-red-50/80' : 'text-slate-700 border-slate-200 hover:bg-slate-100/80'}`}
+                                aria-label={likedIds.has(article._id) ? 'Liked' : 'Like Article'}
+                            >
+                                <Heart size={20} fill={likedIds.has(article._id) ? "currentColor" : "none"} />
+                                <span className="font-semibold text-sm mr-1">
+                                    {formatCount(article.likes)}
+                                </span>
+                            </button>
+
+                            {/* Share Button */}
+                            <button
+                                onClick={handleShare}
+                                className="p-3 rounded-full backdrop-blur-sm bg-white/70 text-slate-700 border border-slate-200 hover:bg-slate-100/80 transition-colors shadow-lg"
+                                aria-label="Share Article"
+                            >
+                                <Share2 size={20} />
+                            </button>
+                        </div>
                     </div>
                 )}
-
-                {/* Action Bar (Like & Share) - Placed under image */}
-                <div className="flex items-center justify-between border-y border-slate-100 py-4 mb-12">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={handleLike}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${likedIds.has(article._id) ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
-                        >
-                            <Heart size={18} fill={likedIds.has(article._id) ? "currentColor" : "none"} />
-                            <span className="font-bold text-sm">{likedIds.has(article._id) ? 'Liked' : 'Like'}</span>
-                        </button>
-                        <button
-                            onClick={handleShare}
-                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all"
-                        >
-                            <Share2 size={18} />
-                            <span className="font-bold text-sm">Share</span>
-                        </button>
-                    </div>
-                    <div className="text-slate-400 text-sm italic hidden sm:block">
-                        Share this knowledge
-                    </div>
-                </div>
-
+                
                 {/* Content */}
                 <div
                     className={`prose prose-slate max-w-none text-slate-800 ${isRTL(article.language)

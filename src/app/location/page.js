@@ -87,7 +87,7 @@ export default function Location() {
                 <div className="flex items-center space-x-3">
                   <Mail className="text-green-600 flex-shrink-0" size={20} />
                   <span className="text-gray-700 font-medium">
-                    {content?.email || 'info@iqradarsudinur.com'}
+                    {content?.email || 'iqradars786@gmail.com'}
                   </span>
                 </div>
 
