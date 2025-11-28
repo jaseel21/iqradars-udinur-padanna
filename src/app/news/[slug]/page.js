@@ -18,10 +18,10 @@ const NewsSkeleton = () => (
       <div className="h-10 w-1/2 bg-gray-200 rounded mx-auto"></div>
     </div>
     <div className="h-64 md:h-[500px] w-full bg-gray-200 rounded-2xl mb-12"></div>
-    <div className="max-w-2xl mx-auto space-y-4">
-      <div className="h-4 w-full bg-gray-200 rounded"></div>
-      <div className="h-4 w-full bg-gray-200 rounded"></div>
-      <div className="h-4 w-5/6 bg-gray-200 rounded"></div>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="h-6 w-full bg-gray-200 rounded"></div>
+      <div className="h-6 w-full bg-gray-200 rounded"></div>
+      <div className="h-6 w-5/6 bg-gray-200 rounded"></div>
     </div>
   </div>
 );
@@ -30,6 +30,7 @@ export default function NewsDetail() {
   const params = useParams();
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [shareStatus, setShareStatus] = useState(null); // 'copied' or null
 
   useEffect(() => {
     if (params.slug) {
@@ -52,10 +53,62 @@ export default function NewsDetail() {
     }
   };
 
+  // Function to copy URL as a fallback for sharing
+  const fallbackCopy = async (url) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareStatus('copied');
+      setTimeout(() => setShareStatus(null), 2000);
+    } catch (err) {
+      console.error('Could not copy text: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed"; // Avoid scrolling to bottom
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setShareStatus('copied');
+        setTimeout(() => setShareStatus(null), 2000);
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
+  // Function to handle sharing logic (Web Share API or Copy)
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    if (navigator.share) {
+      // Use Web Share API if available
+      try {
+        await navigator.share({
+          title: news.title,
+          url: url,
+        });
+      } catch (error) {
+        // User cancelled or another error, fall back to copy
+        if (error.name !== 'AbortError') {
+            await fallbackCopy(url);
+        }
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      await fallbackCopy(url);
+    }
+  };
+
+
   // Calculate read time based on word count
   const calculateReadTime = (content) => {
     const wordsPerMinute = 200;
-    const words = content.split(/\s/g).length;
+    // Strip HTML tags for accurate word count
+    const plainText = content.replace(/<[^>]*>?/gm, ''); 
+    const words = plainText.split(/\s/g).filter(Boolean).length;
     const minutes = Math.ceil(words / wordsPerMinute);
     return `${minutes} min read`;
   };
@@ -91,7 +144,7 @@ export default function NewsDetail() {
     <div className="min-h-screen bg-white selection:bg-emerald-100 selection:text-emerald-900">
       
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link
             href="/"
@@ -103,9 +156,26 @@ export default function NewsDetail() {
             Back to News
           </Link>
           
-          <button className="text-gray-400 hover:text-gray-900 transition-colors">
-            <Share2 size={20} />
-          </button>
+          {/* Share Button with Feedback */}
+          <div className="relative">
+            <button 
+              onClick={handleShare}
+              className="p-2 rounded-full text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              aria-label="Share article"
+            >
+              <Share2 size={20} />
+            </button>
+            {/* Link Copied Feedback Pop-up */}
+            {shareStatus === 'copied' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute right-0 top-full mt-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg shadow-xl whitespace-nowrap z-50"
+              >
+                Link Copied!
+              </motion.div>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -129,14 +199,14 @@ export default function NewsDetail() {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-snug mb-6">
             {news.title}
           </h1>
         </header>
 
         {/* Featured Image */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl shadow-xl shadow-gray-200">
+          <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl shadow-xl shadow-gray-300">
             <Image
               src={news.thumbnail}
               alt={news.title}
@@ -147,18 +217,32 @@ export default function NewsDetail() {
           </div>
         </div>
 
-        {/* Article Content */}
+        {/* Article Content - **IMPROVED READABILITY HERE** */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div 
-            className="prose prose-lg prose-slate max-w-none
-              prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900
-              prose-p:text-slate-600 prose-p:leading-8
-              prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-slate-900
-              prose-img:rounded-xl prose-img:shadow-lg
-              prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:not-italic prose-blockquote:text-slate-700"
-            dangerouslySetInnerHTML={{ __html: news.content }}
-          />
+        <div
+  className="
+    relative z-10
+    text-black !text-black
+    prose prose-xl max-w-none
+
+    prose-headings:text-black 
+    prose-p:text-black 
+    prose-li:text-black 
+    prose-strong:text-black 
+    prose-a:text-black
+
+    prose-headings:font-extrabold prose-headings:tracking-tight
+    prose-p:leading-relaxed
+    prose-a:no-underline hover:prose-a:underline
+    prose-img:rounded-2xl prose-img:shadow-2xl
+    prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 
+    prose-blockquote:bg-emerald-50 prose-blockquote:py-4 prose-blockquote:px-6 
+    prose-blockquote:not-italic prose-blockquote:text-emerald-800 
+    prose-blockquote:rounded-r-lg
+  "
+  dangerouslySetInnerHTML={{ __html: news.content }}
+/>
+
 
           {/* Footer / Tags (Placeholder) */}
           <div className="mt-16 pt-8 border-t border-gray-100">

@@ -292,7 +292,7 @@ export default function Home() {
       </section>
 
       {/* 2. PREMIUM MISSION BENTO */}
-      <section className="py-32 px-6 md:px-12 lg:px-16 max-w-[1600px] mx-auto relative z-20 -mt-16">
+      <section className="py-32 px-4 md:px-12 lg:px-16 max-w-[1600px] mx-auto relative z-20 -mt-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -303,7 +303,7 @@ export default function Home() {
             <div className="absolute top-0 right-0 p-16 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 transform group-hover:scale-110">
               <Target size={280} className="text-emerald-900" />
             </div>
-            <div className="relative z-10">
+            <div className="relative px-  z-10">
               <div className="relative inline-block mb-8">
                 <div className="absolute inset-0 bg-emerald-200/50 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
@@ -311,7 +311,7 @@ export default function Home() {
                 </div>
               </div>
               <h2 className="text-4xl font-bold text-slate-900 mb-6 tracking-tight">Our Core Mission</h2>
-              <p className="text-slate-600 text-xl leading-relaxed max-w-2xl text-balance font-light">
+              <p className="text-slate-600 text-md leading-relaxed max-w-2xl text-balance font-light">
                 {contentData?.mission || "To illuminate hearts and minds with the light of Islamic knowledge, guiding individuals on the path of righteousness."}
               </p>
             </div>
@@ -754,8 +754,8 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-transparent opacity-95 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-transparent to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute bottom-0 left-0 p-8 lg:p-10 w-full">
-                      <span className="inline-block px-4 py-1.5 glass-panel border border-white/20 text-white text-[11px] font-bold uppercase tracking-wider rounded-full mb-4 shadow-lg">
-                        Featured Story
+                      <span className="inline-block px-4 py-1.5  border border-white/20 text-white text-[11px] font-bold uppercase tracking-wider rounded-full mb-4 shadow-lg">
+                        Featured News
                       </span>
                       <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3 group-hover:text-emerald-200 transition-colors">
                         {latestNews.title}

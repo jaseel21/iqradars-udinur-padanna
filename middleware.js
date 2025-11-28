@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
 const verifyToken = (token) => {
@@ -19,11 +20,19 @@ export async function middleware(request) {
       return NextResponse.next();
     }
 
-    // Read cookies from the incoming request (Edge-compatible)
-    const token = request.cookies.get('token')?.value;
-    const user = verifyToken(token);
+    try {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('token')?.value;
+      const user = verifyToken(token);
 
-    if (!user) {
+      if (!user) {
+        // Redirect to login if not authenticated
+        const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('from', pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch (error) {
+      // If there's an error, redirect to login
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
