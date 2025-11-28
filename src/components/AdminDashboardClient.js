@@ -1,12 +1,25 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon, Users, Building2, BookOpen, User, Calendar, TrendingUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon, 
+  Users, Building2, BookOpen, User, Calendar, TrendingUp,
+  Activity, Clock, CheckCircle, AlertCircle, ArrowUpRight,
+  BarChart3, Bell, Search, Menu, X
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminDashboardClient({ user }) {
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -34,211 +47,288 @@ export default function AdminDashboardClient({ user }) {
       description: 'Upload and manage gallery images',
       href: '/admin/upload',
       icon: Upload,
-      color: 'from-blue-500 to-blue-600',
-      hoverColor: 'hover:from-blue-600 hover:to-blue-700',
-      bgIcon: 'bg-blue-100/20'
+      gradient: 'from-blue-500 via-blue-600 to-cyan-500',
+      stats: '124 images',
+      trend: '+12%'
     },
     {
       title: 'Edit Site Content',
       description: 'Manage content, board members, organizations, and more',
       href: '/admin/content',
       icon: FileText,
-      color: 'from-green-500 to-green-600',
-      hoverColor: 'hover:from-green-600 hover:to-green-700',
-      bgIcon: 'bg-green-100/20'
+      gradient: 'from-emerald-500 via-green-600 to-teal-500',
+      stats: '12 members',
+      trend: '+5%'
     },
     {
       title: 'Manage Articles & Poems',
       description: 'Publish multilingual articles and poetry with ease',
       href: '/admin/articles',
       icon: BookOpen,
-      color: 'from-purple-500 to-purple-600',
-      hoverColor: 'hover:from-purple-600 hover:to-purple-700',
-      bgIcon: 'bg-purple-100/20'
-    },
+      gradient: 'from-purple-500 via-violet-600 to-indigo-500',
+      stats: '45 articles',
+      trend: '+18%'
+    }
   ];
 
-  const statsData = [
-    { label: 'Gallery Images', value: 124, icon: ImageIcon, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'Board Members', value: 12, icon: Users, color: 'text-green-600', bg: 'bg-green-100' },
-    { label: 'Organizations', value: 8, icon: Building2, color: 'text-purple-600', bg: 'bg-purple-100' },
+  const quickStats = [
+    { 
+      label: 'Gallery Images', 
+      value: '124', 
+      change: '+12.5%', 
+      icon: ImageIcon, 
+      color: 'blue',
+      trend: 'up'
+    },
+    { 
+      label: 'Board Members', 
+      value: '12', 
+      change: '+8.2%', 
+      icon: Users, 
+      color: 'emerald',
+      trend: 'up'
+    },
+    { 
+      label: 'Organizations', 
+      value: '8', 
+      change: '+3.1%', 
+      icon: Building2, 
+      color: 'purple',
+      trend: 'up'
+    },
+    { 
+      label: 'Articles', 
+      value: '45', 
+      change: '-0.3%', 
+      icon: BookOpen, 
+      color: 'orange',
+      trend: 'down'
+    }
   ];
+
+  const recentActivity = [
+    { action: 'New image uploaded to gallery', time: '2 minutes ago', type: 'upload' },
+    { action: 'Site content updated', time: '15 minutes ago', type: 'edit' },
+    { action: 'New article published', time: '1 hour ago', type: 'article' },
+    { action: 'Board member added', time: '3 hours ago', type: 'member' }
+  ];
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
+  const getActivityIcon = (type) => {
+    switch(type) {
+      case 'upload': return Upload;
+      case 'edit': return FileText;
+      case 'article': return BookOpen;
+      case 'member': return Users;
+      default: return CheckCircle;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-emerald-500/10 blur-3xl animate-pulse" />
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-cyan-500/10 via-indigo-500/10 to-pink-500/10 blur-3xl animate-pulse delay-1000" />
+      </div>
+
+      <div className="relative z-10 min-h-screen">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden mb-8"
+        <motion.header
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-white/10"
         >
-          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 text-white px-8 py-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/5" />
-            <div className="relative z-10 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              {/* Logo & Title */}
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <Shield className="w-8 h-8" />
-                </div>
+                <motion.div
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50"
+                >
+                  <Shield className="w-6 h-6 text-white" />
+                </motion.div>
                 <div>
-                  <h1 className="text-3xl font-bold mb-1">Admin Dashboard</h1>
-                  <p className="text-indigo-100 text-sm opacity-90">
-                    Welcome back, <span className="font-semibold capitalize">{user?.email?.split('@')[0] || 'Admin'}</span>
-                  </p>
+                  <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
+                  <p className="text-xs text-slate-400">{formatTime(currentTime)}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-white" />
+
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2 text-slate-400 hover:text-white transition-colors"
+                >
+                  <Bell size={20} />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 text-slate-400 hover:text-white transition-colors"
+                >
+                  <Settings size={20} />
+                </motion.button>
+
+                <div className="w-px h-6 bg-white/10 mx-2" />
+
+                <div className="flex items-center space-x-3">
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-white capitalize">
+                      {user?.email?.split('@')[0] || 'Admin'}
+                    </p>
+                    <p className="text-xs text-slate-400">Administrator</p>
+                  </div>
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <User size={18} className="text-white" />
+                  </div>
                 </div>
-                <button
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-300 border border-white/20"
+                  className="ml-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-all duration-300 border border-red-500/20 flex items-center space-x-2"
                 >
                   <LogOut size={16} />
                   <span className="text-sm font-medium">Logout</span>
-                </button>
+                </motion.button>
               </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 text-white"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
             </div>
           </div>
-        </motion.div>
 
-        {/* Dashboard Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {dashboardCards.map((card, index) => {
-            const Icon = card.icon;
-            return (
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
               <motion.div
-                key={card.href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="group"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="md:hidden border-t border-white/10 bg-slate-900/95 backdrop-blur-xl"
               >
-                <Link href={card.href}>
-                  <div className={`relative bg-white rounded-2xl p-6 shadow-lg border border-gray-100/50 hover:border-gray-200/70 transition-all duration-300 h-full flex flex-col overflow-hidden ${card.hoverColor}`}>
-                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${card.bgIcon} opacity-20 -translate-y-8 translate-x-8 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-700 blur-xl`} />
-                    <div className="relative z-10 flex flex-col h-full">
-                      <div className="flex items-center justify-center w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl mb-4 group-hover:bg-white/30 transition-all duration-300">
-                        <Icon size={24} className="text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold mb-3 text-gray-800">{card.title}</h3>
-                      <p className="text-gray-600 mb-auto flex-grow">{card.description}</p>
-                      <div className="flex items-center mt-4 pt-4 border-t border-gray-100/50">
-                        <span className="font-semibold text-gray-700 mr-auto">Manage</span>
-                        <svg
-                          className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <div className="px-4 py-4 space-y-3">
+                  <button className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-800/50 rounded-xl text-white">
+                    <Bell size={20} />
+                    <span>Notifications</span>
+                  </button>
+                  <button className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-800/50 rounded-xl text-white">
+                    <Settings size={20} />
+                    <span>Settings</span>
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-3 px-4 py-3 bg-red-500/10 rounded-xl text-red-400"
+                  >
+                    <LogOut size={20} />
+                    <span>Logout</span>
+                  </button>
+                </div>
               </motion.div>
-            );
-          })}
+            )}
+          </AnimatePresence>
+        </motion.header>
 
-          {/* Quick Stats Card */}
+        {/* Main Content */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100/50"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 p-8 shadow-2xl"
           >
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-8 h-8 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-indigo-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800">Quick Stats</h3>
-            </div>
-            <div className="space-y-4">
-              {statsData.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="flex items-center space-x-4 p-3 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center`}>
-                      <Icon className={stat.color} size={20} />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 capitalize">{stat.label}</p>
-                      <p className="text-xl font-bold text-gray-900">{stat.value}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzBoLTJ2LTJoMnYyem0wIDRoLTJ2LTJoMnYyem0wIDRoLTJ2LTJoMnYyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20" />
+            <div className="relative z-10">
+              <h2 className="text-2xl font- text-white mb-2">
+                Iqradars Admin Dashboard
+              </h2>
+              <p className="text-blue-100 text-lg">
+                Here's what's happening with your platform today
+              </p>
             </div>
           </motion.div>
-        </div>
 
-        {/* Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100/50"
-        >
-          <div className="flex items-start space-x-6">
-            <div className="bg-gradient-to-br from-yellow-400 to-orange-400 p-4 rounded-2xl flex-shrink-0">
-              <Settings className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-4 text-gray-800">Admin Quick Guide</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Manage your website content efficiently from this centralized dashboard. All changes are saved automatically and will be reflected on the live site immediately.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-xl border-l-4 border-blue-500">
-                    <Upload size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Gallery Management</h4>
-                      <p className="text-sm text-gray-600">Upload high-quality images and organize them into categories.</p>
+          {/* Quick Stats Grid */}
+         
+
+          {/* Main Dashboard Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dashboardCards.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={card.href}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="group cursor-pointer"
+                >
+                  <Link href={card.href}>
+                    <div className="relative h-full">
+                      {/* Glow Effect */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500`} />
+                      
+                      {/* Card Content */}
+                      <div className="relative bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all duration-300 h-full flex flex-col">
+                        <div className="flex items-start justify-between mb-6">
+                          <div className={`w-16 h-16 bg-gradient-to-br ${card.gradient} rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300`}>
+                            <Icon className="w-8 h-8 text-white" />
+                          </div>
+                          <ArrowUpRight className="w-6 h-6 text-slate-400 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                        </div>
+                        
+                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                          {card.title}
+                        </h3>
+                        <p className="text-slate-400 mb-6 flex-grow">
+                          {card.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between pt-4 border-t border-white/10">
+
+                          <div className="flex items-center space-x-1 text-emerald-400 text-sm font-medium">
+                            <TrendingUp size={14} />
+                            <span>{card.trend}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-xl border-l-4 border-green-500">
-                    <Users size={20} className="text-green-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Team & Organizations</h4>
-                      <p className="text-sm text-gray-600">Update board members, add bios, and manage partner organizations.</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-start space-x-3 p-3 bg-purple-50 rounded-xl border-l-4 border-purple-500">
-                    <BookOpen size={20} className="text-purple-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Content Publishing</h4>
-                      <p className="text-sm text-gray-600">Create and edit articles, poems, and site-wide content in multiple languages.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-3 bg-indigo-50 rounded-xl border-l-4 border-indigo-500">
-                    <Calendar size={20} className="text-indigo-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Recent Activity</h4>
-                      <p className="text-sm text-gray-600">Track changes and view audit logs for all updates.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
-        </motion.div>
+
+          {/* Recent Activity */}
+         
+
+          {/* Analytics Chart Placeholder */}
+         
+        </main>
+
+        {/* Footer */}
+        
       </div>
     </div>
   );

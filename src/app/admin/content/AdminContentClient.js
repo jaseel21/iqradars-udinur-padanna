@@ -283,10 +283,31 @@ export default function AdminContentClient({ initialData, user }) {
           className="bg-white rounded-2xl shadow-xl overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-8">
-            <h1 className="text-4xl font-bold mb-2">Content Management</h1>
-            <p className="text-green-100">Manage all site content, gallery, board members, and more</p>
-          </div>
+          <div className="
+  bg-gradient-to-r from-green-600 to-green-700 
+  dark:from-green-900 dark:to-green-950
+  text-white px-6 py-10 rounded-xl shadow-lg 
+  border border-white/10 dark:border-green-800/40
+  relative overflow-hidden
+">
+  {/* Decorative Glow */}
+  <div className="
+    absolute inset-0 opacity-20 
+    bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.3),transparent)]
+    dark:bg-[radial-gradient(circle_at_top_left,rgba(0,255,100,0.15),transparent)]
+  " />
+
+  <h1 className="
+    relative text-4xl md:text-5xl font-bold mb-3 tracking-tight
+  ">
+    Content Management
+  </h1>
+
+  <p className="relative text-green-100 dark:text-green-300 text-lg">
+    Manage all site content, gallery, board members, and more
+  </p>
+</div>
+
 
           {/* Tabs */}
           <Tab.Group selectedIndex={activeTab} onChange={setActiveTab}>

@@ -91,7 +91,7 @@ export default function AdminLoginForm() {
                     }
                   })} 
                   type="email"
-                  placeholder="iqradars786@gmail.com" 
+                  placeholder="Email" 
                   className={`w-full p-3 pl-10 border rounded-lg focus:outline-none focus:ring-2 transition-all text-slate-900 ${
                     errors.email ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-emerald-500 focus:ring-emerald-100'
                   }`}
