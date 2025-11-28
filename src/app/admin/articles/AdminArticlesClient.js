@@ -211,7 +211,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl shadow-xl overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="bg-gradient-to-r from-green-900 to-emerald-900 text-white px-6 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold mb-2 flex items-center space-x-3">
                 <BookOpen size={40} />
@@ -239,7 +239,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     value={form.title}
                     onChange={(e) => handleChange('title', e.target.value)}
                     required
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border-2 border-gray-200 text-black rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Enter article or poem title"
                   />
                 </div>
@@ -248,7 +248,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                   <input
                     value={form.subtitle}
                     onChange={(e) => handleChange('subtitle', e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border-2 text-black border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Enter subtitle or summary"
                   />
                 </div>
@@ -258,7 +258,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <input
                       value={form.author}
                       onChange={(e) => handleChange('author', e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full p-3 text-black border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       placeholder="Author name"
                     />
                   </div>
@@ -267,7 +267,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <select
                       value={form.language}
                       onChange={(e) => handleChange('language', e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full p-3 border-2 text-black border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
                       {languageOptions.map((lang) => (
                         <option key={lang} value={lang}>
@@ -283,7 +283,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <select
                       value={form.fontFamily}
                       onChange={(e) => handleChange('fontFamily', e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full p-3 text-black border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
                       {fontOptions.map((font) => (
                         <option key={font.value} value={font.value}>
@@ -297,7 +297,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <select
                       value={form.type}
                       onChange={(e) => handleChange('type', e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full text-black p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
                       <option value="article">Article</option>
                       <option value="poem">Poem</option>
@@ -308,7 +308,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <select
                       value={form.status || 'draft'}
                       onChange={(e) => handleChange('status', e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full text-black p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
                       {statusOptions.map((status) => (
                         <option key={status.value} value={status.value}>
@@ -326,7 +326,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                   <input
                     value={form.tags}
                     onChange={(e) => handleChange('tags', e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full text-black p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Comma separated (e.g., Faith, Spirituality)"
                   />
                 </div>
@@ -338,7 +338,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                   <input
                     value={form.bannerUrl}
                     onChange={(e) => handleChange('bannerUrl', e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 text-black text-black border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="https://..."
                   />
                   <label className="mt-3 flex items-center space-x-2 text-sm text-green-700 cursor-pointer">
@@ -346,7 +346,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     <span>{uploading ? 'Uploading...' : 'Upload banner image'}</span>
                     <input
                       type="file"
-                      className="hidden"
+                      className="hidden text-black"
                       accept="image/*"
                       onChange={(e) => handleBannerUpload(e.target.files?.[0])}
                       disabled={uploading}
@@ -360,7 +360,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                     onChange={(e) => handleChange('content', e.target.value)}
                     required
                     rows={12}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full text-black p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Write the full article or poem text. Use paragraphs for clarity."
                   />
                   <p className="text-xs text-gray-500 mt-2">
@@ -374,7 +374,7 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition"
+                className="flex items-center space-x-2 bg-green-900 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition"
               >
                 <Save size={18} />
                 <span>{editingId ? 'Update Article' : 'Publish Article'}</span>
@@ -418,13 +418,13 @@ export default function AdminArticlesClient({ initialArticles = [] }) {
                   key={article._id}
                   className="border-2 border-gray-100 rounded-xl p-5 hover:border-green-400 transition group flex flex-col space-y-3"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="space-x-2 text-xs uppercase tracking-wide text-gray-500">
+                  <div className="flex items-center  justify-between">
+                    <div className="space-x-2 text-xs  uppercase tracking-wide text-gray-500">
                       <span>{article.type}</span>
                       <span>· {article.language}</span>
                     </div>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      className={`px-3 py-1 rounded-full text-xs  font-semibold ${
                         article.status === 'published'
                           ? 'bg-emerald-50 text-emerald-700'
                           : 'bg-amber-50 text-amber-700'
