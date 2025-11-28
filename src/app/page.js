@@ -453,7 +453,7 @@ export default function Home() {
                         </div>
 
                         {/* Premium View/Like Counts */}
-                        <div className="flex items-center gap-4 glass-panel border border-white/20 px-5 py-2 rounded-full shadow-lg">
+                        <div className="flex items-center gap-4  border border-white/20 px-5 py-2 rounded-full shadow-lg">
                           <span className="flex items-center gap-2 text-sm text-white font-semibold">
                             <Eye size={16} className="text-emerald-400" />
                             {formatCount(featuredArticle.views)}
