@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import * as jose from 'jose';
 import connectDB from '@/lib/mongoose';
 
 export async function POST(req) {
@@ -38,11 +38,15 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const token = await new jose.SignJWT({ email })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('24h')
+      .sign(secret);
     console.log('Token generated successfully');
 
     const response = NextResponse.json({ success: true, message: 'Login successful' });
-    response.cookies.set('token', token, { 
+    response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60,

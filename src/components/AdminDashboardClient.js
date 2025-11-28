@@ -146,77 +146,7 @@ export default function AdminDashboardClient({ user }) {
           animate={{ y: 0 }}
           className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-white/10"
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              {/* Logo & Title */}
-              <div className="flex items-center space-x-4">
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50"
-                >
-                  <Shield className="w-6 h-6 text-white" />
-                </motion.div>
-                <div>
-                  <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
-                  <p className="text-xs text-slate-400">{formatTime(currentTime)}</p>
-                </div>
-              </div>
-
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-3">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative p-2 text-slate-400 hover:text-white transition-colors"
-                >
-                  <Bell size={20} />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-2 text-slate-400 hover:text-white transition-colors"
-                >
-                  <Settings size={20} />
-                </motion.button>
-
-                <div className="w-px h-6 bg-white/10 mx-2" />
-
-                <div className="flex items-center space-x-3">
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-white capitalize">
-                      {user?.email?.split('@')[0] || 'Admin'}
-                    </p>
-                    <p className="text-xs text-slate-400">Administrator</p>
-                  </div>
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <User size={18} className="text-white" />
-                  </div>
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLogout}
-                  className="ml-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-all duration-300 border border-red-500/20 flex items-center space-x-2"
-                >
-                  <LogOut size={16} />
-                  <span className="text-sm font-medium">Logout</span>
-                </motion.button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-white"
-              >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
+          
 
           {/* Mobile Menu */}
           <AnimatePresence>
@@ -250,7 +180,7 @@ export default function AdminDashboardClient({ user }) {
         </motion.header>
 
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <main className="max-w-7xl pt-20 mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           {/* Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

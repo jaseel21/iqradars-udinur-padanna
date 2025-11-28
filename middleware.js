@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
+import * as jose from 'jose';
 
-const verifyToken = (token) => {
+const verifyToken = async (token) => {
   if (!token) return null;
   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const { payload } = await jose.jwtVerify(token, secret);
+    return payload;
+  } catch (err) {
     return null;
   }
 };
@@ -23,7 +25,7 @@ export async function middleware(request) {
     try {
       const cookieStore = await cookies();
       const token = cookieStore.get('token')?.value;
-      const user = verifyToken(token);
+      const user = await verifyToken(token);
 
       if (!user) {
         // Redirect to login if not authenticated
