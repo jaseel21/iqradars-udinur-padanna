@@ -4,15 +4,15 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  motion, 
-  AnimatePresence, 
-  useScroll, 
-  useMotionValueEvent 
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent
 } from 'framer-motion';
-import { 
-  Menu, X, Shield, LayoutDashboard, 
-  Upload, FileText, BookOpen, Phone, Facebook, Twitter,MessageCircleCode, Instagram, 
+import {
+  Menu, X, Shield, LayoutDashboard,
+  Upload, FileText, BookOpen, Phone, Facebook, Twitter, MessageCircleCode, Instagram,
   // WhatsApp,  // <-- Remove or comment this out
   MessageCircle,  // <-- Add this as a placeholder (available in Lucide)
   ChevronRight, MapPin, Mail, LogOut, GraduationCap
@@ -68,16 +68,16 @@ const TopBar = () => (
     <div className="flex items-center gap-5">
       <span className="text-[10px] tracking-[0.4em] text-slate-400">Connect</span>
       <div className="flex gap-3">
-        <a 
-          href="https://www.instagram.com/iqra_dars_udinur" 
+        <a
+          href="https://www.instagram.com/iqra_dars_udinur"
           className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-emerald-400 hover:bg-emerald-500/20 hover:scale-110 transition-all duration-300"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Instagram size={13} />
         </a>
-        <a 
-          href="https://whatsapp.com/channel/0029Vahzgjj545usYhW1vK37" 
+        <a
+          href="https://whatsapp.com/channel/0029Vahzgjj545usYhW1vK37"
           className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-green-400 hover:bg-green-500/20 hover:scale-110 transition-all duration-300"
           target="_blank"
           rel="noopener noreferrer"
@@ -118,7 +118,7 @@ function AdminNavbar() {
             <div className="relative">
               <div className="absolute inset-0 bg-emerald-500/30 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative  p-2.5 rounded-lg shadow-lg">
-                     <img src='/icon.png' className='h-16 w-16'></img>
+                <img src='/icon.png' className='h-16 w-16'></img>
               </div>
             </div>
             <div>
@@ -139,19 +139,56 @@ function AdminNavbar() {
               </Link>
             ))}
             <div className="h-5 w-px bg-slate-700 mx-3" />
-            <button 
-              onClick={handleLogout} 
+            <button
+              onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-500/20 hover:text-red-300 rounded-lg transition-all duration-300 border border-transparent hover:border-red-500/30"
             >
               <LogOut size={14} /> Logout
             </button>
           </div>
-          
+
           <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-            <Menu size={24} />
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-slate-900 border-t border-slate-800 overflow-hidden"
+          >
+            <div className="px-6 py-4 space-y-2">
+              {adminMenuItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                >
+                  <item.icon size={18} />
+                  <span className="text-sm font-medium uppercase tracking-wide">{item.label}</span>
+                </Link>
+              ))}
+              <div className="h-px bg-slate-800 my-2" />
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                <LogOut size={18} />
+                <span className="text-sm font-bold uppercase tracking-wide">Logout</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
@@ -184,20 +221,19 @@ export default function Header() {
     <>
       <style jsx global>{customStyles}</style>
       <TopBar />
-      
+
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, type: 'spring', damping: 20 }}
-        className={`fixed w-full top-0 lg:top-auto z-40 transition-all duration-500 ease-in-out font-sans ${
-          isScrolled 
-            ? 'bg-white/95 backdrop-blur-2xl shadow-xl shadow-slate-900/5 py-3 lg:py-3 border-b border-slate-200/60' 
+        className={`fixed w-full top-0 lg:top-auto z-40 transition-all duration-500 ease-in-out font-sans ${isScrolled
+            ? 'bg-white/95 backdrop-blur-2xl shadow-xl shadow-slate-900/5 py-3 lg:py-3 border-b border-slate-200/60'
             : 'bg-white/80 backdrop-blur-md py-5 lg:py-6 border-b border-transparent'
-        }`}
+          }`}
       >
         <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center">
-            
+
             {/* --- PREMIUM BRAND LOGO --- */}
             <Link href="/" className="flex items-center gap-4 group z-50" onClick={() => setIsMobileMenuOpen(false)}>
               <div className="relative">
@@ -214,7 +250,7 @@ export default function Header() {
                 <div className="flex items-center gap-2 mt-1.5">
                   <span className="h-0.5 w-5 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"></span>
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                    Udinur & Padanna 
+                    Udinur & Padanna
                   </span>
                 </div>
               </div>
@@ -225,20 +261,18 @@ export default function Header() {
               {menuItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
-                  <Link 
-                    key={item.href} 
-                    href={item.href} 
+                  <Link
+                    key={item.href}
+                    href={item.href}
                     className="relative px-6 py-2.5 group overflow-hidden rounded-full transition-all duration-300"
                   >
-                    <span className={`relative z-10 text-[13px] font-bold uppercase tracking-wider transition-colors duration-300 ${
-                      isActive ? 'text-emerald-700' : 'text-slate-600 group-hover:text-emerald-700'
-                    }`}>
+                    <span className={`relative z-10 text-[13px] font-bold uppercase tracking-wider transition-colors duration-300 ${isActive ? 'text-emerald-700' : 'text-slate-600 group-hover:text-emerald-700'
+                      }`}>
                       {item.label}
                     </span>
                     {/* Premium Hover Background Pill */}
-                    <span className={`absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full transform origin-center transition-transform duration-300 ease-out ${
-                      isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'
-                    }`} />
+                    <span className={`absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full transform origin-center transition-transform duration-300 ease-out ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'
+                      }`} />
                     {/* Active Indicator */}
                     {isActive && (
                       <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"></span>
@@ -289,7 +323,7 @@ export default function Header() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"
             />
-            
+
             {/* Premium Sidebar */}
             <motion.div
               initial={{ x: '100%' }}
@@ -310,7 +344,7 @@ export default function Header() {
                   </div>
                   <span className="font-bold text-slate-900 text-lg">Iqra Dars</span>
                 </div>
-                <motion.button 
+                <motion.button
                   onClick={() => setIsMobileMenuOpen(false)}
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
@@ -334,15 +368,14 @@ export default function Header() {
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`group flex items-center justify-between  p-5 rounded-2xl transition-all duration-300 ${
-                          isActive 
-                          ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-2 border-emerald-200 shadow-lg shadow-emerald-100' 
-                          : 'text-slate-700 hover:bg-white hover:text-slate-900 border-2 border-slate-100 hover:border-slate-200 hover:shadow-md'
-                        }`}
+                        className={`group flex items-center justify-between  p-5 rounded-2xl transition-all duration-300 ${isActive
+                            ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-2 border-emerald-200 shadow-lg shadow-emerald-100'
+                            : 'text-slate-700 hover:bg-white hover:text-slate-900 border-2 border-slate-100 hover:border-slate-200 hover:shadow-md'
+                          }`}
                       >
                         <span className=" text-am">{item.label}</span>
                         <div className={`p- rounded-full transition-all ${isActive ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-emerald-600'}`}>
-                           <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                          <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </div>
                       </Link>
                     </motion.div>
@@ -352,18 +385,18 @@ export default function Header() {
 
               {/* Premium Sidebar Footer */}
               <div className="p-6 border-t-2 border-slate-200 bg-gradient-to-b from-slate-50 to-white">
-              <Link href="/location" onClick={() => setIsMobileMenuOpen(false)}>
-  <motion.button
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-    className="relative w-full flex items-center justify-center gap-3 py-4 px-6 bg-white hover:bg-gray-50 text-gray-900 rounded-2xl font-bold uppercase tracking-wider text-sm shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-300/60 border border-gray-200 hover:border-gray-300 transition-all duration-300 group overflow-hidden"
-  >
-    <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
-    <MapPin size={18} className="relative z-10 text-emerald-600 group-hover:rotate-12 transition-transform" />
-    <span className="relative z-10">Visit Dars</span>
-  </motion.button>
-</Link>
-                
+                <Link href="/location" onClick={() => setIsMobileMenuOpen(false)}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative w-full flex items-center justify-center gap-3 py-4 px-6 bg-white hover:bg-gray-50 text-gray-900 rounded-2xl font-bold uppercase tracking-wider text-sm shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-300/60 border border-gray-200 hover:border-gray-300 transition-all duration-300 group overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <MapPin size={18} className="relative z-10 text-emerald-600 group-hover:rotate-12 transition-transform" />
+                    <span className="relative z-10">Visit Dars</span>
+                  </motion.button>
+                </Link>
+
                 <div className="mt-8 flex justify-center gap-6">
                   <motion.a
                     href="https://www.instagram.com/iqra_dars_udinur"
@@ -392,7 +425,7 @@ export default function Header() {
           </>
         )}
       </AnimatePresence>
-      
+
       {/* Layout Spacer (Prevents content jumping when header becomes fixed) */}
       <div className="h-[110px] lg:h-[130px]" />
     </>

@@ -521,7 +521,7 @@ export default function Contact() {
                   />
                   <div className="absolute top-6 right-6 z-20">
                     <div className="px-4 py-2 rounded-full glass-panel text-xs font-bold text-emerald-700 shadow-lg border border-white/50">
-                      Campus {i + 1}
+                      Dars {i + 1}
                     </div>
                   </div>
                   {/* Overlay Gradient */}

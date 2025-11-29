@@ -21,12 +21,12 @@ export default function Footer() {
     ],
     locations: [
         { 
-            name: 'Udinur Campus', 
+            name: 'Udinur Dars', 
             address: 'Udinur Education Street, Udinur, Kasaragod, Kerala, India',
             mapUrl: "https://www.google.com/maps/place/Udinur+Juma+Masjid/@12.1535692,75.1699812,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba46e2faaaaaaab:0x34c5c716b6b6e9d!8m2!3d12.1535692!4d75.1699812!16s%2Fg%2F11b7h9y1zm?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D"
         },
         { 
-            name: 'Padanna Campus', 
+            name: 'Padanna Dars', 
             address: 'Padanna Valiya Juma Masjid Road, Padanna, Kasaragod, Kerala, India',
             mapUrl: "https://www.google.com/maps/place/Padanna+%E2%88%99+Valiya+juma+masjid/@12.1763519,75.1463666,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba4712baa5a024f:0xf28f87750da0ae5e!8m2!3d12.1763519!4d75.1463666!16s%2Fg%2F11hdf8t3mj?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D"
         },
