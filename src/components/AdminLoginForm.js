@@ -87,9 +87,8 @@ export default function AdminLoginForm() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
         {/* Header Section */}
         <div className="bg-slate-900 p-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 mb-4">
-            <Shield className="w-6 h-6 text-emerald-500" />
-          </div>
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-xl mb-4">
+     <img src='/icon.png' className='h-24 w-24'></img>          </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Admin Portal</h2>
           <p className="text-slate-400 text-sm mt-2">Sign in to manage your dashboard</p>
         </div>
@@ -122,7 +121,7 @@ export default function AdminLoginForm() {
                   value={formData.email}
                   onChange={handleChange}
                   type="email"
-                  placeholder="admin@example.com"
+                  placeholder="Email"
                   className={`block w-full pl-10 pr-3 py-2.5 border rounded-lg text-sm transition-colors focus:ring-2 focus:ring-offset-0 ${errors.email
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200 bg-red-50/30'
                       : 'border-slate-200 focus:border-slate-900 focus:ring-slate-100'
@@ -146,6 +145,7 @@ export default function AdminLoginForm() {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-slate-400" />
+             
                 </div>
                 <input
                   name="password"

@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon, 
-  Users, Building2, BookOpen, User, Calendar, TrendingUp,
-  Activity, Clock, CheckCircle, AlertCircle, ArrowUpRight,
-  BarChart3, Bell, Search, Menu, X
+import {
+  Upload, FileText, LogOut, Settings, Shield, Image as ImageIcon,
+  Users, Building2, BookOpen, TrendingUp, ArrowUpRight,
+  Bell, Search, Menu, X, ChevronRight, LayoutDashboard
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -23,11 +22,11 @@ export default function AdminDashboardClient({ user }) {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('/api/auth/logout', { 
-        method: 'POST', 
-        credentials: 'include' 
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
       });
-      
+
       if (res.ok) {
         toast.success('Logged out successfully');
         router.push('/admin/login');
@@ -43,223 +42,176 @@ export default function AdminDashboardClient({ user }) {
 
   const dashboardCards = [
     {
-      title: 'Upload Gallery Images',
-      description: 'Upload and manage gallery images',
+      title: 'Gallery Management',
+      description: 'Upload and organize gallery images',
       href: '/admin/upload',
-      icon: Upload,
-      gradient: 'from-blue-500 via-blue-600 to-cyan-500',
+      icon: ImageIcon,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
       stats: '124 images',
       trend: '+12%'
     },
     {
-      title: 'Edit Site Content',
-      description: 'Manage content, board members, organizations, and more',
+      title: 'Content Management',
+      description: 'Edit site content and personnel',
       href: '/admin/content',
       icon: FileText,
-      gradient: 'from-emerald-500 via-green-600 to-teal-500',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
       stats: '12 members',
       trend: '+5%'
     },
     {
-      title: 'Manage Articles & Poems',
-      description: 'Publish multilingual articles and poetry with ease',
+      title: 'Articles & Poems',
+      description: 'Publish and manage articles',
       href: '/admin/articles',
       icon: BookOpen,
-      gradient: 'from-purple-500 via-violet-600 to-indigo-500',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
       stats: '45 articles',
       trend: '+18%'
     }
   ];
 
   const quickStats = [
-    { 
-      label: 'Gallery Images', 
-      value: '124', 
-      change: '+12.5%', 
-      icon: ImageIcon, 
-      color: 'blue',
+    {
+      label: 'Total Images',
+      value: '124',
+      change: '+12.5%',
+      icon: ImageIcon,
       trend: 'up'
     },
-    { 
-      label: 'Board Members', 
-      value: '12', 
-      change: '+8.2%', 
-      icon: Users, 
-      color: 'emerald',
+    {
+      label: 'Board Members',
+      value: '12',
+      change: '+8.2%',
+      icon: Users,
       trend: 'up'
     },
-    { 
-      label: 'Organizations', 
-      value: '8', 
-      change: '+3.1%', 
-      icon: Building2, 
-      color: 'purple',
+    {
+      label: 'Organizations',
+      value: '8',
+      change: '+3.1%',
+      icon: Building2,
       trend: 'up'
     },
-    { 
-      label: 'Articles', 
-      value: '45', 
-      change: '-0.3%', 
-      icon: BookOpen, 
-      color: 'orange',
+    {
+      label: 'Published Articles',
+      value: '45',
+      change: '-0.3%',
+      icon: BookOpen,
       trend: 'down'
     }
   ];
 
-  const recentActivity = [
-    { action: 'New image uploaded to gallery', time: '2 minutes ago', type: 'upload' },
-    { action: 'Site content updated', time: '15 minutes ago', type: 'edit' },
-    { action: 'New article published', time: '1 hour ago', type: 'article' },
-    { action: 'Board member added', time: '3 hours ago', type: 'member' }
-  ];
-
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    });
-  };
-
-  const getActivityIcon = (type) => {
-    switch(type) {
-      case 'upload': return Upload;
-      case 'edit': return FileText;
-      case 'article': return BookOpen;
-      case 'member': return Users;
-      default: return CheckCircle;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-emerald-500/10 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-cyan-500/10 via-indigo-500/10 to-pink-500/10 blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      <div className="relative z-10 min-h-screen">
-        {/* Header */}
-        <motion.header
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-white/10"
-        >
-          
-
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="md:hidden border-t border-white/10 bg-slate-900/95 backdrop-blur-xl"
-              >
-                <div className="px-4 py-4 space-y-3">
-                  <button className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-800/50 rounded-xl text-white">
-                    <Bell size={20} />
-                    <span>Notifications</span>
-                  </button>
-                  <button className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-800/50 rounded-xl text-white">
-                    <Settings size={20} />
-                    <span>Settings</span>
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-4 py-3 bg-red-500/10 rounded-xl text-red-400"
-                  >
-                    <LogOut size={20} />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.header>
-
-        {/* Main Content */}
-        <main className="max-w-7xl pt-20 mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          {/* Welcome Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 p-8 shadow-2xl"
-          >
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzBoLTJ2LTJoMnYyem0wIDRoLTJ2LTJoMnYyem0wIDRoLTJ2LTJoMnYyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20" />
-            <div className="relative z-10">
-              <h2 className="text-2xl font- text-white mb-2">
-                Iqradars Admin Dashboard
-              </h2>
-              <p className="text-blue-100 text-lg">
-                Here's what's happening with your platform today
-              </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Top Navigation */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center gap-3">
+              <div className="bg-slate-900 p-2 rounded-lg">
+                <Shield className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-slate-900 text-lg tracking-tight">Admin Portal</span>
             </div>
-          </motion.div>
 
-          {/* Quick Stats Grid */}
-         
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-medium text-slate-600">System Online</span>
+              </div>
 
-          {/* Main Dashboard Cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dashboardCards.map((card, index) => {
-              const Icon = card.icon;
-              return (
-                <motion.div
-                  key={card.href}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="group cursor-pointer"
-                >
-                  <Link href={card.href}>
-                    <div className="relative h-full">
-                      {/* Glow Effect */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500`} />
-                      
-                      {/* Card Content */}
-                      <div className="relative bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all duration-300 h-full flex flex-col">
-                        <div className="flex items-start justify-between mb-6">
-                          <div className={`w-16 h-16 bg-gradient-to-br ${card.gradient} rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300`}>
-                            <Icon className="w-8 h-8 text-white" />
-                          </div>
-                          <ArrowUpRight className="w-6 h-6 text-slate-400 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-                        </div>
-                        
-                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-blue-200 group-hover:to-purple-200 transition-all duration-300">
-                          {card.title}
-                        </h3>
-                        <p className="text-slate-400 mb-6 flex-grow">
-                          {card.description}
-                        </p>
-                        
-                        <div className="flex items-center justify-between pt-4 border-t border-white/10">
+              <div className="h-6 w-px bg-slate-200" />
 
-                          <div className="flex items-center space-x-1 text-emerald-400 text-sm font-medium">
-                            <TrendingUp size={14} />
-                            <span>{card.trend}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
+              >
+                <LogOut size={18} />
+                Sign out
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
+        </div>
 
-          {/* Recent Activity */}
-         
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden border-t border-slate-200 bg-white"
+            >
+              <div className="px-4 py-4 space-y-3">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium"
+                >
+                  <LogOut size={20} />
+                  Sign out
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
 
-          {/* Analytics Chart Placeholder */}
-         
-        </main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <p className="text-slate-500 mt-1">Welcome back, here's what's happening today.</p>
+        </div>
 
-        {/* Footer */}
-        
-      </div>
+        {/* Quick Stats */}
+       
+
+        {/* Main Actions Grid */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {dashboardCards.map((card, index) => {
+            const Icon = card.icon;
+            return (
+              <Link key={card.href} href={card.href} className="group">
+                <div className="h-full bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-slate-300 transition-all duration-200">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className={`p-3 rounded-xl ${card.bgColor} ${card.color} group-hover:scale-110 transition-transform duration-200`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div className="p-2 rounded-full hover:bg-slate-50 text-slate-400 group-hover:text-slate-600 transition-colors">
+                      <ArrowUpRight size={20} />
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {card.title}
+                  </h3>
+                  <p className="text-slate-500 text-sm mb-4 line-clamp-2">
+                    {card.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs font-medium text-slate-400 pt-4 border-t border-slate-100">
+                    <LayoutDashboard size={14} />
+                    <span>{card.stats}</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </main>
     </div>
   );
 }

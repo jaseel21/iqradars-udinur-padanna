@@ -117,8 +117,8 @@ function AdminNavbar() {
           <Link href="/admin" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-emerald-500/30 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-gradient-to-br from-emerald-600 to-emerald-500 p-2.5 rounded-lg shadow-lg shadow-emerald-900/50">
-                <Shield className="text-white" size={18} />
+              <div className="relative  p-2.5 rounded-lg shadow-lg">
+                     <img src='/icon.png' className='h-16 w-16'></img>
               </div>
             </div>
             <div>
