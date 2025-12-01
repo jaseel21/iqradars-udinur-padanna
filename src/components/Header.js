@@ -211,7 +211,7 @@ export default function Header() {
 
   const menuItems = [
     { href: '/', label: 'Home' },
-    { href: '/articles', label: 'Academy' },
+    { href: '/articles', label: 'Writings' },
     { href: '/organizations', label: 'Organization' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/contact', label: 'Contact' },
