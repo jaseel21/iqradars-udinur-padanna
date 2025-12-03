@@ -1,178 +1,113 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Navigation } from 'lucide-react';
+import { MapPin, Phone, Mail, Navigation, Clock, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
-export default function Location() {
-  const [content, setContent] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchContent();
-  }, []);
-
-  const fetchContent = async () => {
-    try {
-      const res = await fetch('/api/content');
-      if (res.ok) {
-        const data = await res.json();
-        setContent(data.content);
-      }
-    } catch (error) {
-      console.error('Error fetching content:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-600"></div>
-      </div>
-    );
+const locations = [
+  {
+    id: 1,
+    title: "Padanna Dars",
+    address: "Valiya Juma Masjid, Padanna",
+    description: "A center for Islamic learning and spiritual growth in the heart of Padanna.",
+    mapLink: "https://www.google.com/maps/place/Padanna+%E2%88%99+Valiya+juma+masjid/@12.1763519,75.1463666,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba4712baa5a024f:0xf28f87750da0ae5e!8m2!3d12.1763519!4d75.1463666!16s%2Fg%2F11hdf8t3mj?entry=ttu&g_ep=EgoyMDI1MTEzMC4wIKXMDSoASAFQAw%3D%3D",
+    embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3894.676766687644!2d75.1463666!3d12.1763519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4712baa5a024f%3A0xf28f87750da0ae5e!2sPadanna%20%E2%88%99%20Valiya%20juma%20masjid!5e0!3m2!1sen!2sin!4v1709664000000!5m2!1sen!2sin"
+  },
+  {
+    id: 2,
+    title: "Udinur Dars",
+    address: "Udinur Juma Masjid, Udinur",
+    description: "Dedicated to preserving Islamic heritage and providing quality education.",
+    mapLink: "https://www.google.com/maps/place/Udinur+Juma+Masjid/@12.1535692,75.1699812,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba46e2faaaaaaab:0x34c5c716b6b6e9d!8m2!3d12.1535692!4d75.1699812!16s%2Fg%2F11b7h9y1zm?entry=ttu&g_ep=EgoyMDI1MTEzMC4wIKXMDSoASAFQAw%3D%3D",
+    embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3894.987654321!2d75.1699812!3d12.1535692!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba46e2faaaaaaab%3A0x34c5c716b6b6e9d!2sUdinur%20Juma%20Masjid!5e0!3m2!1sen!2sin!4v1709664000000!5m2!1sen!2sin"
   }
+];
 
-  const location = content?.location || {
-    address: '123 Islamic Education Street, Udinur District, City, Country',
-    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.184133978015!2d-73.98811768459378!3d40.75889597932662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus',
-  };
+const contactInfo = {
+  phone: "9656480068",
+  email: "iqradars786@gmail.com",
+  hours: "Daily: 5:00 AM - 9:00 PM"
+};
 
+export default function Location() {
   return (
-    <div className="min-h-screen bg-white pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-amiri">
-            Our Location
+          <span className="text-green-600 font-semibold tracking-wider uppercase text-sm">Find Us</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4 font-amiri">
+            Our Locations
           </h1>
-          <p className="text-xl text-gray-600">
-            Visit us for classes, events, and community gatherings
-          </p>
+         
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Location Information */}
-          <div className="lg:col-span-1 space-y-6">
+        
+
+        {/* Locations Grid */}
+        <div className="space-y-20">
+          {locations.map((location, index) => (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 p-8"
+              key={location.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 lg:gap-12 items-start`}
             >
-              <div className="flex items-start space-x-4 mb-6">
-                <div className="bg-gradient-to-br from-green-600 to-green-700 p-4 rounded-full flex-shrink-0">
-                  <MapPin className="text-white" size={28} />
+              {/* Info Side */}
+              <div className="flex-1 space-y-6 w-full">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-green-600 text-white p-2 rounded-lg">
+                    <MapPin size={24} />
+                  </div>
+                  <h2 className="text-3xl font-bold text-gray-900 font-amiri">{location.title}</h2>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 pt-2">
-                  Address
-                </h2>
+
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  {location.description}
+                </p>
+
+                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <Navigation className="w-5 h-5 mr-2 text-green-600" />
+                    Address
+                  </h3>
+                  <p className="text-gray-600 mb-6">{location.address}</p>
+
+                  <Link
+                    href={location.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors group"
+                  >
+                    <span>Get Directions</span>
+                    <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
 
-              <p className="text-gray-700 text-lg leading-relaxed mb-6 font-medium">
-                {location.address}
-              </p>
-
-              <div className="space-y-4 pt-6 border-t border-gray-200">
-                <div className="flex items-center space-x-3">
-                  <Phone className="text-green-600 flex-shrink-0" size={20} />
-                  <span className="text-gray-700 font-medium">
-                    {content?.phone || '+1 (555) 123-4567'}
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-3">
-                  <Mail className="text-green-600 flex-shrink-0" size={20} />
-                  <span className="text-gray-700 font-medium">
-                    {content?.email || 'iqradars786@gmail.com'}
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-3">
-                  <Clock className="text-green-600 flex-shrink-0" size={20} />
-                  <span className="text-gray-700 font-medium">
-                    {content?.hours || 'Monday - Friday: 9:00 AM - 6:00 PM'}
-                  </span>
-                </div>
-              </div>
-
-              <Link
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
-              >
-                <Navigation size={20} />
-                <span>Get Directions</span>
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 p-8"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 font-amiri">
-                Visiting Hours
-              </h3>
-              <div className="space-y-4 text-gray-700">
-                <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                  <span className="font-medium">Monday - Friday</span>
-                  <span className="font-semibold text-green-600">9:00 AM - 6:00 PM</span>
-                </div>
-                <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                  <span className="font-medium">Saturday</span>
-                  <span className="font-semibold text-green-600">10:00 AM - 4:00 PM</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">Sunday</span>
-                  <span className="font-semibold text-red-600">Closed</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Map */}
-          <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 overflow-hidden"
-            >
-              <div className="relative w-full h-[600px]">
+              {/* Map Side */}
+              <div className="flex-1 w-full h-[400px] lg:h-[450px] bg-gray-200 rounded-2xl overflow-hidden shadow-lg border border-gray-200 relative">
                 <iframe
-                  src={location.mapEmbed}
+                  src={location.embedUrl}
                   width="100%"
                   height="100%"
-                  className="absolute inset-0 border-0"
-                  allowFullScreen
+                  style={{ border: 0 }}
+                  allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Location Map"
+                  className="absolute inset-0 w-full h-full"
                 />
               </div>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mt-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg border border-gray-100 p-8"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 font-amiri">
-                Parking & Accessibility
-              </h3>
-              <p className="text-gray-700 leading-relaxed font-medium">
-                We have ample parking available for visitors. The facility is wheelchair accessible with ramps and elevators. 
-                If you need any special accommodations, please contact us in advance and we'll be happy to assist you.
-              </p>
-            </motion.div>
-          </div>
+          ))}
         </div>
+
       </div>
     </div>
   );
