@@ -8,11 +8,10 @@ import { Audiowide } from 'next/font/google';
 
 import {
   ArrowRight, BookOpen, Users, Target, Newspaper,
-   Share2,
+   Share2,ShieldCheck, Linkedin ,
   Play, Heart, Eye, Calendar, Quote, ExternalLink, 
   Film, Award, Globe
 } from 'lucide-react';
-
 // Font loader must be called at module scope
 const audiowide = Audiowide({
   weight: '400', // Audiowide only supports the 400 weight
@@ -295,9 +294,9 @@ export default function Home() {
         <div className="max-w-4xl mx-auto pb-0 sm:pb-0"> 
           
           {/* Logo/Icon (Placeholder for the ship icon in the image) */}
-          <div className="mb-6 mx-auto text-7xl text-amber-900">
+          <div className=" mx-auto text-7xl text-amber-900">
             {/* Replace with your actual logo (e.g., the ship SVG) */}
-            <BookOpenText size={72} className="mx-auto text-amber-900" /> 
+            <img className="mx-auto text-amber-900 h-50 w-50" src='/icon.png'/>
           </div>
 
           {/* Subtitle/Tag - Similar to "Showcasing Islamic Art & Culture" in the image */}
@@ -315,38 +314,12 @@ export default function Home() {
           </h1>
 
           {/* Description - Shorter, centered, max-width constrained */}
-          <p className={`text-base sm:text-lg ${colors.secondaryText} mb-10 leading-relaxed max-w-2xl mx-auto font-normal`}>
+          <p className={`text-base sm:text-lg ${colors.secondaryText} mb-9 leading-relaxed max-w-2xl mx-auto font-normal`}>
             {contentData?.description || "Dedicated to spreading knowledge, faith, and wisdom through comprehensive Islamic education and modern academic excellence."}
           </p>
 
           {/* Single Call to Action - Styled like the "Click to Dive In" button */}
-          <Link href="/contact" className="inline-block">
-            <button 
-                className={`
-                    group 
-                    px-10 py-3 sm:px-12 sm:py-4         /* Adjust padding for a wider, taller button */
-                    bg-amber-500                       /* Gold/Yellow background color */
-                    text-amber-900                     /* Dark/Black text color */
-                    font-bold                          /* Bold text */
-                    rounded-xl                       /* Very rounded/pill shape */
-                    
-                    /* Custom Shadow: A combination of a standard shadow and a glowing bottom shadow */
-                    shadow-lg 
-                    shadow-amber-500/50 
-                    
-                    /* Optional: Add a subtle glow for the red/pink hint in the image */
-                    relative
-                    
-                    /* Optional: Subtle hover effect for better UX */
-                    hover:bg-amber-500 
-                    hover:shadow-xl 
-                    transition-all duration-200
-                `}
-            >
-                {/* Remove the icon and change the text */}
-                Click to Dive In
-            </button>
-        </Link>
+    
           
           {/* The second button from your original code is removed for a simpler, focused professional look */}
 
@@ -410,309 +383,363 @@ export default function Home() {
 
       {/* ARTICLES SECTION */}
      <section className={`py-16 sm:py-24 ${colors.background}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* ... Header Section (No RTL change needed here) ... */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
-            <div>
-              <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full ${colors.tagBackground} ${colors.accent} text-sm font-bold uppercase tracking-widest mb-4 border border-amber-200`}>
-                <BookOpen size={16} />
-                Insights
-              </div>
-              <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${colors.primaryText} leading-tight font-serif`}>
-                Latest <span className={colors.accent}>Writings</span>
-              </h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* --- Header Section --- */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+            <div className="max-w-2xl">
+                <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${colors.tagBackground} ${colors.accent} text-xs font-bold uppercase tracking-widest mb-4 border border-amber-200/50`}>
+                    <BookOpen size={14} />
+                    <span>Insights</span>
+                </div>
+                <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${colors.primaryText} leading-[1.1] font-serif`}>
+                    Latest <span className={colors.accent}>Writings</span>
+                </h2>
             </div>
-            <Link href="/articles">
-              <button className={`flex items-center gap-2 px-6 py-3 rounded-full ${colors.ctaPrimary} text-amber-950 hover:${colors.ctaHover} transition-all text-sm font-bold shadow-md shadow-amber-500/30`}>
-                View All <ArrowRight size={16} />
-              </button>
+            
+            <Link href="/articles" className="shrink-0">
+                <button className={`group flex items-center gap-2 px-6 py-3 rounded-full ${colors.ctaPrimary} text-amber-950 hover:${colors.ctaHover} transition-all duration-300 text-sm font-bold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-0.5`}>
+                    <span>View All</span>
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </button>
             </Link>
-          </div>
-
-          {/* --- Articles Grid --- */}
-          {articles.length > 0 ? (
-            <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
-              
-              {/* Featured Article */}
-              {featuredArticle && (
-                // This entire block replaces the Featured Article section within your grid
-
-// This entire block replaces the Featured Article section within your grid
-
-<div className="lg:row-span-2">
-  <div className="bg-white rounded-3xl overflow-hidden shadow-2xl shadow-amber-900/10 border border-stone-200 h-full flex flex-col">
-    <Link
-      href={`/articles/${featuredArticle._id}`}
-      onClick={() => handleArticleView(featuredArticle)}
-      // Make the entire card block interactive to compensate for removing the footer link
-      className="group block relative flex-grow aspect-[4/5] sm:aspect-[1/1] lg:aspect-auto rounded-b-none overflow-hidden hover:opacity-95 transition-opacity duration-300"
-      // *** RTL FIX: dir attribute on the Link for text flow/alignment ***
-      dir={isRTL(featuredArticle.language) ? 'rtl' : 'ltr'}
-    >
-      {/* --- 1. Image Area (The main visual) --- */}
-      <div className="relative w-full h-full min-h-[400px]"> {/* Re-adding a min-height for structure */}
-        <Image 
-          src={featuredArticle.bannerUrl || '/placeholder.jpg'} 
-          alt={featuredArticle.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        {/* Subtle Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-amber-950/70 via-transparent to-transparent" />
-
-        {/* --- Title & Tag Overlay --- */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 pt-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase tracking-wider mb-3">
-            {featuredArticle.type || 'Featured Insight'}
-          </span>
-          {/* FIX 2: Apply text-right for the title alignment */}
-          <h3 className={`text-3xl sm:text-4xl font-extrabold text-white leading-tight ${isRTL(featuredArticle.language) ? 'text-right' : 'text-left'}`}>
-            {featuredArticle.title}
-          </h3>
         </div>
-      </div>
-    </Link>
 
-    {/* --- 2. Professional Social Action Bar --- */}
-    <div className={`p-5 flex flex-col gap-4 border-t border-stone-100`}>
-      
-      {/* Author and Date (Top of the 'caption' area) */}
-      <div className={`flex items-center gap-3 ${isRTL(featuredArticle.language) ? 'flex-row-reverse' : 'flex-row'} justify-between`}>
-        <div className={`flex items-center gap-3 ${isRTL(featuredArticle.language) ? 'flex-row-reverse' : 'flex-row'}`}>
-            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shadow-sm">
-                {featuredArticle.author?.[0] || 'A'}
-            </div>
-            <div>
-                <p className="font-bold text-amber-900 leading-none">{featuredArticle.author || "Editorial Team"}</p>
-                <p className="text-xs text-stone-500 uppercase tracking-wider mt-1">{featuredArticle.language || 'English'}</p>
-            </div>
-        </div>
-        <span className="text-xs text-stone-500 whitespace-nowrap">{featuredArticle.createdAt ? formatDate(featuredArticle.createdAt) : 'N/A'}</span>
-      </div>
+        {/* --- Main Content Grid --- */}
+        {articles.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+                
+                {/* === LEFT COLUMN: Featured Article === */}
+                {featuredArticle && (
+                    <div className="w-full h-full flex flex-col">
+                        <div 
+                            className="relative flex-1 bg-white rounded-3xl overflow-hidden shadow-xl shadow-stone-200/50 border border-stone-100 flex flex-col group transition-all hover:shadow-2xl hover:shadow-amber-900/10"
+                            dir={isRTL(featuredArticle.language) ? 'rtl' : 'ltr'}
+                        >
+                            <Link
+                                href={`/articles/${featuredArticle._id}`}
+                                onClick={() => handleArticleView(featuredArticle)}
+                                className="flex-1 flex flex-col relative"
+                            >
+                                {/* Image Container - Takes available height but keeps min-height */}
+                                <div className="relative w-full min-h-[300px] flex-grow overflow-hidden">
+                                    <Image
+                                        src={featuredArticle.bannerUrl || '/placeholder.jpg'}
+                                        alt={featuredArticle.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    {/* Gradient for text readability */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                    
+                                    {/* Overlay Content */}
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                                        <span className="inline-block px-3 py-1 mb-3 rounded-md bg-amber-400 text-black text-[10px] font-bold uppercase tracking-wider">
+                                            {featuredArticle.type || 'Featured'}
+                                        </span>
+                                        <h3 className="text-1xl sm:text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-sm">
+                                            {featuredArticle.title}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </Link>
 
-      {/* Social Bar (Likes, Views, Share) */}
-      <div className="flex justify-between items-center pt-3 border-t border-stone-100">
-        
-        <div className="flex items-center gap-6 text-stone-500">
-          {/* Likes Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleArticleLike(featuredArticle);
-            }}
-            className={`flex items-center gap-2 text-sm font-semibold hover:text-red-500 transition-colors ${likedArticleIds.includes(featuredArticle._id) ? 'text-red-500' : 'text-stone-700'}`}
-          >
-            <Heart size={20} className={likedArticleIds.includes(featuredArticle._id) ? 'fill-red-500 text-red-500' : 'text-stone-400'} />
-            {formatCount(featuredArticle.likes)}
-          </button>
-          
-          {/* Views Display */}
-          <span className="flex items-center gap-2 text-sm font-semibold text-stone-700">
-            <Eye size={20} className="text-stone-400" />
-            {formatCount(featuredArticle.views)}
-          </span>
-        </div>
-        
-        {/* Share Button (ACTION IMPLEMENTED HERE) */}
-        <button
-            onClick={(e) => {
-                e.preventDefault();
-                // Call the handleShare function, passing the featuredArticle data
-                handleShare(featuredArticle);
-            }}
-            className="p-1.5 rounded-full text-stone-500 hover:text-amber-700 hover:bg-amber-50 transition-colors"
-            aria-label="Share Article"
-        >
-            <Share2 size={20} />
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-              )}
+                            {/* Meta Data Footer (Outside image for cleaner look) */}
+                            <div className="p-5 sm:p-6 bg-white border-t border-stone-100">
+                                <div className="flex items-center justify-between gap-4">
+                                    {/* Author Info */}
+                                    <div className="flex items-center gap-3">
+                                       
+                                        <div className="flex flex-col">
+                                            <span className="text-sm  text-stone-800 leading-none">
+                                                {featuredArticle.author || "Editorial"}
+                                            </span>
+                                            <span className="text-xs text-stone-400 mt-1 font-medium">
+                                                {featuredArticle.createdAt ? formatDate(featuredArticle.createdAt) : 'Recently'}
+                                            </span>
+                                        </div>
+                                    </div>
 
-              {/* Supporting Articles */}
-              {supportingArticles.map((article) => (
-                <Link
-                  key={article._id}
-                  href={`/articles/${article._id}`}
-                  onClick={() => handleArticleView(article)}
-                  // *** FIX 3: Apply dir="rtl" to the supporting article container ***
-                  dir={isRTL(article.language) ? 'rtl' : 'ltr'}
-                  className="group flex gap-4 p-4 sm:p-6 bg-white rounded-2xl border border-stone-100 hover:border-amber-400 hover:shadow-lg hover:shadow-amber-100 transition-all duration-300"
-                >
-                  {/* Image: Flex order is handled by dir="rtl" on parent (Image will move to the right) */}
-                  <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden flex-shrink-0 border border-stone-200">
-                    <Image 
-                      src={article.bannerUrl || '/placeholder.jpg'} 
-                      alt={article.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  
-                  {/* Content Area - Apply text alignment for inner content */}
-                  <div className={`flex-1 min-w-0 ${isRTL(article.language) ? 'text-right' : 'text-left'}`}>
-                    
-                    <span className={`text-xs font-bold ${colors.accent} uppercase mb-1 block tracking-wider`}>
-                      {article.language}
-                    </span>
-                    
-                    {/* FIX 4: Ensure title alignment is correct */}
-                    <h4 className={`text-lg font-bold ${colors.primaryText} mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors`}>
-                      {article.title}
-                    </h4>
-                    
-                    {/* Footer Details - Use justify-end when RTL to push LTR icons to the right */}
-                    <div className={`flex items-center gap-3 text-xs text-stone-500 ${isRTL(article.language) ? 'justify-end' : ''}`}>
-                      <span className="flex items-center gap-1">
-                        <Eye size={14} /> {formatCount(article.views)}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleArticleLike(article);
-                        }}
-                        className="flex items-center gap-1 hover:text-red-500 transition-colors"
-                      >
-                        <Heart size={14} className={likedArticleIds.includes(article._id) ? 'fill-red-500 text-red-500' : ''} />
-                        {formatCount(article.likes)}
-                      </button>
+                                    {/* Interaction Actions */}
+                                    <div className="flex items-center gap-4 text-stone-400">
+                                         {/* Like */}
+                                         <button
+                                            onClick={(e) => { e.preventDefault(); handleArticleLike(featuredArticle); }}
+                                            className={`flex items-center gap-1.5 text-sm transition-colors ${likedArticleIds.includes(featuredArticle._id) ? 'text-red-500 font-normal' : 'hover:text-amber-600'}`}
+                                        >
+                                            <Heart size={18} className={likedArticleIds.includes(featuredArticle._id) ? 'fill-current' : ''} />
+                                            <span>{formatCount(featuredArticle.likes)}</span>
+                                        </button>
+                                        
+                                        {/* Share */}
+                                        <button
+                                            onClick={(e) => { e.preventDefault(); handleShare(featuredArticle); }}
+                                            className="p-2 rounded-full hover:bg-stone-50 hover:text-amber-600 transition-colors"
+                                        >
+                                            <Share2 size={18} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                )}
+
+                {/* === RIGHT COLUMN: Supporting Articles List === */}
+                <div className="flex flex-col gap-5 h-full">
+                    {supportingArticles.map((article) => (
+                        <Link
+                            key={article._id}
+                            href={`/articles/${article._id}`}
+                            onClick={() => handleArticleView(article)}
+                            dir={isRTL(article.language) ? 'rtl' : 'ltr'}
+                            className="group relative flex flex-row items-stretch bg-white rounded-2xl border border-stone-100 overflow-hidden hover:border-amber-300 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300"
+                        >
+                            {/* Thumbnail */}
+                            <div className="relative w-32 sm:w-40 shrink-0 overflow-hidden">
+                                <Image
+                                    src={article.bannerUrl || '/placeholder.jpg'}
+                                    alt={article.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className={`text-[10px] font-bold ${colors.accent2} uppercase tracking-wider bg-amber-50 px-2 py-0.5 rounded-sm`}>
+                                            {article.language || 'Article'}
+                                        </span>
+                                        {/* Views - subtle */}
+                                        <span className="flex items-center gap-1 text-[10px] text-stone-400 font-medium">
+                                            <Eye size={12} /> {formatCount(article.views)}
+                                        </span>
+                                    </div>
+                                    
+                                    <h4 className={`text-sm  ${colors.primaryText} leading-snug line-clamp-2 group-hover:text-amber-700 transition-colors`}>
+                                        {article.title}
+                                    </h4>
+                                </div>
+
+                                {/* Footer (Date & Like) */}
+                                <div className="flex items-center justify-between mt-3 pt-3 border-t border-stone-50">
+                                    <span className="text-xs text-stone-400 font-medium">
+                                        {article.createdAt ? formatDate(article.createdAt) : ''}
+                                    </span>
+                                    
+                                    <button
+                                        onClick={(e) => { e.preventDefault(); handleArticleLike(article); }}
+                                        className={`flex items-center gap-1 text-xs  transition-colors ${likedArticleIds.includes(article._id) ? 'text-red-500' : 'text-stone-400 hover:text-amber-600'}`}
+                                    >
+                                        <Heart size={14} className={likedArticleIds.includes(article._id) ? 'fill-current' : ''} />
+                                        {formatCount(article.likes)}
+                                    </button>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+
+                    {/* Empty slot filler if needed (Optional: helps visual balance if list is short) */}
+                    {supportingArticles.length < 3 && (
+                        <div className="flex-1 rounded-2xl border border-dashed border-stone-200 bg-stone-50/50 flex items-center justify-center text-stone-400 text-sm font-medium min-h-[100px]">
+                            More coming soon...
+                        </div>
+                    )}
+                </div>
+
             </div>
-          ) : (
-            /* Empty State */
-            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-200 shadow-inner">
-              <BookOpen size={48} className="mx-auto text-amber-300 mb-4" />
-              <p className="text-stone-500 font-semibold">No writings available at the moment. Check back soon!</p>
+        ) : (
+            /* --- Empty State --- */
+            <div className="flex flex-col items-center justify-center py-24 bg-stone-50 rounded-3xl border border-stone-200 border-dashed">
+                <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+                    <BookOpen size={24} className="text-amber-600" />
+                </div>
+                <h3 className="text-xl font-bold text-stone-800">No writings found</h3>
+                <p className="text-stone-500 mt-2">Check back later for new insights.</p>
             </div>
-          )}
-        </div>
-      </section>
+        )}
+    </div>
+</section>
 
       {/* ADVISORY BOARD */}
-      <section className="py-16 sm:py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-4">
-              <Users size={14} />
-              Leadership
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
-              Advisory <span className="text-emerald-600">Board</span>
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg">
-              Guided by esteemed scholars and community leaders
-            </p>
+     <section className="py-16 sm:py-24 bg-stone-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* --- Header (Kept consistent with your flow) --- */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4">
+            <ShieldCheck size={12} />
+            <span>Leadership</span>
           </div>
+          
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-900 mb-4 font-serif leading-tight">
+            Advisory <span className="text-amber-500">Board</span>
+          </h2>
+          
+          <p className="text-sm sm:text-base text-stone-500 font-medium">
+            Guided by esteemed scholars and industry veterans.
+          </p>
+        </div>
 
-          {advisoryMembers.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-              {advisoryMembers.map((member, idx) => (
-                <div key={idx} className="group text-center">
-                  <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-4 sm:mb-6">
-                    <div className="absolute -inset-1 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full opacity-0 group-hover:opacity-100 blur transition-opacity" />
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg">
-                      <Image 
-                        src={member.image || 'https://via.placeholder.com/150'} 
-                        alt={member.name} 
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500" 
-                      />
-                    </div>
+        {/* --- Members Grid --- */}
+        {advisoryMembers.length > 0 ? (
+          /* 
+             grid-cols-2 : Shows 2 items per row on mobile (small devices) 
+             gap-3       : Smaller gap on mobile to fit 2 columns comfortably
+          */
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            {advisoryMembers.map((member, idx) => (
+              <div 
+                key={idx} 
+                className="group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-stone-100 shadow-sm hover:border-amber-200 hover:shadow-xl hover:shadow-amber-900/5 transition-all duration-300 hover:-translate-y-1"
+              >
+                
+                {/* Decorative background gradient (Subtle) */}
+                <div className="absolute top-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-b from-amber-50/40 to-transparent rounded-t-2xl sm:rounded-t-3xl opacity-50" />
+
+                {/* Profile Image - Smaller on mobile */}
+                <div className="relative mx-auto mb-3 sm:mb-5 w-20 h-20 sm:w-28 sm:h-28">
+                   {/* Hover Ring Effect */}
+                  <div className="absolute -inset-1.5 rounded-full border border-dashed border-amber-300 opacity-0 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-700" />
+                  
+                  <div className="relative w-full h-full rounded-full overflow-hidden border-[3px] border-white shadow-sm group-hover:shadow-md transition-all">
+                    <Image 
+                      src={member.image || 'https://via.placeholder.com/150'} 
+                      alt={member.name} 
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                    />
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2">{member.name}</h3>
-                  <span className="text-xs sm:text-sm text-emerald-600 font-semibold uppercase tracking-wide">
+                </div>
+
+                {/* Text Content - Refined & Smaller */}
+                <div className="text-center relative z-10">
+                  {/* Name: Removed bold, used font-medium, smaller text */}
+                  <h3 className="text-sm sm:text-base font-medium text-stone-900 mb-1 group-hover:text-amber-700 transition-colors line-clamp-1">
+                    {member.name}
+                  </h3>
+                  
+                  {/* Decorative Dash: Smaller */}
+                  <div className="h-0.5 w-4 bg-amber-200 mx-auto my-2 rounded-full group-hover:w-8 transition-all duration-300" />
+                  
+                  {/* Role: Smaller, lighter weight */}
+                  <span className="block text-[10px] sm:text-xs text-amber-600 font-medium uppercase tracking-wide line-clamp-2 min-h-[1.5em]">
                     {member.role}
                   </span>
                 </div>
-              ))}
+
+                {/* Optional: Social Icon (Hidden on mobile usually to save space, or keeps tiny) */}
+                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="p-1.5 bg-white rounded-full text-blue-600 shadow-sm border border-stone-100">
+                        <Linkedin size={12} />
+                    </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* --- Empty State --- */
+          <div className="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-stone-200 border-dashed shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-stone-50 flex items-center justify-center mb-4">
+              <Users size={24} className="text-stone-300" />
             </div>
-          ) : (
-            <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-slate-200">
-              <Users size={48} className="mx-auto text-slate-300 mb-4" />
-              <p className="text-slate-500 font-semibold">Advisory board members coming soon.</p>
-            </div>
-          )}
-        </div>
-      </section>
+            <p className="text-sm font-medium text-stone-500">Board members coming soon.</p>
+          </div>
+        )}
+      </div>
+    </section>
 
       {/* MEDIA GALLERY */}
-      <section className="py-16 sm:py-24">
+       <section className="py-16 sm:py-24 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider mb-4">
+          
+          {/* --- Section Header --- */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-bold uppercase tracking-widest mb-4">
                 <Film size={14} />
-                Multimedia
+                <span>Multimedia & News</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
-                Campus <span className="text-emerald-600">Gallery</span>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-stone-900 leading-[1.1] font-serif">
+                Campus <span className="text-amber-500">Highlights</span>
               </h2>
             </div>
-            <Link href="/gallery">
-              <button className="flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all text-sm font-semibold">
-                View All <ArrowRight size={16} />
-              </button>
+            
+            <Link href="/gallery" className="shrink-0">
+                <button className="group flex items-center gap-2 px-6 py-3 rounded-full bg-stone-900 text-white hover:bg-amber-500 hover:text-black transition-all duration-300 text-sm font-bold shadow-lg shadow-stone-300 hover:shadow-amber-500/30 hover:-translate-y-0.5">
+                    <span>View Gallery</span>
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </button>
             </Link>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Video Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
-                  <Film className="text-white" size={20} />
-                </div>
-                Video Spotlight
-              </h3>
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+            
+            {/* === COLUMN 1: Video Spotlight === */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3 pb-4 border-b border-stone-200">
+                 <div className="w-2 h-8 bg-amber-400 rounded-full" />
+                 <h3 className="text-2xl font-bold text-stone-800 font-serif">Video Spotlight</h3>
+              </div>
               
               {activeVideo ? (
                 <>
-                  <div className="aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-slate-200">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${getYouTubeId(activeVideo.youtubeUrl)}`}
-                      className="w-full h-full"
-                      title={activeVideo.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+                  {/* Main Video Player */}
+                  <div className="group relative bg-white p-2 rounded-3xl border border-stone-100 shadow-xl shadow-stone-200/50">
+                    <div className="aspect-video relative rounded-2xl overflow-hidden bg-black">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${getYouTubeId(activeVideo.youtubeUrl)}`}
+                        className="w-full h-full"
+                        title={activeVideo.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                    <div className="p-4 sm:p-5">
+                        <h4 className="text-lg sm:text-xl  text-stone-900 leading-tight mb-2">
+                            {activeVideo.title}
+                        </h4>
+                        <p className="text-stone-500 text-sm">Featured Campus Event</p>
+                    </div>
                   </div>
 
-                  <div className="p-6 bg-white rounded-xl border border-slate-200">
-                    <h4 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">{activeVideo.title}</h4>
-                    <p className="text-slate-600">Watch our latest events and campus highlights</p>
-                  </div>
-
+                  {/* Playlist */}
                   {videoPlaylist.length > 0 && (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {videoPlaylist.map((video) => (
                         <button
                           key={video._id}
                           onClick={() => setActiveVideo(video)}
-                          className="w-full flex gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all group"
+                          className={`w-full flex gap-4 p-3 sm:p-4 rounded-2xl border transition-all duration-300 group text-left
+                            ${activeVideo._id === video._id 
+                                ? 'bg-amber-50 border-amber-200 ring-1 ring-amber-200' 
+                                : 'bg-white border-stone-100 hover:border-amber-300 hover:shadow-md'
+                            }`}
                         >
-                          <div className="relative w-24 sm:w-32 h-16 sm:h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-200">
+                          <div className="relative w-24 sm:w-32 h-16 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 bg-stone-200">
                             {getYouTubeId(video.youtubeUrl) && (
                               <Image 
                                 src={`https://img.youtube.com/vi/${getYouTubeId(video.youtubeUrl)}/mqdefault.jpg`}
                                 alt={video.title}
                                 fill
-                                className="object-cover"
+                                className="object-cover group-hover:scale-110 transition-transform duration-500"
                               />
                             )}
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                              <Play size={24} className="text-white fill-white" />
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/10 transition-colors">
+                              <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center pl-1 shadow-sm">
+                                <Play size={14} className="text-amber-600 fill-amber-600" />
+                              </div>
                             </div>
                           </div>
-                          <div className="flex-1 text-left min-w-0">
-                            <h5 className="text-sm sm:text-base font-bold text-slate-800 group-hover:text-emerald-600 line-clamp-2 transition-colors">
+                          
+                          <div className="flex-1 py-1">
+                            <h5 className={`text-sm font-bold line-clamp-2 mb-1 ${activeVideo._id === video._id ? 'text-amber-800' : 'text-stone-800 group-hover:text-amber-700'}`}>
                               {video.title}
                             </h5>
+                            <span className="text-xs text-stone-400 font-medium">Watch Now</span>
                           </div>
                         </button>
                       ))}
@@ -720,55 +747,62 @@ export default function Home() {
                   )}
                 </>
               ) : (
-                <div className="aspect-video bg-slate-50 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-200">
-                  <Film size={48} className="text-slate-300 mb-4" />
-                  <p className="text-slate-500 font-semibold">No videos available.</p>
+                /* Empty State Video */
+                <div className="aspect-video bg-white rounded-3xl flex flex-col items-center justify-center border border-dashed border-stone-200 shadow-sm">
+                  <div className="w-16 h-16 rounded-full bg-stone-50 flex items-center justify-center mb-4">
+                     <Film size={24} className="text-stone-300" />
+                  </div>
+                  <p className="text-stone-500 font-medium">No videos available currently.</p>
                 </div>
               )}
             </div>
 
-            {/* News Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
-                  <Newspaper className="text-white" size={20} />
-                </div>
-                Latest Updates
-              </h3>
+            {/* === COLUMN 2: Latest Updates (News) === */}
+            <div className="space-y-8">
+               <div className="flex items-center gap-3 pb-4 border-b border-stone-200">
+                 <div className="w-2 h-8 bg-stone-800 rounded-full" />
+                 <h3 className="text-2xl font-bold text-stone-800 font-serif">Latest Updates</h3>
+              </div>
 
               {latestNews ? (
                 <>
-                  <Link href={`/news/${latestNews.slug}`} className="group block relative h-64 sm:h-80 rounded-xl overflow-hidden shadow-2xl">
+                  {/* Featured News Card */}
+                  <Link href={`/news/${latestNews.slug}`} className="group block relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-xl shadow-stone-200/50 border border-stone-100">
                     <Image 
-                      src={latestNews.thumbnail} 
+                      src={latestNews.thumbnail || '/placeholder.jpg'} 
                       alt={latestNews.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90" />
+                    
                     <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                      <span className="inline-block px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold uppercase mb-3">
+                      <span className="inline-block px-3 py-1 rounded-md bg-amber-400 text-black text-[10px] font-bold uppercase tracking-wider mb-3 shadow-sm">
                         Featured News
                       </span>
-                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 leading-tight group-hover:underline decoration-amber-400 decoration-2 underline-offset-4">
                         {latestNews.title}
                       </h3>
-                      <div className="flex items-center gap-2 text-sm text-slate-300">
-                        <Calendar size={14} />
-                        <span>{formatDate(latestNews.createdAt)}</span>
+                      <div className="flex items-center gap-3 text-xs text-stone-300 font-medium">
+                        <span className="flex items-center gap-1.5">
+                            <Calendar size={14} className="text-amber-400" />
+                            {formatDate(latestNews.createdAt)}
+                        </span>
                       </div>
                     </div>
                   </Link>
 
+                  {/* Recent News List */}
                   {recentNews.length > 0 && (
                     <div className="space-y-4">
                       {recentNews.map((newsItem) => (
                         <Link
                           key={newsItem._id}
                           href={`/news/${newsItem.slug}`}
-                          className="flex gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all group"
+                          className="flex gap-4 p-4 bg-white rounded-2xl border border-stone-100 hover:border-amber-300 hover:shadow-lg hover:shadow-amber-900/5 transition-all duration-300 group"
                         >
-                          <div className="relative w-24 sm:w-28 h-20 sm:h-24 rounded-lg overflow-hidden flex-shrink-0">
+                          <div className="relative w-24 sm:w-28 h-20 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 border border-stone-100">
                             <Image 
                               src={newsItem.thumbnail || '/placeholder.jpg'} 
                               alt={newsItem.title}
@@ -776,16 +810,19 @@ export default function Home() {
                               className="object-cover group-hover:scale-110 transition-transform duration-500"
                             />
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                          
+                          <div className="flex-1 min-w-0 flex flex-col justify-center">
+                            <div className="flex items-center gap-2 text-[10px] text-stone-400 font-bold uppercase tracking-wider mb-1.5">
                               <Calendar size={12} />
                               <span>{formatDate(newsItem.createdAt)}</span>
                             </div>
-                            <h4 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-2 group-hover:text-emerald-600 transition-colors mb-2">
+                            
+                            <h4 className="text-sm sm:text-base font-bold text-stone-900 leading-snug line-clamp-2 group-hover:text-amber-700 transition-colors mb-2">
                               {newsItem.title}
                             </h4>
-                            <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                              Read More <ExternalLink size={10} />
+                            
+                            <span className="text-xs text-amber-600 font-bold flex items-center gap-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                              Read News <ArrowRight size={10} />
                             </span>
                           </div>
                         </Link>
@@ -794,10 +831,13 @@ export default function Home() {
                   )}
                 </>
               ) : (
-                <div className="h-full flex items-center justify-center p-10 text-center text-slate-400 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                /* Empty State News */
+                <div className="h-full min-h-[300px] flex items-center justify-center p-10 text-center bg-white rounded-3xl border border-dashed border-stone-200">
                   <div>
-                    <Newspaper size={48} className="mx-auto text-slate-300 mb-4" />
-                    <p className="text-slate-500 font-semibold">No news available.</p>
+                    <div className="w-16 h-16 rounded-full bg-stone-50 flex items-center justify-center mx-auto mb-4">
+                        <Newspaper size={24} className="text-stone-300" />
+                    </div>
+                    <p className="text-stone-500 font-medium">No updates available at the moment.</p>
                   </div>
                 </div>
               )}
@@ -807,38 +847,7 @@ export default function Home() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/30 via-transparent to-transparent opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-transparent to-teal-900/10" />
-        
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-6">
-            <Users size={14} />
-            Join Us
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Join Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Community</span>
-          </h2>
-          
-          <p className="text-slate-300 text-base sm:text-lg lg:text-xl mb-8 sm:mb-12 leading-relaxed max-w-2xl mx-auto">
-            Embark on a path of knowledge, wisdom, and spiritual growth. The doors to excellence are open.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/contact">
-              <button className="w-full sm:w-auto group px-8 py-4 bg-white text-slate-900 font-bold rounded-lg hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-600 hover:text-white transition-all shadow-lg hover:shadow-2xl hover:shadow-emerald-500/50">
-                Contact Admissions
-              </button>
-            </Link>
-            <Link href="/about">
-              <button className="w-full sm:w-auto px-8 py-4 bg-transparent border-2 border-white/30 text-white font-bold rounded-lg hover:bg-white/10 hover:border-white/50 transition-all">
-                Learn More
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 }
