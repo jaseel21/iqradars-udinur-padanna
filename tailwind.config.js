@@ -19,6 +19,7 @@ export default {
         'text-light': '#6b7280',
         'bg-light': '#f9fafb',
       },
+      audiowide: ['var(--font-audiowide)', 'sans-serif'],
       fontFamily: {
         amiri: ['Amiri', 'Times New Roman', 'serif'],
         roboto: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],

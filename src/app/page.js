@@ -3,11 +3,23 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import {  BookOpenText } from 'lucide-react'; 
+import { Audiowide } from 'next/font/google';
+
 import {
   ArrowRight, BookOpen, Users, Target, Newspaper,
+   Share2,
   Play, Heart, Eye, Calendar, Quote, ExternalLink, 
   Film, Award, Globe
 } from 'lucide-react';
+
+// Font loader must be called at module scope
+const audiowide = Audiowide({
+  weight: '400', // Audiowide only supports the 400 weight
+  subsets: ['latin'],
+  // This creates a CSS variable that Tailwind will use: --font-audiowide
+  variable: '--font-audiowide', 
+});
 
 export default function Home() {
   // State Management
@@ -22,6 +34,45 @@ export default function Home() {
   const [likedArticleIds, setLikedArticleIds] = useState([]);
   const [viewedArticleIds, setViewedArticleIds] = useState([]);
   const [activeVideo, setActiveVideo] = useState(null);
+  
+  const handleShare = async (article) => {
+    // 1. Check for essential data
+    if (!article || !article._id) {
+        // Use a placeholder toast if the real one isn't available
+        typeof toast !== 'undefined' && toast.error("Cannot share: Article data is missing.");
+        return;
+    }
+
+    // 2. Determine the full, sharable URL
+    // This assumes the Next.js app is running and window.location.origin is correct.
+    const articleUrl = `${window.location.origin}/articles/${article._id}`;
+
+    // 3. Use the native Web Share API (best for mobile devices)
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: article.title,
+                text: article.subtitle || 'Check out this latest insight!',
+                url: articleUrl,
+            });
+            // Native share sheet handles feedback
+        } catch (error) {
+            if (error.name !== 'AbortError') { // Ignore user cancellation
+                console.error('Error sharing:', error);
+                typeof toast !== 'undefined' && toast.error('Sharing failed.');
+            }
+        }
+    } else {
+        // 4. Fallback for desktop/unsupported browsers: Copy link to clipboard
+        try {
+            await navigator.clipboard.writeText(articleUrl);
+            typeof toast !== 'undefined' && toast.success('Article link copied to clipboard!');
+        } catch (err) {
+            console.error('Could not copy to clipboard:', err);
+            typeof toast !== 'undefined' && toast.error('Failed to copy link.');
+        }
+    }
+};
 
   // Effects
   useEffect(() => {
@@ -135,6 +186,8 @@ export default function Home() {
     }).catch(console.error);
   };
 
+  const isRTL = (language = '') =>
+    /arabic|urdu|farsi|persian|hebrew|pashto/i.test((language || '').toLowerCase());
   // Article logic
   const featuredArticle = articles[0];
   const supportingArticles = articles.slice(1, 4);
@@ -148,204 +201,335 @@ export default function Home() {
 
   // Stats data
   
+  const colors = {
+    background: 'bg-stone-50', // Light cream background
+    primaryText: 'text-amber-950',
+    secondaryText: 'text-stone-700',
+    ctaPrimary: 'bg-amber-500', // Gold/Orange for CTA
+    ctaHover: 'bg-amber-600',
+    accent: 'text-amber-400',
+    accent2: 'text-amber-500',
+    waterWave: 'bg-teal-700', // Deep teal for the bottom wave visual
+  };
+
+   const spinnerSize = 'w-12 h-12';
+  const innerSpinnerSize = 'w-10 h-10'; // Slightly smaller inner ring
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50"> 
+        {/* Spinner Container */}
         <div className="relative">
-          <div className="w-20 h-20 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
-          <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-emerald-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+          {/* Outer Ring: Slow spin, main amber color, thick border */}
+          <div 
+            className={`${spinnerSize} border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin`}
+            style={{ animationDuration: '1.5s' }}
+          ></div>
+          
+          {/* Inner Ring: Faster spin, secondary color (darker amber/brown), thinner border, offset */}
+          <div 
+            className={`absolute inset-0 m-1 border-3 border-transparent border-r-amber-700 rounded-full animate-spin`}
+            // Inline styles for precise control on size and border-width (since Tailwind utility for border-3 is not default)
+            style={{ 
+              animationDirection: 'reverse', 
+              animationDuration: '1.0s',
+              top: '2px', left: '2px', right: '2px', bottom: '2px',
+              borderWidth: '3px',
+              width: innerSpinnerSize,
+              height: innerSpinnerSize
+            }}
+          ></div>
         </div>
-        <p className="text-slate-500 text-sm font-bold uppercase tracking-[0.3em] mt-6">
+        
+        {/* Loading Text - Use dark brown text for contrast */}
+        <p className="text-amber-900 text-xs font-semibold uppercase tracking-widest mt-4">
           Loading Excellence...
         </p>
-      </div>
+        
+        {/* Subtle Progress Bar (Optional: adds a nice modern touch) */}
+        <div className="mt-4 w-32 h-1 bg-amber-100 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-amber-500 rounded-full animate-pulse" 
+            style={{ width: '40%' }} // You can simulate a changing width here if needed
+          ></div>
+        </div>
+    </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* HERO SECTION */}
-      <section className="relative h-screen min-h-[600px] overflow-hidden">
-        {/* Background Image Slider */}
-        <div className="absolute inset-0">
-          {banners.length > 0 ? (
-            banners.map((banner, idx) => (
-              <div
-                key={banner._id || idx}
-                className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentBannerIndex ? 'opacity-100' : 'opacity-0'}`}
-              >
-                <Image 
-                  src={banner.imageUrl} 
-                  alt={banner.title || "Banner"} 
-                  fill
-                  className="object-cover" 
-                  priority={idx === 0}
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              </div>
-            ))
-          ) : (
-            <div className="absolute inset-0 bg-slate-950" />
-          )}
-        </div>
+     <section className={`relative h-screen min-h-[600px] overflow-hidden ${colors.background}`}>
+      {/* 
+      <div className={`absolute bottom-0 left-0 right-0 h-40 ${colors.waterWave} z-20`}>
+        <div className="absolute top-0 left-0 right-0 h-1/2 bg-white/10 rounded-t-[50%] blur-sm" />
+      </div>
+      */}
+      {/* Wave/Base Visual (Inspired by the bottom of the image) - HAS BEEN REMOVED */}
 
-        {/* Hero Content */}
-        <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-emerald-300 text-xs font-bold tracking-wider uppercase">
-                  Excellence in Education
-                </span>
-              </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
-                Iqra Dars<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
-                  Udinur & Padanna
-                </span>
-              </h1>
+      {/* Background Ornaments (Inspired by the starbursts in the image) */}
+      <div className={`hidden lg:block absolute top-10 right-10 ${colors.accent} opacity-50`}>
+         {/* Simple starburst representation (could be a custom SVG) */}
+         <div className="w-16 h-16 relative">
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-45" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform -rotate-45" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-0" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-90" />
+         </div>
+      </div>
+      <div className={`hidden lg:block absolute bottom-40 left-10 ${colors.accent} opacity-50`}>
+        <div className="w-12 h-12 relative transform rotate-12">
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-45" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform -rotate-45" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-0" />
+            <div className="absolute inset-0 border-r-2 border-amber-400 transform rotate-90" />
+         </div>
+      </div>
 
-              <p className="text-lg sm:text-xl text-slate-200 mb-8 leading-relaxed max-w-2xl">
-                {contentData?.description || "Dedicated to spreading knowledge, faith, and wisdom through comprehensive Islamic education and modern academic excellence."}
-              </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/contact">
-                  <button className="group px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-bold hover:shadow-2xl hover:shadow-emerald-500/50 transition-all flex items-center justify-center gap-2">
-                    Begin Journey
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
-                <Link href="/organizations">
-                  <button className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-lg font-semibold hover:bg-white/20 transition-all">
-                    View Structure
-                  </button>
-                </Link>
-              </div>
-            </div>
+      {/* Hero Content - Centered */}
+      <div className="relative z-30 h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+        {/* Adjusted pb-40 to pb-0 since the bottom wave is gone, centering content better */}
+        <div className="max-w-4xl mx-auto pb-0 sm:pb-0"> 
+          
+          {/* Logo/Icon (Placeholder for the ship icon in the image) */}
+          <div className="mb-6 mx-auto text-7xl text-amber-900">
+            {/* Replace with your actual logo (e.g., the ship SVG) */}
+            <BookOpenText size={72} className="mx-auto text-amber-900" /> 
           </div>
-        </div>
 
-        {/* Banner Indicators */}
-        {banners.length > 1 && (
-          <div className="absolute bottom-8 right-4 sm:right-8 z-20 flex gap-2">
-            {banners.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentBannerIndex(idx)}
-                className={`h-1.5 rounded-full transition-all ${idx === currentBannerIndex ? 'w-8 bg-emerald-400' : 'w-1.5 bg-white/40'}`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+          {/* Subtitle/Tag - Similar to "Showcasing Islamic Art & Culture" in the image */}
+          <p className={`text-base sm:text-lg font-medium tracking-widest uppercase mb-2 ${colors.secondaryText}`}>
+            Excellence in Education
+          </p>
+
+          {/* Main Title - Centered and large */}
+          <h1 className={`text-5xl sm:text-6xl md:text-7xl ${audiowide.className} ${colors.primaryText} leading-none mb-4 font-bold tracking-tight`} style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.1), -1px -1px 0px rgba(255,255,255,0.5)' }}>
+            Iqra Dars
+            <br className="sm:hidden" />
+            <span className={`text-4xl sm:text-5xl md:text-6xl font-bold block mt-1 text-amber-700`}>
+               Udinur & Padanna
+            </span>
+          </h1>
+
+          {/* Description - Shorter, centered, max-width constrained */}
+          <p className={`text-base sm:text-lg ${colors.secondaryText} mb-10 leading-relaxed max-w-2xl mx-auto font-normal`}>
+            {contentData?.description || "Dedicated to spreading knowledge, faith, and wisdom through comprehensive Islamic education and modern academic excellence."}
+          </p>
+
+          {/* Single Call to Action - Styled like the "Click to Dive In" button */}
+          <Link href="/contact" className="inline-block">
+            <button 
+                className={`
+                    group 
+                    px-10 py-3 sm:px-12 sm:py-4         /* Adjust padding for a wider, taller button */
+                    bg-amber-500                       /* Gold/Yellow background color */
+                    text-amber-900                     /* Dark/Black text color */
+                    font-bold                          /* Bold text */
+                    rounded-xl                       /* Very rounded/pill shape */
+                    
+                    /* Custom Shadow: A combination of a standard shadow and a glowing bottom shadow */
+                    shadow-lg 
+                    shadow-amber-500/50 
+                    
+                    /* Optional: Add a subtle glow for the red/pink hint in the image */
+                    relative
+                    
+                    /* Optional: Subtle hover effect for better UX */
+                    hover:bg-amber-500 
+                    hover:shadow-xl 
+                    transition-all duration-200
+                `}
+            >
+                {/* Remove the icon and change the text */}
+                Click to Dive In
+            </button>
+        </Link>
+          
+          {/* The second button from your original code is removed for a simpler, focused professional look */}
+
+        </div>
+      </div>
+      
+      {/* Removed Banner Indicators as the design is static like the image */}
+    </section>
 
      
 
       {/* MISSION SECTION */}
-      <section className="py-16 sm:py-24 bg-slate-50">
+      <section className={`py-16 sm:py-24 ${colors.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            
+            {/* --- Content Column --- */}
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-6">
-                <Target size={14} />
+              {/* Tag/Badge - Amber Themed */}
+              <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full ${colors.tagBackground} ${colors.accent2} text-sm font-bold uppercase tracking-widest mb-6 border border-amber-200`}>
+                <Target size={16} />
                 Our Mission
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-                Guiding Towards <span className="text-emerald-600">Excellence</span>
+              
+              {/* Main Heading - Dark Brown/Black with Amber Accent */}
+              <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${colors.primaryText} mb-6 leading-tight font-serif`}>
+                Guiding Towards <span className={colors.accent}>Excellence</span>
               </h2>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-6">
+              
+              {/* Main Description - Made smaller (text-base) and standardized */}
+              <p className={`${colors.secondaryText} text-base leading-relaxed mb-6 border-l-4 border-amber-300 pl-4`}>
                 {contentData?.mission || "To illuminate hearts and minds with the light of Islamic knowledge, guiding individuals on the path of righteousness."}
               </p>
-              <p className="text-slate-600 leading-relaxed">
+              
+              {/* Secondary Detail - Made smaller (text-sm) and standardized */}
+              <p className={`${colors.secondaryText} leading-relaxed text-sm mb-10`}>
                 We nurture highly qualified Islamic scholars through comprehensive structured education, preserving cultural heritage while guiding students toward bilingual proficiency.
               </p>
+
+              {/* REMOVED: Learn More About Our Vision link/section */}
             </div>
-            <div className="relative h-64 sm:h-96 rounded-2xl overflow-hidden shadow-2xl">
+            
+            {/* --- Image Column --- */}
+            <div className="relative h-72 sm:h-[450px] rounded-3xl overflow-hidden shadow-2xl shadow-amber-900/10 transform hover:scale-[1.01] transition-transform duration-500 ease-out">
               <Image 
                 src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800" 
-                alt="Mission" 
+                alt="Mission - Books and Knowledge" 
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/50 to-transparent" />
+              {/* Darker, Earthy Overlay for Depth */}
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-900/60 via-transparent to-amber-900/10" />
+              {/* Optional: Add a subtle overlay text or element for visual interest */}
+              <div className="absolute bottom-6 left-6 p-3 bg-white/20 backdrop-blur-sm rounded-xl text-white font-bold text-sm uppercase tracking-widest">
+                Knowledge & Wisdom
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ARTICLES SECTION */}
-      <section className="py-16 sm:py-24">
+     <section className={`py-16 sm:py-24 ${colors.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* ... Header Section (No RTL change needed here) ... */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider mb-4">
-                <BookOpen size={14} />
+              <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full ${colors.tagBackground} ${colors.accent} text-sm font-bold uppercase tracking-widest mb-4 border border-amber-200`}>
+                <BookOpen size={16} />
                 Insights
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
-                Latest <span className="text-emerald-600">Articles</span>
+              <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${colors.primaryText} leading-tight font-serif`}>
+                Latest <span className={colors.accent}>Writings</span>
               </h2>
             </div>
             <Link href="/articles">
-              <button className="flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all text-sm font-semibold">
+              <button className={`flex items-center gap-2 px-6 py-3 rounded-full ${colors.ctaPrimary} text-amber-950 hover:${colors.ctaHover} transition-all text-sm font-bold shadow-md shadow-amber-500/30`}>
                 View All <ArrowRight size={16} />
               </button>
             </Link>
           </div>
 
+          {/* --- Articles Grid --- */}
           {articles.length > 0 ? (
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+              
               {/* Featured Article */}
               {featuredArticle && (
-                <div className="lg:row-span-2">
-                  <Link
-                    href={`/articles/${featuredArticle._id}`}
-                    onClick={() => handleArticleView(featuredArticle)}
-                    className="group block relative h-full min-h-[400px] sm:min-h-[600px] rounded-2xl overflow-hidden shadow-xl"
-                  >
-                    <Image 
-                      src={featuredArticle.bannerUrl || '/placeholder.jpg'} 
-                      alt={featuredArticle.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                      <span className="inline-block px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold uppercase mb-4">
-                        {featuredArticle.type || 'Featured'}
-                      </span>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors">
-                        {featuredArticle.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-sm text-slate-300">
-                        <span className="font-medium">{featuredArticle.author || "Editorial Team"}</span>
-                        <div className="flex items-center gap-4">
-                          <span className="flex items-center gap-1">
-                            <Eye size={14} /> {formatCount(featuredArticle.views)}
-                          </span>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleArticleLike(featuredArticle);
-                            }}
-                            className="flex items-center gap-1 hover:text-red-400 transition-colors"
-                          >
-                            <Heart size={14} className={likedArticleIds.includes(featuredArticle._id) ? 'fill-red-500 text-red-500' : ''} />
-                            {formatCount(featuredArticle.likes)}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+                // This entire block replaces the Featured Article section within your grid
+
+// This entire block replaces the Featured Article section within your grid
+
+<div className="lg:row-span-2">
+  <div className="bg-white rounded-3xl overflow-hidden shadow-2xl shadow-amber-900/10 border border-stone-200 h-full flex flex-col">
+    <Link
+      href={`/articles/${featuredArticle._id}`}
+      onClick={() => handleArticleView(featuredArticle)}
+      // Make the entire card block interactive to compensate for removing the footer link
+      className="group block relative flex-grow aspect-[4/5] sm:aspect-[1/1] lg:aspect-auto rounded-b-none overflow-hidden hover:opacity-95 transition-opacity duration-300"
+      // *** RTL FIX: dir attribute on the Link for text flow/alignment ***
+      dir={isRTL(featuredArticle.language) ? 'rtl' : 'ltr'}
+    >
+      {/* --- 1. Image Area (The main visual) --- */}
+      <div className="relative w-full h-full min-h-[400px]"> {/* Re-adding a min-height for structure */}
+        <Image 
+          src={featuredArticle.bannerUrl || '/placeholder.jpg'} 
+          alt={featuredArticle.title}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        {/* Subtle Gradient Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-amber-950/70 via-transparent to-transparent" />
+
+        {/* --- Title & Tag Overlay --- */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 pt-16">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase tracking-wider mb-3">
+            {featuredArticle.type || 'Featured Insight'}
+          </span>
+          {/* FIX 2: Apply text-right for the title alignment */}
+          <h3 className={`text-3xl sm:text-4xl font-extrabold text-white leading-tight ${isRTL(featuredArticle.language) ? 'text-right' : 'text-left'}`}>
+            {featuredArticle.title}
+          </h3>
+        </div>
+      </div>
+    </Link>
+
+    {/* --- 2. Professional Social Action Bar --- */}
+    <div className={`p-5 flex flex-col gap-4 border-t border-stone-100`}>
+      
+      {/* Author and Date (Top of the 'caption' area) */}
+      <div className={`flex items-center gap-3 ${isRTL(featuredArticle.language) ? 'flex-row-reverse' : 'flex-row'} justify-between`}>
+        <div className={`flex items-center gap-3 ${isRTL(featuredArticle.language) ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shadow-sm">
+                {featuredArticle.author?.[0] || 'A'}
+            </div>
+            <div>
+                <p className="font-bold text-amber-900 leading-none">{featuredArticle.author || "Editorial Team"}</p>
+                <p className="text-xs text-stone-500 uppercase tracking-wider mt-1">{featuredArticle.language || 'English'}</p>
+            </div>
+        </div>
+        <span className="text-xs text-stone-500 whitespace-nowrap">{featuredArticle.createdAt ? formatDate(featuredArticle.createdAt) : 'N/A'}</span>
+      </div>
+
+      {/* Social Bar (Likes, Views, Share) */}
+      <div className="flex justify-between items-center pt-3 border-t border-stone-100">
+        
+        <div className="flex items-center gap-6 text-stone-500">
+          {/* Likes Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleArticleLike(featuredArticle);
+            }}
+            className={`flex items-center gap-2 text-sm font-semibold hover:text-red-500 transition-colors ${likedArticleIds.includes(featuredArticle._id) ? 'text-red-500' : 'text-stone-700'}`}
+          >
+            <Heart size={20} className={likedArticleIds.includes(featuredArticle._id) ? 'fill-red-500 text-red-500' : 'text-stone-400'} />
+            {formatCount(featuredArticle.likes)}
+          </button>
+          
+          {/* Views Display */}
+          <span className="flex items-center gap-2 text-sm font-semibold text-stone-700">
+            <Eye size={20} className="text-stone-400" />
+            {formatCount(featuredArticle.views)}
+          </span>
+        </div>
+        
+        {/* Share Button (ACTION IMPLEMENTED HERE) */}
+        <button
+            onClick={(e) => {
+                e.preventDefault();
+                // Call the handleShare function, passing the featuredArticle data
+                handleShare(featuredArticle);
+            }}
+            className="p-1.5 rounded-full text-stone-500 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+            aria-label="Share Article"
+        >
+            <Share2 size={20} />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
               )}
 
               {/* Supporting Articles */}
@@ -354,26 +538,36 @@ export default function Home() {
                   key={article._id}
                   href={`/articles/${article._id}`}
                   onClick={() => handleArticleView(article)}
-                  className="group flex gap-4 p-4 sm:p-6 bg-white rounded-xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all"
+                  // *** FIX 3: Apply dir="rtl" to the supporting article container ***
+                  dir={isRTL(article.language) ? 'rtl' : 'ltr'}
+                  className="group flex gap-4 p-4 sm:p-6 bg-white rounded-2xl border border-stone-100 hover:border-amber-400 hover:shadow-lg hover:shadow-amber-100 transition-all duration-300"
                 >
-                  <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden flex-shrink-0">
+                  {/* Image: Flex order is handled by dir="rtl" on parent (Image will move to the right) */}
+                  <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden flex-shrink-0 border border-stone-200">
                     <Image 
                       src={article.bannerUrl || '/placeholder.jpg'} 
                       alt={article.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-xs font-bold text-emerald-600 uppercase mb-2 block">
+                  
+                  {/* Content Area - Apply text alignment for inner content */}
+                  <div className={`flex-1 min-w-0 ${isRTL(article.language) ? 'text-right' : 'text-left'}`}>
+                    
+                    <span className={`text-xs font-bold ${colors.accent} uppercase mb-1 block tracking-wider`}>
                       {article.language}
                     </span>
-                    <h4 className="text-base sm:text-lg font-bold text-slate-900 mb-3 line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                    
+                    {/* FIX 4: Ensure title alignment is correct */}
+                    <h4 className={`text-lg font-bold ${colors.primaryText} mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors`}>
                       {article.title}
                     </h4>
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                    
+                    {/* Footer Details - Use justify-end when RTL to push LTR icons to the right */}
+                    <div className={`flex items-center gap-3 text-xs text-stone-500 ${isRTL(article.language) ? 'justify-end' : ''}`}>
                       <span className="flex items-center gap-1">
-                        <Eye size={12} /> {formatCount(article.views)}
+                        <Eye size={14} /> {formatCount(article.views)}
                       </span>
                       <button
                         onClick={(e) => {
@@ -382,7 +576,7 @@ export default function Home() {
                         }}
                         className="flex items-center gap-1 hover:text-red-500 transition-colors"
                       >
-                        <Heart size={12} className={likedArticleIds.includes(article._id) ? 'fill-red-500 text-red-500' : ''} />
+                        <Heart size={14} className={likedArticleIds.includes(article._id) ? 'fill-red-500 text-red-500' : ''} />
                         {formatCount(article.likes)}
                       </button>
                     </div>
@@ -391,9 +585,10 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-slate-50 rounded-2xl">
-              <BookOpen size={48} className="mx-auto text-slate-300 mb-4" />
-              <p className="text-slate-500 font-semibold">No articles available at the moment.</p>
+            /* Empty State */
+            <div className="text-center py-16 bg-stone-50 rounded-2xl border border-stone-200 shadow-inner">
+              <BookOpen size={48} className="mx-auto text-amber-300 mb-4" />
+              <p className="text-stone-500 font-semibold">No writings available at the moment. Check back soon!</p>
             </div>
           )}
         </div>
