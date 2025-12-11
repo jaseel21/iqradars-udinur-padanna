@@ -3,14 +3,17 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Users, Shield, Award, ChevronRight, Briefcase, Sparkles, Building2 } from 'lucide-react';
+import { 
+    Users, Shield, Award, ChevronRight, Briefcase, 
+    Sparkles, Building2, Search 
+} from 'lucide-react';
 
-// --- CSS FOR STACK SANS FONT & PREMIUM UTILITIES ---
+// --- CSS FOR PREMIUM EDITORIAL FEEL ---
 const customStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
   
   :root {
-    --font-stack: 'Stack Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-serif: 'Playfair Display', serif;
   }
   
@@ -18,25 +21,30 @@ const customStyles = `
     font-family: var(--font-stack);
   }
 
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  /* Warm Premium Shadow */
   .premium-card {
     box-shadow: 
-      0 20px 60px rgba(15, 23, 42, 0.08),
-      0 0 0 1px rgba(255, 255, 255, 0.5),
+      0 10px 40px rgba(120, 113, 108, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.8),
       inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
 
   .premium-card-hover {
     box-shadow: 
-      0 30px 80px rgba(16, 185, 129, 0.15),
-      0 0 0 1px rgba(16, 185, 129, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      0 20px 60px rgba(245, 158, 11, 0.15),
+      0 0 0 1px rgba(245, 158, 11, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   .glass-panel {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(231, 229, 228, 0.8);
   }
 `;
 
@@ -72,158 +80,127 @@ export default function Organizations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { type: "spring", stiffness: 40, damping: 15 } 
+      transition: { type: "spring", stiffness: 50, damping: 20 } 
     }
   };
 
   // --- LOADING STATE ---
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 font-stack">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 font-stack">
         <style jsx global>{customStyles}</style>
-        <div className="relative">
-          <div className="w-20 h-20 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
-          <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-emerald-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+        <div className="flex flex-col items-center gap-4">
+           <div className="w-16 h-16 border-4 border-stone-200 border-t-amber-500 rounded-full animate-spin"></div>
+           <p className="text-stone-400 text-xs font-bold uppercase tracking-widest animate-pulse">
+             Loading ...
+           </p>
         </div>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-slate-500 text-sm font-bold uppercase tracking-[0.3em] mt-6 flex items-center gap-2"
-        >
-          <Sparkles size={14} className="text-emerald-500" />
-          Loading Structure...
-        </motion.p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/20 pt-32 pb-32 font-stack selection:bg-emerald-100 selection:text-emerald-900 text-slate-900">
+    <div className="min-h-screen bg-stone-50 pt-32 pb-32 font-stack selection:bg-amber-100 selection:text-amber-900 text-stone-900 overflow-x-hidden">
       <style jsx global>{customStyles}</style>
       
-      {/* Premium Background Pattern */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03]" 
-        style={{ backgroundImage: 'radial-gradient(#059669 1.5px, transparent 1.5px)', backgroundSize: '50px 50px' }} 
+      {/* Background Texture (Subtle Noise or Dots) */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.05]" 
+        style={{ backgroundImage: 'radial-gradient(#78716c 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
       />
-      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-emerald-50/10" />
 
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 relative z-10">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 relative z-10">
         
         {/* --- PREMIUM PAGE HERO --- */}
-        <div className="text-center max-w-5xl mx-auto mb-32">
+        <div className="text-center max-w-4xl mx-auto mb-10">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full glass-panel text-emerald-700 text-[11px] font-bold uppercase tracking-[0.25em] mb-10 premium-card"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-stone-200 shadow-sm text-amber-700 text-[10px] font-bold uppercase tracking-widest mb-8"
           >
-            <div className="p-1.5 rounded-full bg-emerald-100">
-              <Shield size={12} className="text-emerald-600" />
-            </div>
+            <Shield size={12} className="text-amber-600" />
             <span>Organizational Structure</span>
           </motion.div>
           
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 mb-8 tracking-tight leading-[1.05]"
-          >
-            Leadership &{' '}
-            <span className="relative inline-block">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500">
-                Committees
-              </span>
-              <motion.span
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
-              />
-            </span>
-          </motion.h1>
+        
           
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto font-light"
+            className="text-xs text-stone-500 font-medium leading-relaxed max-w-2xl mx-auto"
           >
-            Meet the dedicated professionals, scholars, and board members working tirelessly to uphold our mission and drive excellence in education.
+            Meet the dedicated scholars and board members working tirelessly to uphold our mission of excellence.
           </motion.p>
 
-          {/* Stats Bar */}
+          {/* Stats Bar (Refined) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-12 flex flex-wrap items-center justify-center gap-8"
+            className="mt-12 inline-flex flex-wrap items-center justify-center gap-4 bg-white p-2 rounded-2xl border border-stone-200 shadow-xl shadow-stone-200/50"
           >
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200/60 premium-card">
-              <Building2 size={18} className="text-emerald-600" />
+            <div className="flex items-center gap-3 px-6 py-3 rounded-xl bg-stone-50">
+              <Building2 size={20} className="text-amber-600" />
               <div className="text-left">
-                <div className="text-2xl font-bold text-slate-900">{committees.length}</div>
-                <div className="text-[10px] uppercase tracking-widest text-slate-500">Committees</div>
+                <div className="text-xl font-bold text-stone-900 leading-none">{committees.length}</div>
+                <div className="text-[9px] uppercase tracking-widest text-stone-400 font-bold mt-1">Wings</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200/60 premium-card">
-              <Users size={18} className="text-emerald-600" />
+            <div className="w-px h-10 bg-stone-200 hidden sm:block"></div>
+            <div className="flex items-center gap-3 px-6 py-3 rounded-xl bg-stone-50">
+              <Users size={20} className="text-amber-600" />
               <div className="text-left">
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-xl font-bold text-stone-900 leading-none">
                   {committees.reduce((acc, c) => acc + (c.members?.length || 0), 0)}
                 </div>
-                <div className="text-[10px] uppercase tracking-widest text-slate-500">Members</div>
+                <div className="text-[9px] uppercase tracking-widest text-stone-400 font-bold mt-1">Members</div>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* --- PREMIUM COMMITTEES LIST --- */}
+        {/* --- COMMITTEES SECTIONS --- */}
         {committees.length > 0 ? (
-          <div className="space-y-40">
+          <div className="space-y-32">
             {committees.map((committee, cIndex) => (
-              <section key={committee._id || cIndex} className="relative group/section">
+              <section key={committee._id || cIndex} className="relative group/section scroll-mt-32">
                 
-                {/* Premium Sticky Section Header */}
+                {/* Section Header (Sticky) */}
                 <motion.div
-                  initial={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, y: -10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="sticky top-24 z-20 glass-panel py-6 px-6 mb-12 rounded-2xl premium-card flex items-center justify-between"
+                  className="sticky top-24 z-20 bg-white/95 backdrop-blur-md py-4 px-6 mb-10 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between max-w-5xl mx-auto"
                 >
-                  <div className="flex items-center gap-5">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl blur-md opacity-40"></div>
-                      <div className="relative w-14 h-14 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl flex items-center justify-center text-white shadow-xl">
-                        <Briefcase size={24} className="drop-shadow-sm" />
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-stone-100 rounded-lg flex items-center justify-center text-stone-600 border border-stone-200">
+                        <Briefcase size={18} />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-1">
+                      <h2 className="text-xl font-serif font-bold text-stone-900">
                         {committee.wing}
                       </h2>
-                      <p className="text-sm text-slate-500 font-medium">
-                        {committee.members?.length || 0} {committee.members?.length === 1 ? 'Member' : 'Members'}
+                      <p className="text-xs text-stone-400 font-bold uppercase tracking-wider">
+                        {committee.members?.length || 0} Members
                       </p>
                     </div>
                   </div>
-                  <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100">
-                    <Award size={16} className="text-emerald-600" />
-                    <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Active</span>
+                  <div className="hidden sm:block px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-widest">
+                    Active Board
                   </div>
                 </motion.div>
 
-                {/* Premium Members Grid */}
+                {/* Members Grid */}
                 <motion.div 
                   variants={containerVariants}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, margin: "-50px" }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 max-w-[1400px] mx-auto"
                 >
                   {committee.members && committee.members.length > 0 ? (
                     committee.members.map((member, index) => {
@@ -234,127 +211,87 @@ export default function Organizations() {
                         <motion.div
                           key={index}
                           variants={cardVariants}
-                          whileHover={{ y: -8 }}
-                          className="group relative premium-card rounded-3xl p-8 hover:premium-card-hover transition-all duration-500 flex flex-col items-center text-center bg-white/90 backdrop-blur-sm"
+                          whileHover={{ y: -6 }}
+                          className="group relative bg-white rounded-2xl p-6 border border-stone-200 shadow-sm hover:border-amber-300 hover:shadow-xl hover:shadow-amber-900/10 transition-all duration-300 flex flex-col items-center text-center"
                         >
-                          {/* Premium Gradient Background on Hover */}
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-50/0 via-teal-50/0 to-emerald-50/0 group-hover:from-emerald-50/30 group-hover:via-teal-50/20 group-hover:to-emerald-50/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
-                          
-                          {/* Image Container with Premium Effects */}
-                          <div className="relative w-44 h-44 mb-7 z-10">
-                            {/* Outer Glow Ring */}
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-emerald-200/50 to-teal-200/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          {/* Image Area */}
+                          <div className="relative w-32 h-32 mb-5">
+                            {/* Hover Ring */}
+                            <div className="absolute -inset-2 rounded-full border border-dashed border-amber-300 opacity-0 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-700" />
                             
-                            {/* Animated Border Ring */}
-                            <motion.div 
-                              className="absolute inset-0 rounded-full border-2 border-slate-200 group-hover:border-emerald-300 transition-all duration-500"
-                              whileHover={{ scale: 1.05, rotate: 5 }}
-                            />
-                            
-                            {/* Image Container */}
-                            <div className="absolute inset-3 rounded-full overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50 shadow-inner">
+                            <div className="relative w-full h-full rounded-full overflow-hidden border-[3px] border-stone-100 bg-stone-100 shadow-inner group-hover:border-white transition-colors">
                               {member.photo ? (
                                 <Image
                                   src={member.photo}
                                   alt={member.name}
                                   fill
-                                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
-                                  <Users size={48} strokeWidth={1.5} />
+                                <div className="w-full h-full flex items-center justify-center text-stone-300">
+                                  <Users size={32} />
                                 </div>
                               )}
                             </div>
 
-                            {/* Premium Leadership Badge */}
+                            {/* Leader Badge */}
                             {isLeader && (
-                              <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.2 + index * 0.05 }}
-                                className="absolute -bottom-2 -right-2 bg-gradient-to-br from-amber-400 to-amber-600 text-white p-3 rounded-full shadow-xl border-4 border-white z-20"
-                              >
-                                <Award size={18} className="drop-shadow-sm" />
-                              </motion.div>
+                              <div className="absolute -bottom-1 -right-1 bg-amber-500 text-white p-1.5 rounded-full shadow-md border-2 border-white z-10" title="Leadership Position">
+                                <Award size={12} />
+                              </div>
                             )}
-
-                            {/* Decorative Corner Accent */}
-                            <div className="absolute -top-2 -left-2 w-6 h-6 bg-emerald-500/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </div>
 
-                          {/* Text Info with Premium Typography */}
-                          <div className="relative z-10 w-full">
-                            <h3 className="text-xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mb-3 leading-tight">
+                          {/* Info */}
+                          <div className="w-full relative z-10">
+                            <h3 className="text-lg font-bold text-stone-900 group-hover:text-amber-700 transition-colors mb-1 line-clamp-1">
                               {member.name}
                             </h3>
                             
-                            {/* Premium Divider */}
-                            <div className="relative h-0.5 w-12 bg-gradient-to-r from-transparent via-emerald-400 to-transparent mx-auto mb-4">
-                              <div className="absolute inset-0 bg-emerald-500/30 blur-sm" />
-                            </div>
+                            {/* Decorative Dash */}
+                            <div className="h-0.5 w-6 bg-amber-200 mx-auto my-3 rounded-full group-hover:w-12 transition-all duration-300" />
                             
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.15em] group-hover:text-emerald-600 transition-colors leading-relaxed">
+                            <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-4 line-clamp-2 min-h-[2.5em]">
                               {member.position}
                             </p>
                             
-                            {/* Premium View Profile Action */}
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              whileHover={{ height: 'auto', opacity: 1 }}
-                              className="overflow-hidden mt-4"
-                            >
-                              <button className="group/btn flex items-center justify-center gap-2 mx-auto text-emerald-600 text-xs font-bold uppercase tracking-wider hover:text-emerald-700 transition-colors">
-                                <span>View Profile</span>
-                                <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
+                            {/* Profile Button (Hidden until hover) */}
+                            <div className="h-8 overflow-hidden">
+                              <button className="flex items-center justify-center gap-1 mx-auto text-stone-400 text-[10px] font-bold uppercase tracking-widest hover:text-stone-900 transition-all translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                                <span>View Details</span>
+                                <ChevronRight size={10} />
                               </button>
-                            </motion.div>
+                            </div>
                           </div>
-
-                          {/* Bottom Accent Line */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full group-hover:w-20 transition-all duration-500" />
                         </motion.div>
                       );
                     })
                   ) : (
-                    // Premium Empty State
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="col-span-full py-20 bg-gradient-to-br from-slate-50 to-white rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 premium-card"
-                    >
-                      <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-                        <Users size={40} className="opacity-40" />
-                      </div>
-                      <p className="text-sm font-semibold text-slate-500">Members to be announced</p>
-                      <p className="text-xs text-slate-400 mt-1">Check back soon for updates</p>
-                    </motion.div>
+                    // Empty State per Committee
+                    <div className="col-span-full py-16 bg-stone-50 rounded-2xl border border-dashed border-stone-300 flex flex-col items-center justify-center text-stone-400">
+                      <Users size={32} className="opacity-50 mb-3" />
+                      <p className="text-xs font-bold uppercase tracking-wider">Members Pending</p>
+                    </div>
                   )}
                 </motion.div>
               </section>
             ))}
           </div>
         ) : (
+          // Empty State Global
           <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-40 text-center"
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-3xl border border-stone-200 border-dashed max-w-2xl mx-auto"
           >
-            <div className="relative mb-8">
-              <div className="absolute inset-0 bg-emerald-100 rounded-full blur-2xl opacity-50 animate-pulse" />
-              <div className="relative w-32 h-32 bg-gradient-to-br from-slate-100 to-slate-50 rounded-full flex items-center justify-center border-4 border-slate-200 premium-card">
-                <Users size={56} className="text-slate-300" />
-              </div>
+            <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-6">
+               <Search size={32} className="text-stone-300" />
             </div>
-            <h3 className="text-3xl font-bold text-slate-900 mb-3">Structure Updating</h3>
-            <p className="text-slate-600 max-w-md leading-relaxed mb-6">
-              We are currently updating our organizational data. Please check back later for the latest information.
+            <h3 className="text-xl font-serif font-bold text-stone-900 mb-2">Structure Updating</h3>
+            <p className="text-stone-500 text-sm max-w-xs mx-auto">
+              Our organizational chart is currently being updated. Please check back soon.
             </p>
-            <div className="flex items-center gap-2 text-emerald-600 text-sm font-semibold">
-              <Sparkles size={16} />
-              <span>Coming Soon</span>
-            </div>
           </motion.div>
         )}
       </div>

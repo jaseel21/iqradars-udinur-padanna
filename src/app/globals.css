@@ -32,7 +32,26 @@ body {
 }
 
 .logo-float {
-  animation: float 6s ease-in-out infinite;
+  position: relative;
+  animation: float 6s ease-in-out infinite, wobble 8s ease-in-out infinite;
+}
+
+/* soft radial glow behind the logo */
+.logo-wrap::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 28px);
+  height: calc(100% + 28px);
+  border-radius: 12px;
+  background: radial-gradient(closest-side, rgba(250, 204, 21, 0.14), rgba(250, 204, 21, 0.06) 50%, transparent 70%);
+  z-index: -1;
+  filter: blur(6px);
+  opacity: 0.95;
+  pointer-events: none;
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 .logo-img {
@@ -54,8 +73,46 @@ body {
   100% { transform: translateY(0); }
 }
 
+@keyframes wobble {
+  0% { transform: rotate(-1deg) scale(1); }
+  25% { transform: rotate(0.6deg) scale(1.01); }
+  50% { transform: rotate(0.8deg) scale(1); }
+  75% { transform: rotate(-0.4deg) scale(1.005); }
+  100% { transform: rotate(-1deg) scale(1); }
+}
+
+@keyframes glow-pulse {
+  0% { opacity: 0.85; transform: translate(-50%, -50%) scale(0.98); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+  100% { opacity: 0.85; transform: translate(-50%, -50%) scale(0.98); }
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .logo-float { animation: none !important; }
   .logo-wrap:hover .logo-img { transform: none !important; }
+}
+
+/* One-time intro animation when the page first loads */
+.logo-intro {
+  animation: intro-pop 700ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes intro-pop {
+  0% {
+    transform: translateY(-8px) scale(0.98);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(0) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-intro { animation: none !important; }
 }

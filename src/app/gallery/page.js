@@ -5,16 +5,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { 
   X, ZoomIn, Camera, ChevronLeft, ChevronRight, 
-  ImageOff, Share2, Loader2 
+  ImageOff, Share2, Loader2, Filter, Download
 } from 'lucide-react';
 
-// --- CUSTOM FONT CSS ---
+// --- CUSTOM CSS FOR MASONRY & FONTS ---
 const customStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
   
   :root {
     --font-sans: 'Inter', sans-serif;
     --font-serif: 'Playfair Display', serif;
+  }
+
+  /* Masonry Grid Logic */
+  .masonry-grid {
+    column-count: 1;
+    column-gap: 2rem;
+  }
+  @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+  @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+  
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -34,12 +47,10 @@ export default function Gallery() {
         const res = await fetch('/api/gallery');
         if (res.ok) {
           const data = await res.json();
-          // Handle different API structures (array vs object)
           const imageList = Array.isArray(data) ? data : (data.images || data.gallery || []);
           setImages(imageList);
         } else {
-          console.error("Failed to fetch gallery");
-          setImages([]); // Ensure empty state triggers
+          setImages([]); 
         }
       } catch (err) {
         console.error("Gallery fetch error:", err);
@@ -53,7 +64,6 @@ export default function Gallery() {
   }, []);
 
   // --- FILTER LOGIC ---
-  // Extract unique categories dynamically from data, plus 'all'
   const categories = ['all', ...new Set(images.map(img => img.category || 'uncategorized'))];
   
   const filteredImages = images.filter(img => 
@@ -95,63 +105,56 @@ export default function Gallery() {
   }, [modalOpen, closeModal, nextImage, prevImage]);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pb-24 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-stone-50 text-stone-900 pb-32 font-sans selection:bg-amber-100 selection:text-amber-900">
       <style jsx global>{customStyles}</style>
 
-      {/* Decorative Background */}
+      {/* Decorative Texture */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03]" 
-        style={{ backgroundImage: 'radial-gradient(#059669 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
+        style={{ backgroundImage: 'radial-gradient(#78716c 1px, transparent 1px)', backgroundSize: '30px 30px' }} 
       />
 
       {/* 1. HEADER SECTION */}
-      <div className="relative pt-32 pb-16 px-6 lg:px-12 bg-white">
-         <div className="max-w-7xl mx-auto text-center space-y-6">
+      <div className="relative pt-22 pb-8 px-6 lg:px-12 bg-stone-50">
+         <div className="max-w-5xl mx-auto text-center space-y-8">
             <motion.div 
                initial={{ opacity: 0, y: -10 }}
                animate={{ opacity: 1, y: 0 }}
-               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-emerald-700 text-[11px] font-bold uppercase tracking-[0.2em]"
+               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-stone-200 shadow-sm text-amber-700 text-[10px] font-bold uppercase tracking-[0.2em]"
             >
-               <Camera size={14} />
+               <Camera size={12} />
                <span>Visual Archive</span>
             </motion.div>
 
-            <motion.h1 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.1 }}
-               className="text-5xl md:text-7xl font-serif font-bold text-slate-900 tracking-tight leading-[1.1]"
-            >
-               Moments in <span className="italic text-emerald-600">Time</span>
-            </motion.h1>
+           
 
             <motion.p 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ delay: 0.2 }}
-               className="text-lg text-slate-500 max-w-2xl mx-auto font-light leading-relaxed"
+               className="text-xs text-stone-500 max-w-2xl mx-auto font-medium leading-relaxed"
             >
-               A curated glimpse into the architectural heritage, vibrant events, and daily life at Iqra Dars Udinur.
+               A curated collection of memories capturing the essence of life, learning, and heritage at Iqra Dars.
             </motion.p>
          </div>
       </div>
 
-      {/* 2. STICKY FILTER BAR (Only show if there are images) */}
+      {/* 2. FILTER BAR */}
       {!loading && images.length > 0 && (
-        <div className="sticky top-20 z-30 mb-12 pointer-events-none">
-           <div className="max-w-7xl mx-auto px-6">
+        <div className="sticky top-10 z-30 mb-6 pointer-events-none">
+           <div className="max-w-7xl mx-auto px-6 text-center">
               <motion.div 
-                 initial={{ opacity: 0, y: 20 }}
+                 initial={{ opacity: 0, y: 10 }}
                  animate={{ opacity: 1, y: 0 }}
-                 className="inline-flex bg-white/80 backdrop-blur-xl border border-slate-200/60 p-1.5 rounded-2xl shadow-xl shadow-slate-200/20 pointer-events-auto mx-auto left-0 right-0 flex-wrap justify-center"
+                 className="inline-flex bg-white/90 backdrop-blur-md border border-stone-200/60 p-1.5 rounded-2xl shadow-xl shadow-stone-200/30 pointer-events-auto flex-wrap justify-center gap-1"
               >
                  {categories.map((cat) => (
                     <button
                        key={cat}
                        onClick={() => setFilter(cat)}
-                       className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                       className={`px-5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
                           filter === cat
-                             ? 'bg-slate-900 text-white shadow-md transform scale-105'
-                             : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                             ? 'bg-stone-900 text-white shadow-md'
+                             : 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'
                        }`}
                     >
                        {cat}
@@ -162,59 +165,64 @@ export default function Gallery() {
         </div>
       )}
 
-      {/* 3. MAIN CONTENT AREA */}
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10 min-h-[400px]">
+      {/* 3. MASONRY GALLERY GRID */}
+      <div className="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-10 min-h-[400px]">
          
          {/* Loading State */}
          {loading && (
-            <div className="flex flex-col items-center justify-center h-64 w-full">
-               <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-4" />
-               <p className="text-slate-400 text-sm uppercase tracking-widest">Loading Gallery...</p>
+            <div className="flex flex-col items-center justify-center py-32">
+               <div className="w-12 h-12 border-4 border-stone-200 border-t-amber-500 rounded-full animate-spin mb-4"></div>
+               <p className="text-stone-400 text-xs font-bold uppercase tracking-widest">Loading Collection...</p>
             </div>
          )}
 
          {/* Gallery Grid */}
          {!loading && filteredImages.length > 0 && (
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+            <div className="masonry-grid">
                <AnimatePresence mode="popLayout">
                   {filteredImages.map((img, index) => (
                      <motion.div
                         layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.4 }}
                         key={img._id || index}
                         onClick={() => openModal(index)}
-                        className="group relative rounded-2xl overflow-hidden bg-slate-100 cursor-zoom-in break-inside-avoid shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100"
+                        className="masonry-item group relative cursor-zoom-in"
                      >
-                        <Image
-                           src={img.url || img.src || '/placeholder.jpg'} // Fallback if url is missing
-                           alt={img.alt || 'Gallery Image'}
-                           width={800}
-                           height={1000}
-                           className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                           loading="lazy"
-                        />
-                        
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        
-                        {/* Content Overlay */}
-                        <div className="absolute inset-x-0 bottom-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 opacity-0 group-hover:opacity-100">
-                           <div className="flex justify-between items-end">
-                              <div>
-                                 <span className="inline-block px-2 py-1 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-widest rounded mb-2">
-                                    {img.category || 'Gallery'}
-                                 </span>
-                                 <h3 className="text-white font-serif text-lg font-medium leading-tight">
-                                    {img.alt || 'View Image'}
-                                 </h3>
-                              </div>
-                              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                                 <ZoomIn size={18} />
-                              </div>
-                           </div>
+                        {/* Image Card */}
+                        <div className="relative overflow-hidden rounded-xl bg-stone-200 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-stone-900/10 border border-stone-100">
+                            <Image
+                                src={img.url || img.src || '/placeholder.jpg'} 
+                                alt={img.alt || 'Gallery Image'}
+                                width={800}
+                                height={1000}
+                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                                loading="lazy"
+                            />
+                            
+                            {/* Overlay */}
+                            <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            
+                            {/* Center Zoom Icon */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white">
+                                    <ZoomIn size={20} />
+                                </div>
+                            </div>
+
+                            {/* Bottom Info Bar */}
+                            <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg border border-stone-100 shadow-lg">
+                                    <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600 mb-1 block">
+                                        {img.category || 'Archive'}
+                                    </span>
+                                    <h3 className="text-stone-900 font-serif text-sm font-bold line-clamp-1">
+                                        {img.alt || 'Untitled Image'}
+                                    </h3>
+                                </div>
+                            </div>
                         </div>
                      </motion.div>
                   ))}
@@ -222,28 +230,28 @@ export default function Gallery() {
             </div>
          )}
 
-         {/* Empty State (When no images exist or match filter) */}
+         {/* Empty State */}
          {!loading && filteredImages.length === 0 && (
             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="flex flex-col items-center justify-center py-32 text-center border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50/50"
+               initial={{ opacity: 0, scale: 0.95 }}
+               animate={{ opacity: 1, scale: 1 }}
+               className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-3xl border border-stone-200 border-dashed max-w-2xl mx-auto"
             >
-               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm text-slate-300">
+               <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-6 text-stone-300">
                   <ImageOff size={32} />
                </div>
-               <h3 className="text-xl font-serif font-bold text-slate-900 mb-2">No Images Found</h3>
-               <p className="text-slate-500 max-w-sm mx-auto mb-8">
+               <h3 className="text-xl font-serif font-bold text-stone-900 mb-2">No Images Found</h3>
+               <p className="text-stone-500 text-sm mb-6 max-w-xs mx-auto">
                   {filter === 'all' 
-                     ? "The gallery is currently empty. Please check back later as we update our collection." 
-                     : `No images found in the "${filter}" category.`}
+                     ? "The archive is currently empty." 
+                     : `No images found in the "${filter}" collection.`}
                </p>
                {filter !== 'all' && (
                   <button 
                      onClick={() => setFilter('all')} 
-                     className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-colors shadow-lg shadow-emerald-600/20"
+                     className="px-6 py-2 bg-stone-900 hover:bg-amber-600 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-colors"
                   >
-                     View All Photos
+                     Clear Filter
                   </button>
                )}
             </motion.div>
@@ -258,71 +266,66 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center"
+            className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-xl flex items-center justify-center"
             onClick={closeModal}
           >
-            {/* Top Bar */}
-            <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
-               <div className="text-white/80 font-mono text-xs tracking-widest pointer-events-auto">
-                  {currentIndex + 1} / {filteredImages.length}
+            {/* Top Controls */}
+            <div className="absolute top-0 left-0 right-0 p-6 lg:p-8 flex justify-between items-start z-50 pointer-events-none">
+               <div className="pointer-events-auto">
+                   <h2 className="text-white font-serif text-xl lg:text-2xl mb-1">
+                      {filteredImages[currentIndex]?.alt || 'Gallery View'}
+                   </h2>
+                   <div className="flex items-center gap-3 text-stone-400 text-xs font-mono">
+                      <span>{currentIndex + 1} / {filteredImages.length}</span>
+                      <span className="w-1 h-1 bg-stone-600 rounded-full"></span>
+                      <span className="uppercase tracking-widest text-amber-500 font-bold">
+                        {filteredImages[currentIndex]?.category || 'Archive'}
+                      </span>
+                   </div>
                </div>
+
                <div className="flex gap-4 pointer-events-auto">
-                  <button className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors">
+                  <button className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-amber-500 hover:text-stone-900 hover:border-amber-500 text-white transition-all duration-300 group">
                      <Share2 size={18} />
                   </button>
-                  <button onClick={closeModal} className="p-3 rounded-full bg-white/10 hover:bg-red-500/80 text-white transition-colors">
+                  <button onClick={closeModal} className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white hover:text-black text-white transition-all duration-300">
                      <X size={20} />
                   </button>
                </div>
             </div>
 
-            {/* Main Image Container */}
+            {/* Main Image */}
             <motion.div 
-              className="relative w-full h-full flex items-center justify-center p-4 lg:p-12"
+              className="relative w-full h-full flex items-center justify-center p-4 lg:p-20"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={e => e.stopPropagation()}
             >
-              <div className="relative max-w-[90vw] max-h-[85vh] shadow-2xl">
+              <div className="relative max-w-full max-h-full shadow-2xl shadow-black/50">
                 <Image
                   src={filteredImages[currentIndex]?.url || filteredImages[currentIndex]?.src || '/placeholder.jpg'}
                   alt={filteredImages[currentIndex]?.alt || 'Detail view'}
-                  width={1600}
+                  width={1920}
                   height={1200}
-                  className="w-auto h-auto max-w-full max-h-[85vh] object-contain rounded-lg"
+                  className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-sm"
                   priority
                 />
-                
-                {/* Caption Bar */}
-                <motion.div 
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent rounded-b-lg text-left"
-                >
-                   <span className="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-1 block">
-                      {filteredImages[currentIndex]?.category || 'Gallery'}
-                   </span>
-                   <h2 className="text-white font-serif text-2xl">
-                      {filteredImages[currentIndex]?.alt || 'View Image'}
-                   </h2>
-                </motion.div>
               </div>
             </motion.div>
 
-            {/* Nav Arrows */}
+            {/* Navigation Arrows */}
             <button
               onClick={prevImage}
-              className="absolute left-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/10 hover:bg-white text-white hover:text-black transition-all hover:scale-110 hidden md:flex items-center justify-center backdrop-blur-sm group"
+              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 p-4 rounded-full text-stone-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all hidden md:flex"
             >
-              <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
+              <ChevronLeft size={32} strokeWidth={1.5} />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/10 hover:bg-white text-white hover:text-black transition-all hover:scale-110 hidden md:flex items-center justify-center backdrop-blur-sm group"
+              className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 p-4 rounded-full text-stone-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all hidden md:flex"
             >
-              <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
+              <ChevronRight size={32} strokeWidth={1.5} />
             </button>
 
           </motion.div>

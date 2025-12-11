@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import {
-    ArrowLeft, Share2, Heart, Calendar, User, Clock, Feather, Eye
+    ArrowLeft, Share2,PenTool, Heart, Calendar, Clock, Feather, Eye, BookOpen
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -12,15 +12,18 @@ import { useRouter } from 'next/navigation';
 const formatDate = (date) =>
     new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
     });
+
 const isRTL = (language = '') =>
     /arabic|urdu|farsi|persian|hebrew|pashto/i.test((language || '').toLowerCase());
+
 const calculateReadTime = (text) => {
     const words = text?.split(/\s+/).length || 0;
     return Math.ceil(words / 200) + ' min read';
 };
+
 const formatCount = (value = 0) =>
     new Intl.NumberFormat('en-US', { notation: "compact" }).format(value || 0);
 
@@ -30,9 +33,9 @@ export default function ArticlePage({ params }) {
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [likedIds, setLikedIds] = useState(new Set());
-    const [viewedIds, setViewedIds] = new useState(new Set());
+    const [viewedIds, setViewedIds] = useState(new Set());
 
-    // --- Effects (Persistence & Views) ---
+    // --- Persistence & Fetching ---
     useEffect(() => {
         if (typeof window === 'undefined') return;
         const liked = JSON.parse(localStorage.getItem('likedArticles') || '[]');
@@ -66,16 +69,13 @@ export default function ArticlePage({ params }) {
 
         const updateView = async () => {
             try {
-                // Optimistic update
                 const next = new Set(viewedIds);
                 next.add(article._id);
                 setViewedIds(next);
                 localStorage.setItem('viewedArticles', JSON.stringify([...next]));
                 
-                // Optimistically update article state views
                 setArticle(prev => ({ ...prev, views: (prev.views || 0) + 1 }));
 
-                // API Call
                 await fetch('/api/articles', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
@@ -86,6 +86,7 @@ export default function ArticlePage({ params }) {
         updateView();
     }, [article, viewedIds]);
 
+    // Handle Like
     const handleLike = async () => {
         if (!article?._id) return;
 
@@ -98,7 +99,6 @@ export default function ArticlePage({ params }) {
             const next = new Set(likedIds);
             next.add(article._id);
             setLikedIds(next);
-            // Increment likes count on state
             setArticle(prev => ({ ...prev, likes: (prev.likes || 0) + 1 }));
             localStorage.setItem('likedArticles', JSON.stringify([...next]));
             toast.success('Added to favorites');
@@ -111,178 +111,210 @@ export default function ArticlePage({ params }) {
         } catch (error) { toast.error('Connection error'); }
     };
 
+    // Handle Share
     const handleShare = async () => {
         if (navigator.share) {
             try {
                 await navigator.share({
                     title: article.title,
-                    text: article.subtitle || 'Check out this article!',
+                    text: article.subtitle || 'Read this article',
                     url: window.location.href,
                 });
-            } catch (error) {
-                console.log('Error sharing:', error);
-            }
+            } catch (error) { console.log('Error sharing:', error); }
         } else {
             navigator.clipboard.writeText(window.location.href);
             toast.success('Link copied to clipboard');
         }
     };
 
+    // --- Loading State (Stone Theme) ---
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center">
-                <div className="animate-pulse flex flex-col items-center">
-                    <div className="h-12 w-12 bg-slate-200 rounded-full mb-4"></div>
-                    <div className="h-4 w-32 bg-slate-200 rounded"></div>
+            <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-stone-200 border-t-amber-500 rounded-full animate-spin"></div>
+                    <p className="text-xs font-bold text-stone-400 uppercase tracking-widest">Loading Content...</p>
                 </div>
             </div>
         );
     }
 
+    // --- Error State ---
     if (!article) {
         return (
-            <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-slate-900 mb-2">Article not found</h1>
-                    <Link href="/articles" className="text-emerald-600 hover:underline">Return to articles</Link>
+            <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+                <div className="text-center p-8 bg-white rounded-3xl border border-stone-200 shadow-sm">
+                    <BookOpen size={48} className="mx-auto text-stone-300 mb-4" />
+                    <h1 className="text-xl font-bold text-stone-900 mb-2">Article not found</h1>
+                    <button onClick={() => router.back()} className="text-xs font-bold text-amber-600 hover:text-amber-700 uppercase tracking-wider">
+                        Return to Archives
+                    </button>
                 </div>
             </div>
         );
     }
 
+    const isRtlLang = isRTL(article.language);
+
     return (
-        <div className="min-h-screen bg-[#FDFDFD] font-sans text-slate-900 pb-24 selection:bg-emerald-100 selection:text-emerald-900">
-
+        <div className="min-h-screen bg-stone-50 font-sans text-stone-900 pb-24 selection:bg-amber-100 selection:text-amber-900">
+            
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl mx-auto px-6 py-12 pt-12"
+                className="max-w-4xl mx-auto px-4 sm:px-6 py-12 pt-20"
             >
-                {/* Simple Back Button */}
-                <button
-                    onClick={() => router.back()}
-                    className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 mb-8"
-                    aria-label="Go Back"
-                >
-                    <ArrowLeft size={20} />
-                    <span className="text-sm font-medium">Back to articles</span>
-                </button>
+                {/* 1. Header Navigation */}
+                <div className="flex justify-between items-center mb-8">
+                    <button
+                        onClick={() => router.back()}
+                        className="group flex items-center gap-2 text-stone-500 hover:text-amber-700 transition-colors"
+                        aria-label="Go Back"
+                    >
+                        <div className="p-2 bg-white rounded-full border border-stone-200 group-hover:border-amber-200 shadow-sm transition-all">
+                            <ArrowLeft size={16} />
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-wider">Back</span>
+                    </button>
 
-                {/* Article Meta (Simplified for views, as views are also on the banner) */}
-                <div className="flex flex-wrap items-center gap-4 mb-8 text-sm">
-                    <span className="px-3 py-1 bg-slate-100 text-slate-600 font-bold uppercase tracking-wider rounded-full text-xs">
-                        {article.type}
-                    </span>
-                    <span className="px-3 py-1 bg-emerald-50 text-emerald-700 font-bold uppercase tracking-wider rounded-full text-xs">
-                        {article.language}
-                    </span>
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <Calendar size={14} />
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 shadow-sm">
+                        <span className={`w-2 h-2 rounded-full ${article.type === 'poem' ? 'bg-purple-400' : 'bg-amber-400'}`}></span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">
+                            {article.type}
+                        </span>
+                    </div>
+                </div>
+
+                {/* 2. Article Header Info */}
+                <div className={`mb-10 ${isRtlLang ? 'text-right' : 'text-left'}`}>
+                    {/* Language & Date Row */}
+                    <div className={`flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 ${isRtlLang ? 'flex-row-reverse' : 'flex-row'}`}>
+                        <span className="text-amber-600">{article.language}</span>
+                        <span>•</span>
                         <span>{formatDate(article.createdAt)}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1">
+                            <Clock size={10} />
+                            {calculateReadTime(article.content)}
+                        </span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <Clock size={14} />
-                        <span>{calculateReadTime(article.content)}</span>
-                    </div>
-                </div>
 
-                {/* Title */}
-                <h1 className={`text-4xl md:text-6xl font-serif font-bold text-slate-900 mb-6 leading-[1.1] ${isRTL(article.language) ? 'font-noto-nastaliq text-right' : ''}`}>
-                    {article.title}
-                </h1>
+                    {/* Title */}
+                    <h1 className={`text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 mb-4 leading-[1.1] ${isRtlLang ? 'font-noto-nastaliq' : ''}`}>
+                        {article.title}
+                    </h1>
 
-                {article.subtitle && (
-                    <p className={`text-xl md:text-2xl text-slate-500 font-light italic mb-12 leading-relaxed ${isRTL(article.language) ? 'font-noto-nastaliq text-right' : ''}`}>
-                        {article.subtitle}
-                    </p>
-                )}
+                    {/* Subtitle */}
+                    {article.subtitle && (
+                        <p className={`text-lg md:text-xl text-stone-500 font-serif italic mb-8 leading-relaxed ${isRtlLang ? 'font-noto-nastaliq' : ''}`}>
+                            {article.subtitle}
+                        </p>
+                    )}
 
-                {/* Author */}
-                <div className="flex items-center gap-4 mb-12 p-4 bg-slate-50 rounded-2xl">
-                    <div className="w-12 h-12 rounded-full bg-white text-emerald-700 flex items-center justify-center font-bold text-lg shadow-sm">
-                        {article.author?.[0] || 'A'}
-                    </div>
-                    <div>
-                        <p className="font-bold text-slate-900">{article.author}</p>
-                        <p className="text-xs text-slate-500 uppercase tracking-wide">Author</p>
-                    </div>
-                </div>
-
-                {/* Banner with professional Action Overlay */}
-                {article.bannerUrl && (
-                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-12 shadow-xl">
-                        {/* Image */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={article.bannerUrl} alt={article.title} className="w-full h-full object-cover" />
-
-                        {/* Action Overlay (Bottom Right) */}
-                        <div className="absolute bottom-4 right-4 flex items-center gap-3">
-                            
-                            {/* View Count Display (Non-interactive) */}
-                            <div
-                                className="flex items-center gap-2 p-3 rounded-full backdrop-blur-sm bg-white/70 text-slate-700 border border-slate-200 shadow-lg"
-                            >
-                                <Eye size={20} />
-                                <span className="font-semibold text-sm mr-1">
-                                    {formatCount(article.views)}
-                                </span>
-                            </div>
-
-                            {/* Like Button with Count */}
-                            <button
-                                onClick={handleLike}
-                                className={`flex items-center gap-2 p-3 rounded-full transition-all backdrop-blur-sm bg-white/70 shadow-lg border ${likedIds.has(article._id) ? 'text-red-600 border-red-200 hover:bg-red-50/80' : 'text-slate-700 border-slate-200 hover:bg-slate-100/80'}`}
-                                aria-label={likedIds.has(article._id) ? 'Liked' : 'Like Article'}
-                            >
-                                <Heart size={20} fill={likedIds.has(article._id) ? "currentColor" : "none"} />
-                                <span className="font-semibold text-sm mr-1">
-                                    {formatCount(article.likes)}
-                                </span>
-                            </button>
-
-                            {/* Share Button */}
-                            <button
-                                onClick={handleShare}
-                                className="p-3 rounded-full backdrop-blur-sm bg-white/70 text-slate-700 border border-slate-200 hover:bg-slate-100/80 transition-colors shadow-lg"
-                                aria-label="Share Article"
-                            >
-                                <Share2 size={20} />
-                            </button>
+                    {/* Author Block */}
+                    <div className={`flex items-center gap-3 py-4 border-y border-stone-200/60 ${isRtlLang ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
+                        <div className="w-10 h-10 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center font-bold text-sm border border-stone-200">
+                            <PenTool  size={16} />
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold text-stone-900 uppercase tracking-wide">{article.author}</p>
+                            <p className="text-[10px] text-stone-400 font-medium">Editorial Contributor</p>
                         </div>
                     </div>
+                </div>
+
+                {/* 3. Hero Image with Floating Action Dock */}
+                {article.bannerUrl && (
+                    <>
+                        <div className="relative w-full aspect-video rounded-3xl overflow-hidden mb-6 shadow-xl shadow-stone-200/50 border border-stone-100 group">
+                            {/* Share (small) - top-right of image */}
+                            <button
+                                onClick={handleShare}
+                                title="Share this article"
+                                aria-label="Share article"
+                                className="absolute top-3 right-3 z-20 p-2 bg-white/90 rounded-md shadow-sm text-stone-700 hover:bg-amber-50 transition"
+                            >
+                                <Share2 size={14} />
+                            </button>
+
+                            {/* Image */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={article.bannerUrl}
+                                alt={article.title}
+                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                            />
+
+                            {/* Gradient for Text Readability if needed */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+                        </div>
+
+                        {/* Instagram-Style Engagement Bar - Right Under Image (stats aligned right) */}
+                        <div className="mb-12 px-4   rounded-lg flex items-center justify-end gap-4">
+                            {/* Right-aligned Stats */}
+                            <div className="flex items-center gap-5 text-stone-600">
+                                {/* Views */}
+                                <div className="flex items-center gap-2 select-none">
+                                    <Eye size={16} />
+                                    <span className="text-xs font-normal text-stone-600">{formatCount(article.views)}</span>
+                                </div>
+
+                                {/* Likes (clickable to like) */}
+                                <button onClick={handleLike} className="flex items-center gap-2 hover:opacity-90 transition" title="Like this article">
+                                    <Heart size={16} className={likedIds.has(article._id) ? 'text-red-500' : 'text-stone-500'} fill={likedIds.has(article._id) ? 'currentColor' : 'none'} />
+                                    <span className="text-xs font-normal text-stone-600">{formatCount(article.likes)}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </>
                 )}
                 
-                {/* Content */}
+                {/* 4. Article Content Body */}
                 <div
-                    className={`prose prose-slate max-w-none text-slate-800 ${isRTL(article.language)
-                            ? 'text-right font-noto-nastaliq prose-2xl leading-[2.5]'
-                            : 'text-left prose-lg md:prose-xl leading-loose'
-                        }`}
-                    dir={isRTL(article.language) ? 'rtl' : 'ltr'}
-                    style={{ fontFamily: article.language === 'Urdu' ? '"Noto Nastaliq Urdu", serif' : 'inherit' }}
+                    className={`prose prose-stone max-w-none text-stone-800 
+                        ${isRtlLang 
+                            ? 'text-right font-noto-nastaliq prose-xl leading-[2.2]' 
+                            : 'text-left prose-lg leading-loose'
+                        }
+                        prose-headings:font-serif prose-headings:text-stone-900
+                        prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline
+                        prose-blockquote:border-amber-400 prose-blockquote:bg-amber-50/30 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg
+                        prose-strong:text-stone-900 prose-strong:font-bold
+                    `}
+                    dir={isRtlLang ? 'rtl' : 'ltr'}
+                    style={{ fontFamily: isRtlLang ? '"Noto Nastaliq Urdu", serif' : 'inherit' }}
                 >
-                    {/* Drop Cap for English Articles */}
-                    {(!isRTL(article.language) && article.content) && (
-                        <span className="float-left text-7xl font-bold text-emerald-900 mr-4 mt-[-10px] font-serif">
+                    {/* Editorial Drop Cap (Only for LTR) */}
+                    {(!isRtlLang && article.content) && (
+                        <span className="float-left text-6xl font-bold text-amber-600 mr-3 mt-[-8px] font-serif leading-none">
                             {article.content.charAt(0)}
                         </span>
                     )}
 
                     {article.content?.split('\n').map((paragraph, i) => (
-                        <p key={i} className="mb-8 first-letter:float-none">{
-                            // If drop cap is used, slice first char from first paragraph
-                            (!isRTL(article.language) && i === 0) ? paragraph.slice(1) : paragraph
-                        }</p>
+                        <p key={i} className="mb-6 first-letter:float-none text-base sm:text-lg">
+                            {(!isRtlLang && i === 0) ? paragraph.slice(1) : paragraph}
+                        </p>
                     ))}
                 </div>
 
-                {/* Footer */}
-                <div className="mt-24 pt-12 border-t border-slate-200 flex flex-col items-center text-center">
-                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-6">
-                        <Feather size={24} />
+                {/* 5. Footer / End Marker */}
+                <div className="mt-20 pt-12 border-t border-stone-200 flex flex-col items-center text-center">
+                    <div className="mb-6 relative">
+                        <div className="absolute inset-0 bg-amber-100 rounded-full blur-xl opacity-50"></div>
+                        <div className="relative w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-600 border border-amber-100 shadow-sm">
+                            <Feather size={20} />
+                        </div>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">End of Article</h3>
-                    <p className="text-slate-500 mb-8">Thank you for reading</p>
+                    <h3 className="text-lg font-serif font-bold text-stone-900 mb-2">End of Article</h3>
+                    <p className="text-xs text-stone-500 font-medium uppercase tracking-widest mb-8">Thank you for reading</p>
+                    
+                    <button
+                        onClick={() => router.push('/articles')}
+                        className="px-8 py-3 bg-stone-900 text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-500 hover:text-stone-900 transition-all shadow-lg hover:shadow-amber-500/20"
+                    >
+                        Read More Articles
+                    </button>
                 </div>
 
             </motion.div>

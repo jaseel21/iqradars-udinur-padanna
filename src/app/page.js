@@ -294,9 +294,15 @@ export default function Home() {
         <div className="max-w-4xl mx-auto pb-0 sm:pb-0"> 
           
           {/* Logo/Icon (Placeholder for the ship icon in the image) */}
-          <div className=" mx-auto text-7xl text-amber-900">
-            {/* Replace with your actual logo (e.g., the ship SVG) */}
-            <img className="mx-auto text-amber-900 h-50 w-50" src='/icon.png'/>
+          <div className="mx-auto text-7xl text-amber-900">
+            {/* Animated logo: plays a one-time intro animation on first render */}
+            <div className="logo-wrap logo-float" aria-hidden="false">
+              <img
+                src="/icon.png"
+                alt="Iqra Dars logo"
+                className="logo-img logo-intro mx-auto text-amber-900 h-50 w-50"
+              />
+            </div>
           </div>
 
           {/* Subtitle/Tag - Similar to "Showcasing Islamic Art & Culture" in the image */}
@@ -398,7 +404,7 @@ export default function Home() {
             </div>
             
             <Link href="/articles" className="shrink-0">
-                <button className={`group flex items-center gap-2 px-6 py-3 rounded-full ${colors.ctaPrimary} text-amber-950 hover:${colors.ctaHover} transition-all duration-300 text-sm font-bold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-0.5`}>
+                <button className={`group flex items-center gap-2 px-4 py-2 rounded-full ${colors.ctaPrimary} text-amber-950 hover:${colors.ctaHover} transition-all duration-300 text-xs  shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-0.5`}>
                     <span>View All</span>
                     <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </button>
