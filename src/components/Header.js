@@ -87,7 +87,7 @@ const MobileBottomBar = ({ items }) => {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-50 lg:hidden py-4 px-4">
+        <nav className="fixed inset-x-0 bottom-0 z-50 lg:hidden py-4 px-8">
             <div className="max-w-xl mx-auto flex justify-around items-center h-16 bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl shadow-slate-900/10 border border-slate-200/60">
                 {items.map((item) => {
                     const isActive = pathname === item.href;
@@ -97,7 +97,7 @@ const MobileBottomBar = ({ items }) => {
                                 w-12 h-12 p-2 flex flex-col items-center justify-center 
                                 rounded-lg transition-all duration-300 group
                                 ${isActive
-                                    ? 'bg-amber-800 shadow-md shadow-amber-800/40 text-white'
+                                    ? 'bg-amber-600 shadow-md shadow-amber-800/40 text-white'
                                     : 'text-stone-700 hover:bg-slate-100 hover:text-amber-800'
                                 }
                             `}>
