@@ -114,7 +114,7 @@ export default function Gallery() {
       />
 
       {/* 1. HEADER SECTION */}
-      <div className="relative pt-22 pb-8 px-6 lg:px-12 bg-stone-50">
+      <div className="relative pt-12 pb-8 px-6 lg:px-12 bg-stone-50">
          <div className="max-w-5xl mx-auto text-center space-y-8">
             <motion.div 
                initial={{ opacity: 0, y: -10 }}

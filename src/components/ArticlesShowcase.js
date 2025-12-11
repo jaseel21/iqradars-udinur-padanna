@@ -98,7 +98,7 @@ export default function ArticlesShowcase({ articles = [] }) {
       <div className="min-h-screen bg-stone-50 font-sans text-stone-900 pb-24 selection:bg-amber-100 selection:text-amber-900">
          
          {/* 1. EDITORIAL HEADER */}
-         <div className="pt-32 pb-16 px-6 relative overflow-hidden bg-white border-b border-stone-200">
+         <div className="pt-12 pb-16 px-6 relative overflow-hidden bg-white border-b border-stone-200">
             <div className="max-w-5xl mx-auto text-center relative z-10">
                <motion.div
                   initial={{ opacity: 0, y: -10 }}

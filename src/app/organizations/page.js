@@ -104,7 +104,7 @@ export default function Organizations() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 pt-32 pb-32 font-stack selection:bg-amber-100 selection:text-amber-900 text-stone-900 overflow-x-hidden">
+    <div className="min-h-screen bg-stone-50 pt-12 pb-32 font-stack selection:bg-amber-100 selection:text-amber-900 text-stone-900 overflow-x-hidden">
       <style jsx global>{customStyles}</style>
       
       {/* Background Texture (Subtle Noise or Dots) */}

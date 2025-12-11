@@ -288,10 +288,10 @@ export default function Home() {
       </div>
 
 
-      {/* Hero Content - Centered */}
-      <div className="relative z-30 h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
-        {/* Adjusted pb-40 to pb-0 since the bottom wave is gone, centering content better */}
-        <div className="max-w-4xl mx-auto pb-0 sm:pb-0"> 
+      {/* Hero Content - Centered, Rising Higher on Mobile */}
+      <div className="relative z-30 min-h-screen sm:h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+        {/* Content rises on mobile to account for bottom navbar */}
+        <div className="max-w-4xl mx-auto pb-0 sm:pb-0 -mt-16 sm:mt-0"> 
           
           {/* Logo/Icon (Placeholder for the ship icon in the image) */}
           <div className="mx-auto text-7xl text-amber-900">
@@ -320,7 +320,7 @@ export default function Home() {
           </h1>
 
           {/* Description - Shorter, centered, max-width constrained */}
-          <p className={`text-base sm:text-lg ${colors.secondaryText} mb-9 leading-relaxed max-w-2xl mx-auto font-normal`}>
+          <p className={`text-base text-sm md:text-lg ${colors.secondaryText} mb-9 leading-relaxed max-w-2xl mx-auto font-normal`}>
             {contentData?.description || "Dedicated to spreading knowledge, faith, and wisdom through comprehensive Islamic education and modern academic excellence."}
           </p>
 
@@ -338,7 +338,7 @@ export default function Home() {
      
 
       {/* MISSION SECTION */}
-      <section className={`py-16 sm:py-24 ${colors.background}`}>
+      <section className={` ${colors.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             

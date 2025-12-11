@@ -121,7 +121,7 @@ export default function Contact() {
       />
 
       {/* 1. HERO SECTION */}
-      <section className="relative pt-22 pb-10   px-6 lg:px-12 bg-stone-50 border-b border-stone-200">
+      <section className="relative pt-12 pb-10   px-6 lg:px-12 bg-stone-50 border-b border-stone-200">
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
