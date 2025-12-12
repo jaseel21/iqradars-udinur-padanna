@@ -5,29 +5,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { 
   X, ZoomIn, Camera, ChevronLeft, ChevronRight, 
-  ImageOff, Share2, Loader2, Filter, Download
+  ImageOff, Share2, Loader2
 } from 'lucide-react';
 
-// --- CUSTOM CSS FOR MASONRY & FONTS ---
+// --- CUSTOM CSS (Removed custom masonry CSS, kept fonts) ---
 const customStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
   
   :root {
     --font-sans: 'Inter', sans-serif;
     --font-serif: 'Playfair Display', serif;
-  }
-
-  /* Masonry Grid Logic */
-  .masonry-grid {
-    column-count: 1;
-    column-gap: 2rem;
-  }
-  @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
-  @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
-  
-  .masonry-item {
-    break-inside: avoid;
-    margin-bottom: 2rem;
   }
 `;
 
@@ -125,13 +112,12 @@ export default function Gallery() {
                <span>Visual Archive</span>
             </motion.div>
 
-           
 
             <motion.p 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ delay: 0.2 }}
-               className="text-xs text-stone-500 max-w-2xl mx-auto font-medium leading-relaxed"
+               className="text-sm text-stone-500 max-w-2xl mx-auto font-medium leading-relaxed"
             >
                A curated collection of memories capturing the essence of life, learning, and heritage at Iqra Dars.
             </motion.p>
@@ -140,7 +126,7 @@ export default function Gallery() {
 
       {/* 2. FILTER BAR */}
       {!loading && images.length > 0 && (
-        <div className="sticky top-10 z-30 mb-6 pointer-events-none">
+        <div className="sticky top-24 z-30 mb-16 pointer-events-none">
            <div className="max-w-7xl mx-auto px-6 text-center">
               <motion.div 
                  initial={{ opacity: 0, y: 10 }}
@@ -165,7 +151,7 @@ export default function Gallery() {
         </div>
       )}
 
-      {/* 3. MASONRY GALLERY GRID */}
+      {/* 3. GALLERY GRID (RESTORED OLD STRUCTURE) */}
       <div className="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-10 min-h-[400px]">
          
          {/* Loading State */}
@@ -176,53 +162,50 @@ export default function Gallery() {
             </div>
          )}
 
-         {/* Gallery Grid */}
+         {/* Grid using Tailwind Columns (Matches Old Code Structure) */}
          {!loading && filteredImages.length > 0 && (
-            <div className="masonry-grid">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
                <AnimatePresence mode="popLayout">
                   {filteredImages.map((img, index) => (
                      <motion.div
                         layout
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.4 }}
                         key={img._id || index}
                         onClick={() => openModal(index)}
-                        className="masonry-item group relative cursor-zoom-in"
+                        // "break-inside-avoid" ensures items don't split across columns
+                        className="group relative rounded-2xl overflow-hidden bg-stone-200 cursor-zoom-in break-inside-avoid shadow-sm hover:shadow-2xl hover:shadow-stone-900/10 transition-all duration-500 border border-stone-100"
                      >
-                        {/* Image Card */}
-                        <div className="relative overflow-hidden rounded-xl bg-stone-200 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-stone-900/10 border border-stone-100">
-                            <Image
-                                src={img.url || img.src || '/placeholder.jpg'} 
-                                alt={img.alt || 'Gallery Image'}
-                                width={800}
-                                height={1000}
-                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                                loading="lazy"
-                            />
-                            
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            
-                            {/* Center Zoom Icon */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white">
-                                    <ZoomIn size={20} />
-                                </div>
-                            </div>
-
-                            {/* Bottom Info Bar */}
-                            <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg border border-stone-100 shadow-lg">
-                                    <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600 mb-1 block">
-                                        {img.category || 'Archive'}
-                                    </span>
-                                    <h3 className="text-stone-900 font-serif text-sm font-bold line-clamp-1">
-                                        {img.alt || 'Untitled Image'}
-                                    </h3>
-                                </div>
-                            </div>
+                        <Image
+                           src={img.url || img.src || '/placeholder.jpg'}
+                           alt={img.alt || 'Gallery Image'}
+                           width={800}
+                           height={1000}
+                           className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                           loading="lazy"
+                        />
+                        
+                        {/* Gradient Overlay (Restored Old Effect) */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        
+                        {/* Content Overlay (Restored Old Effect) */}
+                        <div className="absolute inset-x-0 bottom-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 opacity-0 group-hover:opacity-100">
+                           <div className="flex justify-between items-end">
+                              <div>
+                                 {/* Adjusted color to Amber to match new theme */}
+                                 <span className="inline-block px-2 py-1 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-widest rounded mb-2">
+                                    {img.category || 'Archive'}
+                                 </span>
+                                 <h3 className="text-white font-serif text-lg font-medium leading-tight">
+                                    {img.alt || 'View Image'}
+                                 </h3>
+                              </div>
+                              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                                 <ZoomIn size={18} />
+                              </div>
+                           </div>
                         </div>
                      </motion.div>
                   ))}
