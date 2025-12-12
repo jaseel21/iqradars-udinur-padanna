@@ -35,7 +35,7 @@ export const metadata = {
         url: "/og-image.jpg", // Make sure to create this image and place it in the public folder
         width: 1200,
         height: 630,
-        alt: "AIC Amal",
+        alt: "Iqra Dars",
       },
     ],
     locale: "en_US",

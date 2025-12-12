@@ -58,13 +58,13 @@ const FloatingSidebar = ({ items }) => {
     return (
         <nav className="fixed left-4 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
             <div className="w-16 p-2 rounded-xl bg-white/80 backdrop-blur-md shadow-2xl border border-slate-100/70">
-                <div className="space-y-4">
+                <div className="flex flex-col gap-6">
                     {items.map((item) => {
                         const isActive = pathname === item.href;
                         return (
                             <Link key={item.href} href={item.href}>
                                 <div className={`
-                                    w-12 h-12 p-3 flex items-center justify-center 
+                                    w-12 h-12 p-3   flex items-center justify-center 
                                     rounded-lg transition-all duration-300 cursor-pointer
                                     ${isActive
                                         ? `bg-amber-800 shadow-md shadow-amber-800/40 text-white`
@@ -97,7 +97,7 @@ const MobileBottomBar = ({ items }) => {
                                 w-12 h-12 p-2 flex flex-col items-center justify-center 
                                 rounded-lg transition-all duration-300 group
                                 ${isActive
-                                    ? 'bg-amber-600 shadow-md shadow-amber-800/40 text-white'
+                                    ? 'bg-amber-700 shadow-md shadow-amber-800/40 text-white'
                                     : 'text-stone-700 hover:bg-slate-100 hover:text-amber-800'
                                 }
                             `}>
